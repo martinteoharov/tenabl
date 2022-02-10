@@ -2,23 +2,27 @@
 
 ## First Meeting Notes:
 
+Suggested ideas for the project:
+
+- System for evaluating trustworthiness of articles from user votes.
+
 ### Tech stack:
 
 - Frontend: JavaScript + TypeScript + React
 - Styling: SCSS (CSS + variables + extra)
-- Backend: nodejs + express + typeorm
-- Database: postgresql
-- Bundler: vite
+- Backend: Nodei.Js + Express + Typeorm
+- Database: PostgreSQL
+- Bundler: Vite
+- Container: Docker
 
-Not prettier
-Docker
+For code styling do not use prettier
 
 ### Task Breakdown
 
 Admin stuff: (Victor)
 - AWS:
-	- EC2
-	- RDS
+	- Production server: EC2
+	- Database server: RDS
 
 - Github:
 	- Tasks
@@ -26,13 +30,12 @@ Admin stuff: (Victor)
 
 - ESLint
 
-frontend: js+ts, react course
-- w3school for js            
-- typescript official guide  
-- react official guide       
+Frontend: js+ts, react course
+- w3school for JS            
+- Typescript official guide  
+- React official guide       
 
-
-backend: js+ts, typeorm, express
-- w3school for js            
-- typescript official guide  
-- express / typeorm          
+Backend: js+ts, typeorm, express
+- w3school for JS            
+- Typescript official guide  
+- Express / Typeorm          
