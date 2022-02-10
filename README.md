@@ -17,7 +17,7 @@ Suggested ideas for the project:
 
 For code styling do not use prettier
 
-### Task Breakdown
+### Stack Breakdown
 
 Admin stuff: (Victor)
 - AWS:
