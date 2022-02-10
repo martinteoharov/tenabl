@@ -1,16 +1,19 @@
-Frontend: JavaScript + TypeScript + React
-Styling: SCSS (CSS + variables + extra)
-Backend: nodejs + express + typeorm
-Database: postgresql
-Bundler: vite
+# COM2027
+
+## First Meeting Notes:
+
+### Tech stack:
+
+- Frontend: JavaScript + TypeScript + React
+- Styling: SCSS (CSS + variables + extra)
+- Backend: nodejs + express + typeorm
+- Database: postgresql
+- Bundler: vite
 
 Not prettier
-
 Docker
 
-- JavaScript + TypeScript
-	- async/await
-	- express.js
+### Task Breakdown
 
 Admin stuff: (Victor)
 - AWS:
@@ -23,18 +26,13 @@ Admin stuff: (Victor)
 
 - ESLint
 
-
-learning stuff:
-
-admin: docker
-
 frontend: js+ts, react course
-- w3school for js            |
-- typescript official guide  |
-- react official guide       v
+- w3school for js            
+- typescript official guide  
+- react official guide       
 
 
 backend: js+ts, typeorm, express
-- w3school for js            |
-- typescript official guide  |
-- express / typeorm          v
+- w3school for js            
+- typescript official guide  
+- express / typeorm          
