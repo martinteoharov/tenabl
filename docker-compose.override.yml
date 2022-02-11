@@ -24,3 +24,5 @@ services:
     volumes:
       - $PWD/frontend/src:/frontend/src
       - $PWD/common:/common
+    environment:
+      PORT: 80
