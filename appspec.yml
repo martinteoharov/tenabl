@@ -5,10 +5,10 @@ files:
    destination: /home/ec2-user/app
 hooks:
   AfterInstall:
-   - location: scripts/build_docker_image
+   - location: bin/build
      timeout: 300
      runas: admin
   ApplicationStart:
-   - location: scripts/start_docker_container
+   - location: bin/run
      timeout: 300
      runas: admin

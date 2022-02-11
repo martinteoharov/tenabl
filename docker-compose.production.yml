@@ -1,17 +1,24 @@
 version: "3.9"
 services:
-  # api:
-  #   build: 
-  #     target: api
-  #   environment:
-  #     DB_PASSWORD: ${PG_PASSWD}
-  #     DB_HOST: db
-  #     NODE_ENV: production
+  api:
+    image: com2027.prod.api
+    build: 
+      target: api
+    environment:
+      NODE_ENV: production
   caddy:
+    image: com2027.prod.caddy
     build:
       context: $PWD
       dockerfile: frontend/Dockerfile
       target: frontend
+    restart: "no"
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - caddy_data:/data:Z
+      - caddy_config:/config:Z
+volumes:
+  caddy_data:
+  caddy_config:

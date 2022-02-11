@@ -4,6 +4,7 @@ EXPOSE 443
 RUN mkdir /tmp/npm
 RUN chmod 777 /tmp/npm
 ENV npm_config_cache=/tmp/npm
+# Update version if NPM whines
 RUN npm install -g npm@8.5.0
 WORKDIR /frontend
 COPY frontend/package.json frontend/package-lock.json frontend/.npmrc /frontend/

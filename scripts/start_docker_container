@@ -1,3 +1,0 @@
-#!/bin/bash
-
-docker run --env-file /etc/environment p 80:8080 team_5_prod

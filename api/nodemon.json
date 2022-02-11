@@ -1,0 +1,7 @@
+{
+    "watch": [
+        "src"
+    ],
+    "ext": "ts,json,ejs",
+    "exec": "node --inspect=0.0.0.0:9229 --loader ts-node/esm ./src/index.ts"
+}
