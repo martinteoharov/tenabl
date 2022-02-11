@@ -1,8 +1,7 @@
-# COM2027
+## First Meeting Notes
+--- 
 
-## First Meeting Notes:
-
-Suggested ideas for the project:
+### Suggested ideas for the project:
 
 - System for evaluating trustworthiness of articles from user votes.
 
@@ -39,3 +38,16 @@ Backend: js+ts, typeorm, express
 - w3school for JS            
 - Typescript official guide  
 - Express / Typeorm          
+
+
+
+## Local Dev
+---
+To start the frontend dev server:
+
+```bash
+cd app
+npm install
+npm run start
+```
+
