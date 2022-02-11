@@ -43,11 +43,23 @@ Backend: js+ts, typeorm, express
 
 ## Local Dev
 ---
-To start the frontend dev server:
+### To start the frontend dev server:
 
 ```bash
 cd app
 npm install
 npm run start
 ```
+
+Dev CRA server should be running at http://localhost:3000
+
+
+
+### Building & Starting Docker Images Locally
+```bash
+docker-compose up -d
+```
+
+CRA should be running at http://localhost:80
+
 
