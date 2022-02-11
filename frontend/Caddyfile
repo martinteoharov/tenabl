@@ -1,0 +1,18 @@
+{
+	email lbfalvy@protonmail.com
+}
+localhost, 127.0.0.1, arnyekegyetem.hu {
+	encode zstd gzip
+	root * /www
+	route /api/* {
+		uri strip_prefix api
+		reverse_proxy api:80 {
+			header_up X-Real-IP {remote}
+		}
+	}
+	@notApi not path /api/*
+	route @notApi {
+		try_files {path} /index.html
+		file_server
+	}
+}
