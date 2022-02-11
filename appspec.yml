@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+ - source: .
+   destination: /home/ec2-user/app
+hooks:
+  AfterInstall:
+   - location: scripts/build_docker_image
+     timeout: 300
+     runas: admin
+  ApplicationStart:
+   - location: scripts/start_docker_container
+     timeout: 300
+     runas: admin
