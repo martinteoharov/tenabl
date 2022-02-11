@@ -1,13 +1,13 @@
 version: "3.9"
 services:
-  api:
-    build: 
-      target: api
-    environment:
-      DB_PASSWORD: ${PG_PASSWD}
-      DB_HOST: db
-      NODE_ENV: production
-  nginx:
+  # api:
+  #   build: 
+  #     target: api
+  #   environment:
+  #     DB_PASSWORD: ${PG_PASSWD}
+  #     DB_HOST: db
+  #     NODE_ENV: production
+  caddy:
     build:
       context: $PWD
       dockerfile: frontend/Dockerfile

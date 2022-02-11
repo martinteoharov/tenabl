@@ -1,16 +1,16 @@
 version: "3.9"
 services:
-  api:
-    build: 
-      target: api_debug
-    ports: 
-      - "4080:80"
-      - "9229:9229"
-    volumes:
-      - $PWD/api/src:/api/src
-      - $PWD/common:/common
-    environment:
-      NODE_ENV: development
+  # api:
+  #   build: 
+  #     target: api_debug
+  #   ports: 
+  #     - "4080:80"
+  #     - "9229:9229"
+  #   volumes:
+  #     - $PWD/api/src:/api/src
+  #     - $PWD/common:/common
+  #   environment:
+  #     NODE_ENV: development
   cra:
     build:
       context: $PWD

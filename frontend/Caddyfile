@@ -1,6 +1,3 @@
-{
-	email lbfalvy@protonmail.com
-}
 localhost, 127.0.0.1, arnyekegyetem.hu {
 	encode zstd gzip
 	root * /www

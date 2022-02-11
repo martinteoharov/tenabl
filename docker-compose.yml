@@ -1,9 +1,9 @@
 # Only define shared info in this file
 version: "3.9"
-services:
-  api:
-    build:
-      context: $PWD
-      dockerfile: api/Dockerfile
-    ports:
-      - "80"
+# services:
+#   api:
+#     build:
+#       context: $PWD
+#       dockerfile: api/Dockerfile
+#     ports:
+#       - "80"
