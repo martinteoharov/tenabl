@@ -27,11 +27,9 @@ EXPOSE 80
 
 FROM api_base AS api_debug
 EXPOSE 9229
-ENTRYPOINT [ "npm", "run" ]
-CMD [ "debug" ]
+CMD [ "npm", "run", "debug" ]
 
 FROM api_base AS api
 RUN npm run build
 RUN npm prune --production
-ENTRYPOINT [ "npm", "run" ]
-CMD [ "run" ]
+CMD [ "npm", "run", "run"]

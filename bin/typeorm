@@ -1,2 +1,2 @@
 #!/bin/bash
-./bin/exec api typeorm -- "${@}"
+./bin/exec api npm run typeorm -- "${@}"

@@ -22,7 +22,8 @@
         "target": "ESNext"
     },
     "include": [
-        "src"
+        "src",
+        "common"
     ],
     "exclude": [
         "node_modules"

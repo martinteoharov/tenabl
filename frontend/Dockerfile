@@ -13,13 +13,15 @@ COPY frontend /frontend
 COPY common /common
 RUN chown node:node -R /frontend /common
 USER node:node
-RUN npm run build
 
 FROM frontend_base AS frontend_debug
 ENTRYPOINT [ "npm", "run", "start" ]
 
+FROM frontend_base AS frontend_build
+RUN npm run build
+
 FROM caddy/caddy AS frontend
-COPY --from=frontend_base /frontend/public /www
+COPY --from=frontend_build /frontend/build /www
 COPY frontend/Caddyfile /Caddyfile
 ENTRYPOINT [ "caddy", "run", "--config", "/Caddyfile", "--adapter", "caddyfile" ]
 VOLUME [ "/data", "/config" ]

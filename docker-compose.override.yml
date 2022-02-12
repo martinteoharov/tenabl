@@ -10,7 +10,7 @@ services:
     volumes:
       - $PWD/api/src:/api/src
       - $PWD/api/package.json:/api/package.json
-      - $PWD/api/package.lock.json:/api/package.lock.json
+      - $PWD/api/package-lock.json:/api/package-lock.json
       - $PWD/common:/common
     environment:
       NODE_ENV: development
@@ -27,6 +27,6 @@ services:
       - $PWD/frontend/src:/frontend/src
       - $PWD/common:/common
       - $PWD/frontend/package.json:/frontend/package.json
-      - $PWD/frontend/package.lock.json:/frontend/package.lock.json
+      - $PWD/frontend/package-lock.json:/frontend/package-lock.json
     environment:
       PORT: 80
