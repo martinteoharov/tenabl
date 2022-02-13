@@ -14,15 +14,9 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - changeDir:
-          name: "Go to frontend/"
-          command: "cd frontend"
-      - setup:
-          name: "Setup"
-          command: "npm install"
       - run:
-          name: "Run"
-          command: "npm run test"
+          name: "Setup and Test"
+          command: "cd frontend; npm install; npm run test"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
