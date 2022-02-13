@@ -1,3 +1,2 @@
 #!/bin/bash
-pwd > /tmp/build.log
 docker-compose -f docker-compose.yml -f docker-compose.production.yml build
