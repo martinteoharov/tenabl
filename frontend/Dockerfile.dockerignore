@@ -1,6 +1,6 @@
 *
 !frontend
-!common
 frontend/node_modules
 frontend/build
+!common
 common/node_modules

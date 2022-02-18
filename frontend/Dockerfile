@@ -6,19 +6,37 @@ RUN chmod 777 /tmp/npm
 ENV npm_config_cache=/tmp/npm
 # Update version if NPM whines
 RUN npm install -g npm@8.5.0
+
 WORKDIR /frontend
-COPY frontend/package.json frontend/package-lock.json frontend/.npmrc /frontend/
+COPY frontend/package.json \
+    frontend/package-lock.json \
+    frontend/.npmrc \
+    /frontend/
 RUN npm install
 COPY frontend /frontend
+WORKDIR /common
+COPY common/package.json \
+    common/package-lock.json \
+    common/.npmrc \
+    /common/
+RUN npm install
 COPY common /common
 RUN chown node:node -R /frontend /common
-USER node:node
+
 
 FROM frontend_base AS frontend_debug
-ENTRYPOINT [ "npm", "run", "start" ]
+RUN apt-get update
+RUN apt-get install lsyncd -y
+WORKDIR /frontend
+ENTRYPOINT [ "/frontend/entrypoint.sh" ]
+CMD [ "npm", "run", "start" ]
+
 
 FROM frontend_base AS frontend_build
-RUN npm run build
+USER node:node
+WORKDIR /frontend
+RUN ./entrypoint.sh npm run build
+
 
 FROM caddy/caddy AS frontend
 COPY --from=frontend_build /frontend/build /www

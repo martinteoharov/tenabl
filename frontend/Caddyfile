@@ -1,4 +1,7 @@
-localhost, 127.0.0.1, arnyekegyetem.hu {
+{
+	admin off
+}
+localhost, 127.0.0.1 {
 	encode zstd gzip
 	root * /www
 	route /api/* {

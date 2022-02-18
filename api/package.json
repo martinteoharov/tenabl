@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "debug": "nodemon",
-    "build": "tsc",
+    "build": "./build.sh",
     "run": "ENV=production node bin/api/src/index.js",
     "typeorm": "node --loader ts-node/esm ./node_modules/typeorm/cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,8 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
+    "fastify": "^3.27.1",
+    "fp-ts": "^2.11.8",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.5.0",
     "typeorm": "^0.2.41"

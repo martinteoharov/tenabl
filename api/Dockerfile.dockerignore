@@ -1,5 +1,6 @@
 *
 !api
-!common
 api/node_modules
 api/bin
+!common
+common/node_modules

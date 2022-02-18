@@ -4,6 +4,7 @@ FROM node:17-bullseye AS api_base
 RUN mkdir /tmp/npm
 RUN chmod 777 /tmp/npm
 ENV npm_config_cache=/tmp/npm
+RUN npm install -g package-json-merge@0.0.1
 # Update version if NPM whines
 RUN npm install -g npm@8.5.0
 
@@ -14,12 +15,22 @@ RUN npm install -g npm@8.5.0
 #   -y
 # # You probably need make and GCC if you need apt
 
-WORKDIR /api
-COPY api/package.json api/package-lock.json api/.npmrc /api/
+WORKDIR /common
+COPY common/package.json \
+    common/package-lock.json \
+    common/.npmrc \
+        /common/
 RUN npm install
-
-COPY api /api
 COPY common /common
+
+WORKDIR /api
+COPY api/package.json \
+    api/package-lock.json \
+    api/.npmrc \
+        /api/
+RUN npm install
+COPY api /api
+
 
 RUN chown node:node -R /api
 USER node:node

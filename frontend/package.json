@@ -9,6 +9,7 @@
     "@types/jest": "^27.4.0",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "fp-ts": "^2.11.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
@@ -41,7 +42,7 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.17",
+    "http-proxy-middleware": "^2.0.3",
     "jest-watch-typeahead": "^0.6.5"
-  },
-  "proxy": "http://api:80"
+  }
 }
