@@ -9,7 +9,8 @@
             "request": "attach",
             "name": "Run Application",
             "skipFiles": [
-                "<node_internals>/**"
+                "<node_internals>/**",
+                "**/node_modules/**"
             ],
             "preLaunchTask": "Docker Compose Up",
             "postDebugTask": "Docker Compose Down",

@@ -1,11 +1,33 @@
 version: "3.9"
 services:
+  migrations:
+    image: com2027.migrations
+    build:
+      context: $PWD
+      dockerfile: api/Dockerfile
+      target: migrations
+    restart: "no"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWD: ${DB_PASSWD}
+      DB_DATABASE: ${DB_DATABASE}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   api:
     image: com2027.prod.api
-    build: 
+    build:
       target: api
     environment:
       NODE_ENV: production
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWD: ${DB_PASSWD}
+      DB_DATABASE: ${DB_DATABASE}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   caddy:
     image: com2027.prod.caddy
     build:
