@@ -16,13 +16,21 @@ _term() {
 
 trap _term SIGTERM
 
+echo "Initialising common..."
+(cd ../common; npm install)
+
 echo "Replacing common symlink with directory..."
 rm -f src/common
 cp -r ../common src/common
 
-echo "Starting lsyncd..."
-lsyncd -nodaemon lsyncd.lua | sed -e 's/^/Lsyncd: /;' &
-LSYNCD=$!
+if command -v lsyncd &> /dev/null
+then
+    echo "Starting lsyncd..."
+    lsyncd -nodaemon lsyncd.lua | sed -e 's/^/Lsyncd: /;' &
+    LSYNCD=$!
+else
+    echo "Lsyncd not found, live syncing disabled" 1>&2
+fi 
 
 echo "Starting application..."
 "${@}" &
