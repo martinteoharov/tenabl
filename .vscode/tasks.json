@@ -1,0 +1,34 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Docker Compose Up",
+            "type": "docker-compose",
+            "dockerCompose": {
+                "up": {
+                    "detached": true
+                },
+                "files": [
+                    "${workspaceFolder}/docker-compose.yml",
+                    "${workspaceFolder}/docker-compose.override.yml"
+                ]
+            }
+        },
+        {
+            "label": "Docker Compose Down",
+            "type": "docker-compose",
+            "dockerCompose": {
+                "down": {},
+                "files": [
+                    "${workspaceFolder}/docker-compose.yml",
+                    "${workspaceFolder}/docker-compose.override.yml"
+                ]
+            }
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "./bin/clean"
+        }
+    ]
+}
