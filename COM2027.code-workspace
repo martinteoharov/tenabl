@@ -1,0 +1,29 @@
+{
+    "folders": [
+        {
+            "name": "ROOT",
+            "path": "."
+        },
+        {
+            "name": "API",
+            "path": "api"
+        },
+        {
+            "name": "FRONTEND",
+            "path": "frontend"
+        },
+        {
+            "name": "COMMON",
+            "path": "common"
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "api": true,
+            "frontend": true,
+            "common": true,
+            "src/common": true,
+            "notes": true,
+        }
+    },
+}
