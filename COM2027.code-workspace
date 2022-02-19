@@ -5,6 +5,10 @@
             "path": "."
         },
         {
+            "name": "NOTES",
+            "path": "notes"
+        },
+        {
             "name": "API",
             "path": "api"
         },
