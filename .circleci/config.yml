@@ -1,26 +1,37 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+orbs: 
+  discord: antonioned/discord@0.1.0
+
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  setup_and_run:
     docker:
       - image: cimg/node:17.0.1
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
       - run:
-          name: "Setup and Test"
-          command: "cd frontend; npm install; ./entrypoint.sh npm run test"
+          name: "setup"
+          command: "cd frontend; npm install;"
+      - run:
+          name: "run"
+          command: "pwd; cd frontend; ./entrypoint.sh npm run test"
+  notify:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - discord/status:
+          failure_message: "Triggered by: **${CIRCLE_USERNAME}** \\n\\n Ooops! The **$CIRCLE_JOB** job has failed!"
+          success_message: "Good job bro, your code didn't break shit up. Mad respect."
+          webhook: "https://discord.com/api/webhooks/945465161555263499/JcDqy-CYDEnnVJr5gTLgi39QWj8VWpEaDwTzxDRbdyR0qgDh0kHsP1cHtfDl6-hqPgoO"
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+
+
 workflows:
-  say-hello-workflow:
+  run:
     jobs:
-      - say-hello
+      - setup_and_run
+      - notify:
+          requires:
+            - setup_and_run
+
+
