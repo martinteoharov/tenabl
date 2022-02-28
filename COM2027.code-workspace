@@ -28,6 +28,8 @@
             "common": true,
             "src/common": true,
             "notes": true,
-        }
+        },
+        "typescript.tsdk": "FRONTEND/node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true
     },
 }
