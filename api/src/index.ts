@@ -1,18 +1,17 @@
 import fastify from "fastify";
-import decorators from "./decorators";
-
+import fastifyAuth from "fastify-auth";
+import routes from './routes';
 
 const app = fastify({logger: true})
-    .register(decorators)
-    .register(require('./routes'), {prefix: '/'})
-    .decorate('verifyJWTandLevel',  (request, reply, done) => {    
+    .register(routes, {prefix: '/'})
+    .decorate('verifyJWTandLevel', (request, reply, done) => {    
         done()
       })
       .decorate('verifyUserAndPassword', (request, reply, done) => {
         console.log(request, reply)
         done()
       })
-      .register(require('fastify-auth'))
+      .register(fastifyAuth)
       .after(() => {
         fastify.route({
           method: 'POST',

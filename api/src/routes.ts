@@ -1,4 +1,4 @@
-import fastify from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 
 import { Message } from "./common/message";
 import { pipe } from "fp-ts/lib/function";
@@ -10,10 +10,10 @@ const router = fastify({
     logger: true
 })
 
-module.exports = (router: any, opts: any, done: any) => {
+export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     // Reply using return value
-    router.post('/send', async (req: any, res: any) => {
+    router.post('/send', async (req, res) => {
         return pipe( // Allows to write nested functions in order of execution
             Message.decode(req.body),
             fold( // Takes handlers for two sides, calls whichever
@@ -32,7 +32,7 @@ module.exports = (router: any, opts: any, done: any) => {
 
 
     // Reply using callback
-    router.get('/messages', (req: any, res: any) => {
+    router.get('/messages', (req, res) => {
         res.send(msgs)
     })
 
