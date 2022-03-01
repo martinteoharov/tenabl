@@ -9,6 +9,7 @@ const msgs = new Array<Message>()
 const router = fastify({
     logger: true
 })
+
 module.exports = (router: any, opts: any, done: any) => {
 
     // Reply using return value
