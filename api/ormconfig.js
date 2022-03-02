@@ -4,11 +4,11 @@ const subpath = path => isProduction ? `bin/api/src/db/${path}.js`
 
 module.exports = {
     type: 'postgres',
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWD,
-    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST | 'remote',
+    port: process.env.DB_PORT | 5432,
+    username: process.env.DB_USER | 'postgres',
+    password: process.env.DB_PASSWD | 'postgres',
+    database: process.env.DB_DATABASE | 'com2027_dev',
     synchronize: !isProduction,
     logging: true,
     entities: [subpath('entities/*')],
