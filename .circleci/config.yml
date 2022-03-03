@@ -21,7 +21,7 @@ jobs:
     steps:
       - discord/status:
           failure_message: "Triggered by: **${CIRCLE_USERNAME}** \\n\\n Ooops! The **$CIRCLE_JOB** job has failed!"
-          success_message: "Good job bro, your code didn't break shit up. Mad respect."
+          success_message: "Good job **${CIRCLE_USERNAME}**, your code didn't break shit up. Mad respect."
           webhook: "https://discord.com/api/webhooks/945465161555263499/JcDqy-CYDEnnVJr5gTLgi39QWj8VWpEaDwTzxDRbdyR0qgDh0kHsP1cHtfDl6-hqPgoO"
 
 
