@@ -20,8 +20,8 @@ jobs:
       - image: 'cimg/base:stable'
     steps:
       - discord/status:
-          failure_message: "Triggered by: **${CIRCLE_USERNAME}** \\n\\n Ooops! The **$CIRCLE_JOB** job has failed!"
-          success_message: "Good job **${CIRCLE_USERNAME}**, your code didn't break shit up. Mad respect."
+          failure_message: "**${CIRCLE_USERNAME}** pushed bad code. The **$CIRCLE_JOB** job has failed! **You know what happens now :D**."
+          success_message: "Good job **${CIRCLE_USERNAME}**, your code didn't break shit up. You get to live another day :)."
           webhook: "https://discord.com/api/webhooks/945465161555263499/JcDqy-CYDEnnVJr5gTLgi39QWj8VWpEaDwTzxDRbdyR0qgDh0kHsP1cHtfDl6-hqPgoO"
 
 
