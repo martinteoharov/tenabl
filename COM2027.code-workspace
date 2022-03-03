@@ -29,7 +29,11 @@
             "src/common": true,
             "notes": true,
         },
+        feature/migrations-eslint
         "eslint.format.enable": true,
         "editor.formatOnSave": true
+        
+        "typescript.tsdk": "FRONTEND/node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true
     },
 }

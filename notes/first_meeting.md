@@ -28,6 +28,8 @@ Admin stuff: (Victor)
 
 - ESLint
 
+- Figma Prototyping
+
 Frontend: js+ts, react course
 - w3school for JS            
 - Typescript official guide  
