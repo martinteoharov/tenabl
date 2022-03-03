@@ -19,7 +19,7 @@ WORKDIR /common
 COPY common/package.json \
     common/package-lock.json \
     common/.npmrc \
-        /common/
+    /common/
 RUN npm install
 COPY common /common
 
@@ -27,7 +27,7 @@ WORKDIR /api
 COPY api/package.json \
     api/package-lock.json \
     api/.npmrc \
-        /api/
+    /api/
 RUN npm install
 COPY api /api
 
@@ -40,7 +40,12 @@ FROM api_base AS api_debug
 EXPOSE 9229
 CMD [ "npm", "run", "debug" ]
 
-FROM api_base AS api
+FROM api_base AS api_build
 RUN npm run build
+
+FROM api_build AS api
 RUN npm prune --production
 CMD [ "npm", "run", "run"]
+
+FROM api_build AS migrations
+ENTRYPOINT [ "npm", "run", "typeorm", "--", "migration:run" ]

@@ -1,10 +1,17 @@
 version: "3.9"
 services:
+  db:
+    image: postgres:12.9
+    restart: "no"
+    environment:
+      POSTGRES_PASSWORD: pgpassword
+    volumes:
+      - data:/var/lib/postgresql/data
   api:
     image: com2027.dev.api
-    build: 
+    build:
       target: api_debug
-    ports: 
+    ports:
       - "4080:80"
       - "9229:9229"
     volumes:
@@ -14,6 +21,11 @@ services:
       - $PWD/common:/common
     environment:
       NODE_ENV: development
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWD: pgpassword
+      DB_DATABASE: postgres
   cra:
     image: com2027.dev.cra
     build:
@@ -30,3 +42,5 @@ services:
       - $PWD/frontend/package-lock.json:/frontend/package-lock.json
     environment:
       PORT: 80
+volumes:
+  data:
