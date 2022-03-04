@@ -6,7 +6,6 @@ console.log(greet('World'));
 
 const app = fastify({
     logger: true
-})
-    .register(require('./routes'), {prefix: '/'});
+}).register(require('./routes'), {prefix: '/'});
 
 app.listen(80, '0.0.0.0')
