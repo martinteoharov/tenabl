@@ -1,13 +1,14 @@
-import fastify, { FastifyInstance } from "fastify";
+import fastify, { FastifyInstance } from 'fastify';
 
-import { Message } from "./common/message";
-import { pipe } from "fp-ts/lib/function";
-import { fold } from "fp-ts/lib/Either";
+import { Message } from './common/message';
+import { pipe } from 'fp-ts/lib/function';
+import { fold } from 'fp-ts/lib/Either';
 
 import 'reflect-metadata';
 import { PasswordModel } from './db/entities/PasswordModel';
 import { UserModel } from './db/entities/UserModel';
-import { Connection, createConnection } from "typeorm";
+import { Connection, createConnection } from 'typeorm';
+import * as t from 'io-ts';
 
 // Ad-hoc database
 const msgs = new Array<Message>();
@@ -47,19 +48,33 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     })
 
     router.post('/register', async (req, res) => {
+        const body = req.body;
+
+        const email = "test1@mail.com" // Hardcoded until I figure out how to parse the damn JSON
+        const username = "username"
+        const hash = "hash" // Hash the password in the body
 
         const user = new UserModel();
-        user.email = 'test@email.com';
-        user.username = 'Test';
-        console.log("Created user:");
-        console.log(user);
+        user.email = email;
+        user.username = username;
 
-        const response = await connection.manager.save(user);
+        const exists = await connection.manager.createQueryBuilder(UserModel, 'user')
+            .where("user.email = :email", { email: email })
+            .getOne() === undefined;
 
-        console.log("DB response:");
-        console.log(response);
+        if (exists) {
+            const response_user = await connection.manager.save(user);
+            // TODO some error checking with response
+            const pass = new PasswordModel();
+            pass.user = user.id;
+            pass.hash = hash;
 
-        res.send(user);
+            const response_pass = await connection.manager.save(pass);
+            // TODO some error checking again
+            res.send("USER CREATED");
+        } else {
+            res.send("USER EXISTS")
+        }
     })
 
     router.post('/login', async (req, res) => {
