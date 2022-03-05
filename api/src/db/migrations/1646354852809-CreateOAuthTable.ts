@@ -6,9 +6,15 @@ export class CreateOAuthTable1646354852809 implements MigrationInterface {
             name: "oauth",
             columns: [
                 {
+                    name: 'id',
+                    type: 'int',
+                    isPrimary: true,
+                    isGenerated: true,
+                    generationStrategy: 'increment'
+                },
+                {
                     name: "userId",
                     type: "varchar",
-                    isPrimary: true,
                 },
                 {
                     name: "google_auth_token",

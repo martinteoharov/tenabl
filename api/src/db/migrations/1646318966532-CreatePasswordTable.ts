@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, Table, TableIndex, TableColumn, TableForeignKey } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableIndex, TableColumn, TableForeignKey } from "typeorm";
 
 export class CreatePasswordTable1646318966532 implements MigrationInterface {
 
@@ -7,9 +7,15 @@ export class CreatePasswordTable1646318966532 implements MigrationInterface {
             name: "password",
             columns: [
                 {
+                    name: 'id',
+                    type: 'int',
+                    isPrimary: true,
+                    isGenerated: true,
+                    generationStrategy: 'increment'
+                },
+                {
                     name: "userId",
                     type: "varchar",
-                    isPrimary: true,
                 },
                 {
                     name: "hash",
@@ -24,11 +30,11 @@ export class CreatePasswordTable1646318966532 implements MigrationInterface {
             referencedTableName: "user",
             onDelete: "CASCADE"
         });
-        
+
         await queryRunner.createForeignKey("password", foreignKey); // Create foreign key
     }
 
-    
+
     async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable("password");    // Revert changes if needed
     }

@@ -1,10 +1,12 @@
-import {Entity, PrimaryColumn, OneToOne, JoinColumn, Column} from "typeorm";
+import {Entity, OneToOne, JoinColumn, Column, PrimaryGeneratedColumn} from "typeorm";
 import {UserModel} from "./UserModel";
 
 @Entity('password')
 export class PasswordModel {
 
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
+    public id!: number
+    
     @OneToOne(() => UserModel)
     @JoinColumn()
     user!: string;
