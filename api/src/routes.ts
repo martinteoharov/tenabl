@@ -3,12 +3,13 @@ import fastify, { FastifyInstance } from 'fastify';
 import { Message } from './common/message';
 import { pipe } from 'fp-ts/lib/function';
 import { fold } from 'fp-ts/lib/Either';
+import bcrypt from 'bcrypt';
 
 import 'reflect-metadata';
 import { PasswordModel } from './db/entities/PasswordModel';
 import { UserModel } from './db/entities/UserModel';
 import { Connection, createConnection } from 'typeorm';
-import * as D from 'io-ts/Decoder';
+// import * as D from 'io-ts/Decoder';
 
 // Ad-hoc database
 const msgs = new Array<Message>();
@@ -48,15 +49,9 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     })
 
     router.post('/register', async (req, res) => {
-        const body = req.body;
-
-
-        console.log("DECODED");
-        // console.log(decoded);
-
         const email = "test1@mail.com" // Hardcoded until I figure out how to parse the damn JSON
         const username = "username"
-        const hash = "hash" // Hash the password in the body
+        const password = "password"
 
         const user = new UserModel();
         user.email = email;
@@ -69,11 +64,17 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
         if (exists) {
             const response_user = await connection.manager.save(user);
             // TODO some error checking with response
+            const salt = await bcrypt.genSalt(6);
+            const hash = await bcrypt.hash(password, salt);
+
             const pass = new PasswordModel();
             pass.user = user.id;
             pass.hash = hash;
 
             const response_pass = await connection.manager.save(pass);
+
+            console.log("PASSWORD");
+            console.log(pass);
             // TODO some error checking again
             res.send("USER CREATED");
         } else {
@@ -82,13 +83,29 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     })
 
     router.post('/login', async (req, res) => {
-        // Connection available here
-        const response = connection.manager.find(PasswordModel, {
-            relations: ['user']
-        })
-        console.log(response);
 
-        res.send(response);
+        const email = "test1@mail.com";
+        const password = "password";
+
+        const user = await connection.manager.createQueryBuilder(UserModel, 'user')
+            .where("user.email = :email", { email: email })
+            .getOne();
+
+        if (user !== undefined) {
+            const hash = await connection.manager.createQueryBuilder(PasswordModel, 'password')
+                .where("user_id = :id", { id: user.id })
+                .getOne();
+
+            if (hash !== undefined){
+                if (await bcrypt.compare(password, hash.hash)){
+                    res.send("AUTHENTICATED");
+                } else{
+                    res.send("INCORRECT PASSWORD");
+                }
+            }
+        } else {
+            res.send("EMAIL NOT REGISTERED");
+        }
     })
 
     done();
