@@ -8,7 +8,7 @@ import 'reflect-metadata';
 import { PasswordModel } from './db/entities/PasswordModel';
 import { UserModel } from './db/entities/UserModel';
 import { Connection, createConnection } from 'typeorm';
-import * as t from 'io-ts';
+import * as D from 'io-ts/Decoder';
 
 // Ad-hoc database
 const msgs = new Array<Message>();
@@ -49,6 +49,10 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     router.post('/register', async (req, res) => {
         const body = req.body;
+
+
+        console.log("DECODED");
+        // console.log(decoded);
 
         const email = "test1@mail.com" // Hardcoded until I figure out how to parse the damn JSON
         const username = "username"
