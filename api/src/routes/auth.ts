@@ -22,29 +22,31 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
         user.email = email;
         user.username = username;
 
+        // Check if user already exists
         const exists = await connection.manager.createQueryBuilder(UserModel, 'user')
             .where("user.email = :email", { email: email })
-            .getOne() === undefined;
+            .getOne();
 
-        if (exists) {
-            const response_user = await connection.manager.save(user);
-            // TODO some error checking with response
-            const salt = await bcrypt.genSalt(6);
-            const hash = await bcrypt.hash(password, salt);
-
-            const pass = new PasswordModel();
-            pass.user = user.id;
-            pass.hash = hash;
-
-            const response_pass = await connection.manager.save(pass);
-
-            console.log("PASSWORD");
-            console.log(pass);
-            // TODO some error checking again
-            res.send("USER CREATED");
-        } else {
-            res.send("USER EXISTS")
+        if(!exists) {
+            return res.code(404);
         }
+
+        // Save user
+        await connection.manager.save(user);
+
+        // Create and store password
+        const salt = await bcrypt.genSalt(6);
+        const hash = await bcrypt.hash(password, salt);
+        const pass = new PasswordModel();
+        pass.user = user.id;
+        pass.hash = hash;
+
+        await connection.manager.save(pass);
+
+        console.log(`Password: ${pass}`);
+
+        // TODO some error checking again
+        res.send("USER CREATED");
     })
 
     router.post('/login', async (req, res) => {
@@ -56,20 +58,24 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
             .where("user.email = :email", { email: email })
             .getOne();
 
-        if (user !== undefined) {
-            const hash = await connection.manager.createQueryBuilder(PasswordModel, 'password')
-                .where("user_id = :id", { id: user.id })
-                .getOne();
+        if(!user) {
+            console.log("Warning: user is undefined");
+            return res.code(404);
+        }
 
-            if (hash !== undefined){
-                if (await bcrypt.compare(password, hash.hash)){
-                    res.send("AUTHENTICATED");
-                } else{
-                    res.send("INCORRECT PASSWORD");
-                }
-            }
-        } else {
-            res.send("EMAIL NOT REGISTERED");
+        const hash = await connection.manager.createQueryBuilder(PasswordModel, 'password')
+            .where("user_id = :id", { id: user.id })
+            .getOne();
+
+        if(!hash) {
+            console.log("Warning: hash is undefined");
+            return res.code(404);
+        }
+
+        if (await bcrypt.compare(password, hash.hash)){
+            res.send("AUTHENTICATED");
+        } else{
+            res.send("INCORRECT PASSWORD");
         }
     })
 
