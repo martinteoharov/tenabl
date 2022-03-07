@@ -13,7 +13,7 @@ export type Method = "POST" | "GET";
  *    data: the data you want to transmit
  *    headers: the headers for the request, default headers have been provided so you don't need to pass any
  */
-const genericFetch = async (url: string, data: any, method: Method, headers: HeadersInit = defaultHeaders): Promise<Response> => {
+export const genericFetch = async (url: string, data: any, method: Method, headers: HeadersInit = defaultHeaders): Promise<Response> => {
   const requestInit: RequestInit = {
     method,
     headers,
@@ -31,7 +31,7 @@ const genericFetch = async (url: string, data: any, method: Method, headers: Hea
  *    data: the data you want to transmit
  *    headers: the headers for the request, default headers have been provided so you don't need to pass any
  */
-const genericAuthFetch = async (url: string, data: any): Promise<Response> => {
+export const genericAuthFetch = async (url: string, data: any): Promise<Response> => {
   const res = await fetch(url, {
     method: "POST",
     headers: {
