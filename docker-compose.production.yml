@@ -13,6 +13,7 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWD: ${DB_PASSWD}
       DB_DATABASE: ${DB_DATABASE}
+      SEED: ${SEED}
     extra_hosts:
       - "host.docker.internal:host-gateway"
   api:
@@ -26,6 +27,7 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWD: ${DB_PASSWD}
       DB_DATABASE: ${DB_DATABASE}
+      SEED: ${SEED}
     extra_hosts:
       - "host.docker.internal:host-gateway"
   caddy:
