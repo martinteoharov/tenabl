@@ -46,7 +46,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
         console.log(`Password: ${pass}`);
 
         // TODO some error checking again
-        res.send("USER CREATED");
+        return res.send("USER CREATED");
     })
 
     router.post('/login', async (req, res) => {
@@ -72,12 +72,12 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
             return res.code(404);
         }
 
-        if (await bcrypt.compare(password, hash.hash)){
-            res.send("AUTHENTICATED");
-        } else{
-            res.send("INCORRECT PASSWORD");
+        if (!await bcrypt.compare(password, hash.hash)){
+            return res.send("INCORRECT PASSWORD");
         }
-    })
+
+        return res.send("AUTHENTICATED");
+    });
 
     done();
 }
