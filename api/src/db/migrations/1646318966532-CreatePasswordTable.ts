@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableIndex, TableColumn, TableForeignKey } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from "typeorm";
 
 export class CreatePasswordTable1646318966532 implements MigrationInterface {
 
