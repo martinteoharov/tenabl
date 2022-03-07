@@ -7,6 +7,8 @@ services:
       POSTGRES_PASSWORD: pgpassword
     volumes:
       - data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   api:
     image: com2027.dev.api
     build:
@@ -26,6 +28,9 @@ services:
       DB_USER: postgres
       DB_PASSWD: pgpassword
       DB_DATABASE: postgres
+      SEED: Super_secret_key
+    depends_on:
+      - db
   cra:
     image: com2027.dev.cra
     build:
