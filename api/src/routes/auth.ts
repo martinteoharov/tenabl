@@ -1,52 +1,17 @@
-import fastify, { FastifyInstance } from 'fastify';
+import { FastifyInstance } from 'fastify';
 
-import { Message } from './common/message';
-import { pipe } from 'fp-ts/lib/function';
-import { fold } from 'fp-ts/lib/Either';
 import bcrypt from 'bcrypt';
 
 import 'reflect-metadata';
-import { PasswordModel } from './db/entities/PasswordModel';
-import { UserModel } from './db/entities/UserModel';
-import { Connection, createConnection } from 'typeorm';
+import { PasswordModel } from '../db/entities/PasswordModel';
+import { UserModel } from '../db/entities/UserModel';
+import { Connection } from 'typeorm';
+import { getDB } from '../db';
 // import * as D from 'io-ts/Decoder';
 
-// Ad-hoc database
-const msgs = new Array<Message>();
-
-let connection: Connection;
-(async () => {
-    connection = await createConnection();
-})();
-
-const router = fastify({
-    logger: true
-})
+const connection: Connection = getDB();
 
 export default (router: FastifyInstance, opts: any, done: () => any) => {
-
-    // Reply using return value
-    router.post('/send', async (req, res) => {
-        return pipe( // Allows to write nested functions in order of execution
-            Message.decode(req.body),
-            fold( // Takes handlers for two sides, calls whichever
-                errs => `Errors: ${errs
-                    .map(error => error.message)
-                    .filter((x): x is string => x !== undefined)
-                    .map(message => ` - ${message}\n`)
-                    }`,
-                m => {
-                    msgs.push(m)
-                    return 'Received'
-                }
-            )
-        )
-    })
-
-    // Reply using callback
-    router.get('/messages', (req, res) => {
-        res.send(msgs)
-    })
 
     router.post('/register', async (req, res) => {
         const email = "test1@mail.com" // Hardcoded until I figure out how to parse the damn JSON

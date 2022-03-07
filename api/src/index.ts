@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import fastify from "fastify";
-import { greet } from "./common/greet";
-import { Message } from "./common/message";
+import { connectToDB } from "./db";
 
-console.log(greet('World'));
+(async () => {
+    // Note: Ensure connection to DB is established, before importing any routes
+    await connectToDB();
 
-const app = fastify({
-    logger: true
-})
-    .register(require('./routes'), { prefix: '/' });
+    const app = fastify({
+        logger: true
+    })
+        .register(require('./routes/auth'), { prefix: '/auth/' });
 
-app.listen(80, '0.0.0.0')
+    app.listen(80, '0.0.0.0')
+})();
