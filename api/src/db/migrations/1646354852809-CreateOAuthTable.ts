@@ -13,10 +13,6 @@ export class CreateOAuthTable1646354852809 implements MigrationInterface {
                     generationStrategy: 'increment'
                 },
                 {
-                    name: "userId",
-                    type: "varchar",
-                },
-                {
                     name: "google_auth_token",
                     type: "varchar",
                     isNullable: true,
@@ -39,14 +35,17 @@ export class CreateOAuthTable1646354852809 implements MigrationInterface {
             ]
         }), true)
 
-        const foreignKey = new TableForeignKey({
-            columnNames: ["userId"],
-            referencedColumnNames: ["id"],
-            referencedTableName: "user",
-            onDelete: "CASCADE"
-        });
-        
-        await queryRunner.createForeignKey("oauth", foreignKey); // Create foreign key
+        await queryRunner.addColumn('oauth', new TableColumn({
+            name: 'userId',
+            type: 'varchar'
+        }));
+
+        await queryRunner.createForeignKey('oauth', new TableForeignKey({
+            columnNames: ['userId'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'user',
+            onDelete: 'CASCADE'
+        }));
     }
 
     

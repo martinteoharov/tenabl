@@ -4,7 +4,7 @@ export class CreatePasswordTable1646318966532 implements MigrationInterface {
 
     async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
-            name: "password",
+            name: 'password',
             columns: [
                 {
                     name: 'id',
@@ -14,29 +14,28 @@ export class CreatePasswordTable1646318966532 implements MigrationInterface {
                     generationStrategy: 'increment'
                 },
                 {
-                    name: "userId",
-                    type: "varchar",
-                },
-                {
                     name: "hash",
                     type: "varchar",
                 }
             ]
         }), true)
 
-        const foreignKey = new TableForeignKey({
-            columnNames: ["userId"],
-            referencedColumnNames: ["id"],
-            referencedTableName: "user",
-            onDelete: "CASCADE"
-        });
+        await queryRunner.addColumn('password', new TableColumn({
+            name: 'userId',
+            type: 'varchar'
+        }));
 
-        await queryRunner.createForeignKey("password", foreignKey); // Create foreign key
+        await queryRunner.createForeignKey('password', new TableForeignKey({
+            columnNames: ['userId'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'user',
+            onDelete: 'CASCADE'
+        }));
     }
 
 
     async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("password");    // Revert changes if needed
+        await queryRunner.dropTable('password');    // Revert changes if needed
     }
 
 }
