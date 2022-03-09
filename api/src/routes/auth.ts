@@ -8,55 +8,79 @@ import { UserModel } from '../db/entities/UserModel';
 import { Connection } from 'typeorm';
 import { getDB } from '../db';
 import password_req from '../common/password_req';
+import register_req from '../common/register_req';
 import { pipe } from 'fp-ts/lib/function';
 import { fold } from 'fp-ts/lib/Either';
-
-
 
 const connection: Connection = getDB();
 
 export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     router.post('/register', async (req, res) => {
+        return await pipe(req.body, register_req.decode, fold(
+            async () => res.code(400).send({ error: "Invalid request" }),
+            async (request) => {
 
-        const email = "test1@mail.com" // Hardcoded until I figure out how to parse the damn JSON
-        const username = "username"
-        const password = "password"
+                // Verification checks
+                const valid_pass = new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/).test(request.password);
+                const valid_email = new RegExp(/([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/).test(request.email);
 
-        const user = new UserModel();
-        user.email = email;
-        user.username = username;
+                // Check if accepted_terms is false
+                if (!request.accepted_terms) {
+                    res.code(400).send({ error: "Terms and conditions not accepted" })
+                }
 
-        // Check if user already exists
-        const exists = await connection.manager.createQueryBuilder(UserModel, 'user')
-            .where("user.email = :email", { email: email })
-            .getOne();
+                // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
+                if (!valid_pass) {
+                    res.code(400).send({ error: "Password does not meet standards" })
+                }
 
-        if (!exists) {
-            return res.code(404);
-        }
+                // Validate email based on RFC 5322 specifications
+                if (!valid_email) {
+                    res.code(400).send({ error: "Invalid email format" })
+                }
 
-        // Save user
-        await connection.manager.save(user);
+                // Check if user already exists
+                const email_exists = await connection.manager.findOne(UserModel, { email: request.email }) !== undefined;
+                if (email_exists) {
+                    res.code(400).send({ error: "User already exists" })
+                }
 
-        // Create and store password
-        const salt = await bcrypt.genSalt(6);
-        const hash = await bcrypt.hash(password, salt);
-        const pass = new PasswordModel();
-        pass.user = user.id;
-        pass.hash = hash;
+                console.log("VALIDATED")
 
-        await connection.manager.save(pass);
+                const userRepository = connection.getRepository(UserModel);
 
-        console.log(`Password: ${pass}`);
+                const user = new UserModel(); // Create user instance
+                user.first_name = request.first_name;
+                user.last_name = request.last_name;
+                user.username = request.username;
+                user.email = request.email;
+                user.accepted_terms = request.accepted_terms;
 
-        // TODO some error checking again
-        return res.send("USER CREATED");
+                await connection.manager.save(user);
+
+                // Create password hash
+                const salt = await bcrypt.genSalt(6);
+                const hash = await bcrypt.hash(request.password, salt);
+
+                const passRepository = connection.getRepository(PasswordModel);
+
+                const pass = new PasswordModel() // Create password instance
+                pass.user = user.id;
+                pass.hash = hash;
+
+                // Save password table entry
+                await connection.manager.save(pass);
+
+                return res.code(200).send({ ok: "User created" });
+            }
+        ))
     })
 
     router.post('/login', async (req, res) => {
 
-        return await pipe(req, password_req.decode, fold(
+        // TODO fix decoding error
+        return await pipe(req.body, password_req.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
                 const user = await connection.manager.findOne(UserModel, { email: request.email }); // Fetch user profile with given email

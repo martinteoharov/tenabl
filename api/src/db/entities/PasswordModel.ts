@@ -13,5 +13,4 @@ export class PasswordModel {
 
     @Column()
     hash!: string;
-
 }
