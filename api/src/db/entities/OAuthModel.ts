@@ -6,7 +6,7 @@ export class OAuthModel {
 
     @PrimaryGeneratedColumn()
     public id!: number
-    
+
     @OneToOne(() => UserModel)
     @JoinColumn()
     user!: string;

@@ -7,13 +7,18 @@ import { PasswordModel } from '../db/entities/PasswordModel';
 import { UserModel } from '../db/entities/UserModel';
 import { Connection } from 'typeorm';
 import { getDB } from '../db';
-// import * as D from 'io-ts/Decoder';
+import password_req from '../common/password_req';
+import { pipe } from 'fp-ts/lib/function';
+import { fold } from 'fp-ts/lib/Either';
+
+
 
 const connection: Connection = getDB();
 
 export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     router.post('/register', async (req, res) => {
+
         const email = "test1@mail.com" // Hardcoded until I figure out how to parse the damn JSON
         const username = "username"
         const password = "password"
@@ -27,7 +32,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
             .where("user.email = :email", { email: email })
             .getOne();
 
-        if(!exists) {
+        if (!exists) {
             return res.code(404);
         }
 
@@ -51,32 +56,29 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     router.post('/login', async (req, res) => {
 
-        const email = "test1@mail.com";
-        const password = "password";
+        return await pipe(req, password_req.decode, fold(
+            async () => res.code(400).send({ error: "Invalid request" }),
+            async (request) => {
+                const user = await connection.manager.findOne(UserModel, { email: request.email }); // Fetch user profile with given email
 
-        const user = await connection.manager.createQueryBuilder(UserModel, 'user')
-            .where("user.email = :email", { email: email })
-            .getOne();
+                if (!user) {
+                    return res.code(400).send({ error: "User does not exist" });
+                }
 
-        if(!user) {
-            console.log("Warning: user is undefined");
-            return res.code(404);
-        }
+                const hash = await connection.manager.findOne(PasswordModel, { user: user.id }); // Fetch user password hash
 
-        const hash = await connection.manager.createQueryBuilder(PasswordModel, 'password')
-            .where("user_id = :id", { id: user.id })
-            .getOne();
+                if (!hash) {
+                    return res.code(400).send({ error: "Try OAuth" }); // User has no password, probably logged in with OAuth
+                }
 
-        if(!hash) {
-            console.log("Warning: hash is undefined");
-            return res.code(404);
-        }
+                if (!await bcrypt.compare(request.password, hash.hash)) { // Chech password
+                    return res.code(403).send({ error: "Invalid password" });
+                }
 
-        if (!await bcrypt.compare(password, hash.hash)){
-            return res.send("INCORRECT PASSWORD");
-        }
-
-        return res.send("AUTHENTICATED");
+                return res.code(200).send({ ok: "Authenticated" });
+                // TODO send JWT
+            }
+        ))
     });
 
     done();
