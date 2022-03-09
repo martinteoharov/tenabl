@@ -1,7 +1,7 @@
 import { Entity, OneToOne, JoinColumn, Column, PrimaryGeneratedColumn } from "typeorm";
 import { UserModel } from "./UserModel";
 
-@Entity('password')
+@Entity('oauth')
 export class OAuthModel {
 
     @PrimaryGeneratedColumn()
