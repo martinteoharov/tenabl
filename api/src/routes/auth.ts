@@ -11,6 +11,7 @@ import password_req from '../common/password_req';
 import register_req from '../common/register_req';
 import { pipe } from 'fp-ts/lib/function';
 import { fold } from 'fp-ts/lib/Either';
+import { createToken } from '../services/jwt';
 
 const connection: Connection = getDB();
 
@@ -45,8 +46,6 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                     res.code(400).send({ error: "User already exists" })
                 }
 
-                console.log("VALIDATED")
-
                 const userRepository = connection.getRepository(UserModel);
 
                 const user = new UserModel(); // Create user instance
@@ -77,11 +76,6 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     })
 
     router.post('/login', async (req, res) => {
-
-        // TODO fix decoding error
-        console.log("LOGIN BODY");
-        console.log(req.body);
-        console.log(password_req.decode(req.body));
         return await pipe(req.body, password_req.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
@@ -97,12 +91,16 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                     return res.code(400).send({ error: "Try OAuth" }); // User has no password, probably logged in with OAuth
                 }
 
-                if (!await bcrypt.compare(request.password, hash.hash)) { // Chech password
+                if (!await bcrypt.compare(request.password, hash.hash)) { // Check password
                     return res.code(403).send({ error: "Invalid password" });
                 }
 
-                return res.code(200).send({ ok: "Authenticated" });
-                // TODO send JWT
+                if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
+                    console.log("[!] Environment variable SEED not set");
+                    return res.code(500);
+                }
+
+                return res.code(200).send({ access_token: createToken(process.env.SEED, user) }); // Send JWT
             }
         ))
     });
