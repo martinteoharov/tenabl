@@ -11,11 +11,13 @@ import password_req from '../common/password_req';
 import register_req from '../common/register_req';
 import { pipe } from 'fp-ts/lib/function';
 import { fold } from 'fp-ts/lib/Either';
-import { createToken } from '../services/jwt';
+import { createToken, authenticateToken } from '../services/jwt';
+
 
 const connection: Connection = getDB();
 
 export default (router: FastifyInstance, opts: any, done: () => any) => {
+    router.decorateRequest('user', {}); // Request parameter that stores the user (Doesn't work and I can't be bothered debugging it anymore)
 
     router.post('/register', async (req, res) => {
         return await pipe(req.body, register_req.decode, fold(
@@ -97,13 +99,26 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
                 if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
                     console.log("[!] Environment variable SEED not set");
-                    return res.code(500);
+                    return res.code(500).send({ error: "Internal server error" });
                 }
 
                 return res.code(200).send({ access_token: createToken(process.env.SEED, user) }); // Send JWT
             }
         ))
     });
+
+    router.get('/test', {
+        preHandler: (req, res, next) => {
+            const user = authenticateToken(req, res);
+            //req.user = user; // Typescript will whine about this
+            next();
+        }
+    }, async (req, res) => { // Send a GET request to /api/auth/test to check JWT token
+        //console.log(req.user)
+        res.code(200).send({ ok: "Authenticated" });
+    })
+
+    router.get('/login', (req, res) => { res.send({ ok: "Successful redirect" }) }) // Only here for testing redirection for expired tokens
 
     done();
 }
