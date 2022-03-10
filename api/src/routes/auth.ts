@@ -20,23 +20,22 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
         return await pipe(req.body, register_req.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
-
-                // Verification checks
-                const valid_pass = new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/).test(request.password);
-                const valid_email = new RegExp(/([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/).test(request.email);
+                // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
+                const password_regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+                // Email regex explanation link: https://emailregex.com/
+                const email_regex = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
 
                 // Check if accepted_terms is false
                 if (!request.accepted_terms) {
                     res.code(400).send({ error: "Terms and conditions not accepted" })
                 }
 
-                // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
-                if (!valid_pass) {
+                if (!password_regex.test(request.password)) {
                     res.code(400).send({ error: "Password does not meet standards" })
                 }
 
                 // Validate email based on RFC 5322 specifications
-                if (!valid_email) {
+                if (!email_regex.test(request.email)) {
                     res.code(400).send({ error: "Invalid email format" })
                 }
 
@@ -80,6 +79,9 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     router.post('/login', async (req, res) => {
 
         // TODO fix decoding error
+        console.log("LOGIN BODY");
+        console.log(req.body);
+        console.log(password_req.decode(req.body));
         return await pipe(req.body, password_req.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
