@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, FastifyReply } from 'fastify';
 
 import bcrypt from 'bcrypt';
 
@@ -9,9 +9,10 @@ import { Connection } from 'typeorm';
 import { getDB } from '../db';
 import password_req from '../common/password_req';
 import register_req from '../common/register_req';
+import refresh_req from '../common/refresh_req';
 import { pipe } from 'fp-ts/lib/function';
 import { fold } from 'fp-ts/lib/Either';
-import { createToken, authenticateToken } from '../services/jwt';
+import { createTokens, authenticateAccessToken, authenticateRefreshToken } from '../services/jwt';
 
 
 const connection: Connection = getDB();
@@ -102,23 +103,48 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                     return res.code(500).send({ error: "Internal server error" });
                 }
 
-                return res.code(200).send({ access_token: createToken(process.env.SEED, user) }); // Send JWT
+                console.log("Before sendTokens()")
+                return sendTokens(res, user); // Send JWT and refresh token
             }
         ))
     });
 
-    router.get('/test', {
-        preHandler: (req, res, next) => {
-            const user = authenticateToken(req, res);
-            //req.user = user; // Typescript will whine about this
-            next();
+    router.get('/test', async (req, res) => { // Send a GET request to /api/auth/test to check JWT token
+        const user = await authenticateAccessToken(req, res);
+        if (user !== undefined) {
+            res.code(200).send({ ok: `Hello ${user.username}` });
         }
-    }, async (req, res) => { // Send a GET request to /api/auth/test to check JWT token
-        //console.log(req.user)
-        res.code(200).send({ ok: "Authenticated" });
     })
 
     router.get('/login', (req, res) => { res.send({ ok: "Successful redirect" }) }) // Only here for testing redirection for expired tokens
 
+    router.post('/refresh', async (req, res) => { // Send a POST request to /api/auth/refresh to get new access and refresh tokens.
+        return await pipe(req.body, refresh_req.decode, fold(
+            async () => res.code(400).send({ error: "Invalid request" }),
+            async (request) => {
+                const user = await authenticateRefreshToken(request.refresh_token, res);
+
+                if (user !== undefined) { // Create new access and refresh tokens.
+                    sendTokens(res, user);
+                }
+            }))
+    })
     done();
+}
+
+const sendTokens = async (res: FastifyReply, user: UserModel | undefined) => {
+    if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
+        console.log("[!] Environment variable SEED not set");
+        return res.code(500).send({ error: "Internal server error" });
+    }
+
+    if (user === undefined) {
+        console.log("[!] Environment variable SEED not set");
+        return res.code(500).send({ error: "Internal server error" });
+    }
+
+    const response = await createTokens(process.env.SEED, user);
+    console.log("RESPONSE");
+    console.log(response);
+    return res.code(200).send(response); // Send JWT and refresh token
 }

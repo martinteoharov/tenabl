@@ -1,10 +1,21 @@
-export interface Session {
-    id: string;
+import { string } from "fp-ts";
+
+export interface Access {
+    userId: string;
     username: string;
     /**
      * Timestamp indicating when the session was created, in Unix milliseconds.
      */
     issued: number;
+    /**
+     * Timestamp indicating when the session should expire, in Unix milliseconds.
+     */
+    expires: number;
+}
+
+export interface Refresh {
+    sessionId: string;
+    userId: string;
     /**
      * Timestamp indicating when the session should expire, in Unix milliseconds.
      */
@@ -17,13 +28,19 @@ export interface EncodeResult {
     issued: number
 }
 
-export type DecodeResult =
+export type DecodeAccessResult =
     | {
         type: "valid";
-        session: Session;
+        access: Access;
     }
     | {
-        type: "integrity-error";
+        type: "invalid-token";
+    };
+
+export type DecodeRefreshResult =
+    | {
+        type: "valid";
+        refresh: Refresh;
     }
     | {
         type: "invalid-token";

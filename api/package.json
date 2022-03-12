@@ -24,6 +24,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "@types/uuid": "^8.3.4",
     "bcrypt": "^5.0.1",
     "fastify": "^3.27.1",
     "fastify-auth": "^1.1.0",
@@ -35,6 +36,7 @@
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.5.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "uuid": "^8.3.2"
   }
 }

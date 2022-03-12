@@ -1,4 +1,3 @@
-import { boolean } from "fp-ts";
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity('user')
