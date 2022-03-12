@@ -9,7 +9,10 @@ import { v4 as uuidv4 } from 'uuid';
 const connection = getDB();
 
 // Create access and refresh tokens
-export const createTokens = async (secretKey: string, user: UserModel): Promise<{ access_token: String; refresh_token: String; }> => {
+export const createTokens = async (secretKey: string, user: UserModel): Promise<{ access_token: string; refresh_token: string; }> => {
+    // Check if too many sessions exist
+    checkUserSessions(user);
+
     const algorithm: TAlgorithm = 'HS512'; // Signing algorithm
     const issued = Date.now();
     const expiration_access = 60 * 60 * 1000; // One hour expiration in miliseconds
@@ -51,8 +54,6 @@ export const createTokens = async (secretKey: string, user: UserModel): Promise<
 const decodeAccessToken = (secretKey: string, tokenString: string): DecodeAccessResult => {
     const algorithm: TAlgorithm = 'HS512';
 
-    let result: Access;
-
     try {
         return {
             type: 'valid',
@@ -71,9 +72,7 @@ const decodeAccessToken = (secretKey: string, tokenString: string): DecodeAccess
 // Decode and check validity of refresh token
 const decodeRefreshToken = (secretKey: string, tokenString: string): DecodeRefreshResult => {
     const algorithm: TAlgorithm = 'HS512';
-
-    let result: Refresh;
-
+    
     try {
         return {
             type: 'valid',
@@ -149,4 +148,8 @@ export const authenticateRefreshToken = async (string_token: string, res: Fastif
     }
 
     return await connection.manager.findOne(UserModel, userId); // Return the UserModel
+}
+
+const checkUserSessions = async (user: UserModel) => {
+    // TODO check session count.
 }

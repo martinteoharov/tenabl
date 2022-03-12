@@ -144,7 +144,5 @@ const sendTokens = async (res: FastifyReply, user: UserModel | undefined) => {
     }
 
     const response = await createTokens(process.env.SEED, user);
-    console.log("RESPONSE");
-    console.log(response);
     return res.code(200).send(response); // Send JWT and refresh token
 }
