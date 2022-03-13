@@ -20,14 +20,13 @@ const connection: Connection = getDB();
 export default (router: FastifyInstance, opts: any, done: () => any) => {
     router.decorateRequest('user', {}); // Request parameter that stores the user (Doesn't work and I can't be bothered debugging it anymore)
 
-    router.post('/register', async (req, res) => {
-        return await pipe(req.body, register_req.decode, fold(
+    router.post('/register', async (req, res) => pipe(req.body, register_req.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
                 // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
                 const password_regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-                // Email regex explanation link: https://emailregex.com/
-                const email_regex = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
+                // TODO FIX EMAIL REGEX
+                const email_regex = /test@mail.com/; 
 
                 // Check if accepted_terms is false
                 if (!request.accepted_terms) {
@@ -49,8 +48,6 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                     res.code(400).send({ error: "User already exists" })
                 }
 
-                const userRepository = connection.getRepository(UserModel);
-
                 const user = new UserModel(); // Create user instance
                 user.first_name = request.first_name;
                 user.last_name = request.last_name;
@@ -64,8 +61,6 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                 const salt = await bcrypt.genSalt(6);
                 const hash = await bcrypt.hash(request.password, salt);
 
-                const passRepository = connection.getRepository(PasswordModel);
-
                 const pass = new PasswordModel() // Create password instance
                 pass.user = user.id;
                 pass.hash = hash;
@@ -76,10 +71,9 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                 return res.code(200).send({ ok: "User created" });
             }
         ))
-    })
+    )
 
-    router.post('/login', async (req, res) => {
-        return await pipe(req.body, password_req.decode, fold(
+    router.post('/login', async (req, res) => pipe(req.body, password_req.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
                 const user = await connection.manager.findOne(UserModel, { email: request.email }); // Fetch user profile with given email
@@ -107,7 +101,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                 return sendTokens(res, user); // Send JWT and refresh token
             }
         ))
-    });
+    );
 
     router.get('/test', async (req, res) => { // Send a GET request to /api/auth/test to check JWT token
         const user = await authenticateAccessToken(req, res);
@@ -118,8 +112,8 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     router.get('/login', (req, res) => { res.send({ ok: "Successful redirect" }) }) // Only here for testing redirection for expired tokens
 
-    router.post('/refresh', async (req, res) => { // Send a POST request to /api/auth/refresh to get new access and refresh tokens.
-        return await pipe(req.body, refresh_req.decode, fold(
+    // Send a POST request to /api/auth/refresh to get new access and refresh tokens.
+    router.post('/refresh', async (req, res) => pipe(req.body, refresh_req.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
                 const user = await authenticateRefreshToken(request.refresh_token, res);
@@ -128,7 +122,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                     sendTokens(res, user);
                 }
             }))
-    })
+    )
     done();
 }
 
