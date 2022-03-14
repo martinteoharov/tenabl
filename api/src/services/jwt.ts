@@ -11,7 +11,7 @@ const connection = getDB();
 // Create access and refresh tokens
 export const createTokens = async (secretKey: string, user: UserModel): Promise<{ access_token: string; refresh_token: string; }> => {
     // Check if too many sessions exist
-    checkUserSessions(user);
+    checkUserSessions(user.id);
 
     const algorithm: TAlgorithm = 'HS512'; // Signing algorithm
     const issued = Date.now();
@@ -147,9 +147,15 @@ export const authenticateRefreshToken = async (string_token: string, res: Fastif
         return undefined;
     }
 
+    connection.manager.delete(SessionModel, {user: userId, refresh_token: string_token}); // Delete used token
     return await connection.manager.findOne(UserModel, userId); // Return the UserModel
 }
 
-const checkUserSessions = async (user: UserModel) => {
-    // TODO check session count.
+const checkUserSessions = async (userId: string) => {
+    // Delete all but 10 of the most recent sessions
+    const deleted = await connection.manager.find(SessionModel, {where: {user: userId}, order: {started: 'ASC'}, take: 10, select: ['id']})
+    connection.manager.delete(SessionModel, deleted);
+
+    console.log("SUBQUERY");
+    console.log(deleted);
 }

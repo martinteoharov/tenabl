@@ -25,8 +25,8 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
             async (request) => {
                 // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
                 const password_regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-                // TODO FIX EMAIL REGEX
-                const email_regex = /test@mail.com/; 
+                // Basic email regex
+                const email_regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i; 
 
                 // Check if accepted_terms is false
                 if (!request.accepted_terms) {
