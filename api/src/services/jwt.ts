@@ -155,7 +155,4 @@ const checkUserSessions = async (userId: string) => {
     // Delete all but 10 of the most recent sessions
     const deleted = await connection.manager.find(SessionModel, {where: {user: userId}, order: {started: 'ASC'}, take: 10, select: ['id']})
     connection.manager.delete(SessionModel, deleted);
-
-    console.log("SUBQUERY");
-    console.log(deleted);
 }
