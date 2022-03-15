@@ -1,0 +1,38 @@
+.navbar {
+}
+
+.navbar-links {
+   display: grid; 
+
+   margin-top: 150px;
+
+   grid-template-columns: 1fr;
+   grid-template-rows: auto;
+   gap: 10px 0px;
+
+   justify-items: center;
+}
+
+.navbar--dark {
+    background-color: #2C2C2C;
+}
+
+.navbar-button {
+    border-radius: 5px;
+    color: white;
+    padding: 10px 10px;
+    width: 80%;
+    max-height: 30px;
+    text-decoration: none;
+}
+
+.navbar-button--active {
+    background-color: #393939;
+}
+
+.navbar-logo {
+    color: white; 
+    font-size: 24px; 
+    text-align: center;
+    user-select: none;
+}
