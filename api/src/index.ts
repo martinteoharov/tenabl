@@ -3,7 +3,7 @@
 import fastify from "fastify";
 import { connectToDB } from "./db";
 
-(async () => {
+const App = (async () => {
     // Note: Ensure connection to DB is established, before importing any routes
     await connectToDB();
 
@@ -14,3 +14,5 @@ import { connectToDB } from "./db";
 
     app.listen(80, '0.0.0.0')
 })();
+
+export { App };
