@@ -1,4 +1,6 @@
-const setTheme = (theme: "light" | "dark") => {
+export type Theme = "light" | "dark";
+
+export const setTheme = (theme: Theme) => {
     const style = getComputedStyle(document.body);
     if(theme === "light") {
         document.documentElement.style.setProperty('--primaryBackgroundColor', style.getPropertyValue("--light-bg-1"));
@@ -9,6 +11,6 @@ const setTheme = (theme: "light" | "dark") => {
         document.documentElement.style.setProperty('--secondaryBackgroundColor', style.getPropertyValue("--dark-bg-2"));
         document.documentElement.style.setProperty('--primaryColor', style.getPropertyValue("--dark-1"));
     }
-};
 
-export { setTheme };
+    localStorage.setItem("theme", theme);
+};

@@ -19,7 +19,8 @@ const links = [
 ];
 
 const Navbar: FC<Props> = () => {
-  const [checked, setChecked] = useState(false); 
+  // light = true; dark = false;
+  const [checked, setChecked] = useState(localStorage.getItem("theme") === "light"); 
 
   return (
     <div className="navbar">
@@ -52,6 +53,18 @@ const Navbar: FC<Props> = () => {
             {title}
           </NavLink>
         ))}
+      </div>
+
+      <div className="navbar-login">
+        <NavLink to={"/login"} className='navbar-button'>
+          Sign In
+        </NavLink>
+
+        |
+
+        <NavLink to={"/register"} className='navbar-button'>
+          Sign Up
+        </NavLink>
       </div>
     </div>
   );
