@@ -1,6 +1,12 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/navbar.css";
+
+import Switch from "react-switch";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { setTheme } from '../helpers/theme';
+
 
 interface Props {}
 
@@ -13,11 +19,29 @@ const links = [
 ];
 
 const Navbar: FC<Props> = () => {
+  // light = true; dark = false;
+  const [checked, setChecked] = useState(localStorage.getItem("theme") === "light"); 
+
   return (
-    <div className="navbar navbar--dark">
-      <p className="navbar-logo">
-        tenabl.
-      </p>
+    <div className="navbar">
+      <div>
+        <p className="navbar-logo">
+          tenabl.
+        </p>
+        <div style={{display: "grid", alignItems: "center", justifyItems: "center"}}>
+          <Switch 
+            checkedIcon={<FontAwesomeIcon style={{padding: "4px 4px"}} icon={faSun} size="lg"/>}
+            uncheckedIcon={<FontAwesomeIcon style={{padding: "4px 14px", color: "white"}} icon={faMoon} size="lg"/>}
+            width={80}
+            onHandleColor="#000000"
+            offHandleColor="#ffffff"
+            onColor="#ffffff"
+            offColor="#000000"
+            onChange={() => { setTheme(checked ? "dark" : "light"); setChecked(!checked) }} 
+            checked={checked} />
+        </div>
+      </div>
+
       <div className="navbar-links">
         {/* map links to <a> elements */}
         {links.map(({ title, path }) => (
@@ -29,6 +53,18 @@ const Navbar: FC<Props> = () => {
             {title}
           </NavLink>
         ))}
+      </div>
+
+      <div className="navbar-login">
+        <NavLink to={"/login"} className='navbar-button'>
+          Sign In
+        </NavLink>
+
+        |
+
+        <NavLink to={"/register"} className='navbar-button'>
+          Sign Up
+        </NavLink>
       </div>
     </div>
   );
