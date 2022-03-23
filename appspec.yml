@@ -1,14 +1,14 @@
 version: 0.0
 os: linux
 files:
- - source: .
-   destination: /home/ubuntu/app
+  - source: .
+    destination: /home/ubuntu/app
 hooks:
   AfterInstall:
-   - location: bin/build
-     timeout: 300
-     runas: ubuntu
+    - location: bin/build
+      timeout: 300
+      runas: ubuntu
   ApplicationStart:
-   - location: bin/run
-     timeout: 300
-     runas: ubuntu
+    - location: bin/deploy
+      timeout: 300
+      runas: ubuntu
