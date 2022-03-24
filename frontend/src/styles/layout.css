@@ -1,4 +1,4 @@
-.container {
+.layout-container {
     display: grid;
 
     width: 100vw;
@@ -8,7 +8,7 @@
     grid-template-rows: 1fr;
 }
 
-.container-content {
+.layout-container-content {
     display: grid;
 
     justify-content: center;
@@ -17,4 +17,7 @@
 
     background-color: var(--secondaryBackgroundColor);
     color: var(--primaryColor);
+    transition: all ease-in-out 100ms;
+
+    background-position: center;
 }

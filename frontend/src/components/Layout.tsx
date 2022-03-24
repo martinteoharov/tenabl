@@ -14,9 +14,9 @@ const Layout: FC<Props> = ({children}) => {
     }, []);
 
     return (
-        <div className="container">
+        <div className="layout-container">
             <Navbar/>
-            <div className="container-content">
+            <div className="layout-container-content">
                 {children}
             </div>
         </div>

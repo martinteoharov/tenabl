@@ -1,6 +1,7 @@
 .navbar {
     background-color: var(--primaryBackgroundColor);
     min-width: 200px;
+    transition: all ease-in-out 100ms;
 }
 
 .navbar-links {
