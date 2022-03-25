@@ -46,6 +46,12 @@ services:
       - caddy_data:/data:Z
       - caddy_config:/config:Z
     profiles: [ 'core' ]
+  extension:
+    image: com2027.prod.extension
+    build:
+      target: extension
+    restart: 'no'
+    profiles: [ 'setup' ]
 volumes:
   caddy_data:
   caddy_config:

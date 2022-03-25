@@ -1,0 +1,11 @@
+#!/bin/bash
+OLDDIR=`pwd`
+cd ./api
+npm i
+cd ../frontend
+npm i
+cd ../common
+npm i
+cd ../extension
+npm i
+cd $OLDDIR
