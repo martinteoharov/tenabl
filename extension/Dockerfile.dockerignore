@@ -1,0 +1,6 @@
+*
+!extension
+extension/node_modules
+extension/dist
+!common
+common/node_modules
