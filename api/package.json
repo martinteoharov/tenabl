@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/uuid": "^8.3.4",
     "@babel/preset-typescript": "^7.16.7",
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^27.4.1",
@@ -28,7 +29,6 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@types/uuid": "^8.3.4",
     "bcrypt": "^5.0.1",
     "fastify": "^3.27.1",
     "fastify-auth": "^1.1.0",
