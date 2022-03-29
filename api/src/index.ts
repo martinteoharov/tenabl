@@ -1,17 +1,16 @@
-import { greet } from "./common/greet";
-import fastify from 'fastify';
-import { createConnection } from "typeorm";
-import { getMessageService } from "./services/messageService";
-import { getMessageRoutes } from "./routes/message";
+/* eslint-disable @typescript-eslint/no-var-requires */
 
-console.log(greet('World'));
+import fastify, { FastifyInstance, FastifyPluginAsync } from "fastify";
+import { connectToDB } from "./db";
 
-async function main() {
-    const conn = await createConnection()
-    const messages = getMessageService(conn)
-    const app = fastify({ logger: true })
-    app.register(getMessageRoutes(messages), { prefix: '/' })
-    app.listen(80, '0.0.0.0')
-}
+export const build = async (): Promise<FastifyInstance> => {
+    // Note: Ensure connection to DB is established, before importing any routes
+    await connectToDB();
 
-main()
+    const app = fastify({ logger: true });
+    app.register(require('./routes/auth'), { prefix: '/auth/' });
+
+    app.listen(80, '0.0.0.0');
+
+    return app;
+};

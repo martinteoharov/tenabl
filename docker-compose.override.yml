@@ -5,10 +5,10 @@ services:
     restart: "no"
     environment:
       POSTGRES_PASSWORD: pgpassword
-    volumes:
-      - data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
   api:
     image: com2027.dev.api
     build:
