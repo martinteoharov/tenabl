@@ -1,4 +1,14 @@
 #!/bin/bash
 DOCKER_BUILDKIT=1
 COMPOSE_DOCKER_CLI_BUILD=1
+<<<<<<< HEAD
 docker-compose down --rmi all --remove-orphans -v
+=======
+docker-compose \
+    -f docker-compose.yml \
+    -f docker-compose.production.yml \
+    --profile setup \
+    --profile core \
+    down -v --rmi all --remove-orphans
+docker-compose down -v --rmi all --remove-orphans
+>>>>>>> main

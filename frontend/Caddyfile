@@ -1,7 +1,7 @@
 {
 	admin off
 }
-localhost, 127.0.0.1 {
+localhost, 127.0.0.1, tenabl.net, www.tenabl.net {
 	encode zstd gzip
 	root * /www
 	route /api/* {

@@ -17,6 +17,10 @@
             "path": "frontend"
         },
         {
+            "name": "EXTENSION",
+            "path": "extension"
+        },
+        {
             "name": "COMMON",
             "path": "common"
         }
@@ -26,6 +30,7 @@
             "api": true,
             "frontend": true,
             "common": true,
+            "extension": true,
             "src/common": true,
             "notes": true,
         },
