@@ -2,9 +2,7 @@
 cd $(dirname $(dirname $0))
 DOCKER_BUILDKIT=1
 COMPOSE_DOCKER_CLI_BUILD=1
-<<<<<<< HEAD
-docker-compose -f docker-compose.yml -f docker-compose.production.yml up --no-build --remove-orphans
-=======
+
 docker-compose \
     -f docker-compose.yml \
     -f docker-compose.production.yml \
@@ -13,4 +11,3 @@ docker-compose \
     -f docker-compose.yml \
     -f docker-compose.production.yml \
     --profile core up --no-build 
->>>>>>> main
