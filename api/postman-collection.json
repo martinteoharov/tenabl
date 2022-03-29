@@ -1,0 +1,127 @@
+{
+	"info": {
+		"_postman_id": "e472a1f1-9da8-4876-998d-102c66c49086",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\",\n    \"email\": \"test@mail.com\",\n    \"username\": \"testuser\",\n    \"password\": \"Password0!\",\n    \"accepted_terms\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:80/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@mail.com\",\n    \"password\": \"Password0!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:80/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test authentication",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEwYWNkYTQ5LWU2YWQtNGJmMi1hOTk4LTJjOTM0N2I4ZWQ5MSIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpc3N1ZWQiOjE2NDY5NDU3NzgyNjcsImV4cGlyZXMiOjE2NDY5NDkzNzgyNjd9.A6RWuoKnmW57YcZaYZOtKle9_h7Mf8lLt2bYshjyu7MGRtAKu9weF4heVBXATKk5M3QBsILHdcXF4qjgfadyTg",
+						"description": "JWT",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:80/api/auth/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"auth",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiI0ZDJjMDcxMy0zYzQ4LTQ2ZTMtODU2ZC1lZTExNmNhMmU3OWMiLCJzZXNzaW9uSWQiOiJhYmE4NDIwMy01NTAxLTRiODMtOGNjMi0xZGI3MjNiZDdiZjgiLCJleHBpcmVzIjoxNjQ3ODg5MzEwMDczfQ.gG2Rm24lm90d2GkLaQCHBxxPN-H8yTXsEQF-7kK_3dIBasMQDZrRBAVUTg8yK1Awd8DQoA8yydM99A4W4vF3Zg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:80/api/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
