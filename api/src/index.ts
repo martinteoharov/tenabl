@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-import fastify, { FastifyInstance, FastifyPluginAsync } from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import { connectToDB } from "./db";
 
 export const build = async (): Promise<FastifyInstance> => {
@@ -14,3 +14,5 @@ export const build = async (): Promise<FastifyInstance> => {
 
     return app;
 };
+
+build();
