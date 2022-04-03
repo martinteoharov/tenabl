@@ -5,10 +5,10 @@ services:
     restart: "no"
     environment:
       POSTGRES_PASSWORD: pgpassword
-    volumes:
-      - data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
   api:
     image: com2027.dev.api
     build:
@@ -47,5 +47,9 @@ services:
       - $PWD/frontend/package-lock.json:/frontend/package-lock.json
     environment:
       PORT: 80
+  extension:
+    image: com2027.dev.extension
+    build:
+      target: extension_debug
 volumes:
   data:

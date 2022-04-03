@@ -16,6 +16,7 @@ services:
       SEED: ${SEED}
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    profiles: [ 'setup' ]
   api:
     image: com2027.prod.api
     build:
@@ -30,6 +31,7 @@ services:
       SEED: ${SEED}
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    profiles: [ 'core' ]
   caddy:
     image: com2027.prod.caddy
     build:
@@ -43,6 +45,13 @@ services:
     volumes:
       - caddy_data:/data:Z
       - caddy_config:/config:Z
+    profiles: [ 'core' ]
+  extension:
+    image: com2027.prod.extension
+    build:
+      target: extension
+    restart: 'no'
+    profiles: [ 'setup' ]
 volumes:
   caddy_data:
   caddy_config:
