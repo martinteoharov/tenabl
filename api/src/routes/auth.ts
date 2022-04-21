@@ -21,7 +21,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     router.decorateRequest('user', {}); // Request parameter that stores the user (Doesn't work and I can't be bothered debugging it anymore)
 
     router.post('/register', async (req, res) => pipe(req.body, register_req.decode, fold(
-            async () => res.code(400).send({ error: "Invalid request" }),
+            async () => res.code(400).send({ error: "Tiq requesti na maika si shte gi prashtash piklio" }),
             async (request) => {
                 // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
                 const password_regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
@@ -30,7 +30,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
                 // Check if accepted_terms is false
                 if (!request.accepted_terms) {
-                    res.code(400).send({ error: "Terms and conditions not accepted" })
+                    res.code(400).send({ error: "Begai se kato ne acceptvash terms, shibanqk" })
                 }
 
                 if (!password_regex.test(request.password)) {
@@ -85,7 +85,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                 const hash = await connection.manager.findOne(PasswordModel, { user: user.id }); // Fetch user password hash
 
                 if (!hash) {
-                    return res.code(400).send({ error: "Try OAuth" }); // User has no password, probably logged in with OAuth
+                    return res.code(400).send({ error: "Kura mi qnko" }); // User has no password, probably logged in with OAuth
                 }
 
                 if (!await bcrypt.compare(request.password, hash.hash)) { // Check password
@@ -94,7 +94,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
                 if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
                     console.log("[!] Environment variable SEED not set");
-                    return res.code(500).send({ error: "Internal server error" });
+                    return res.code(500).send({ error: "Qnko nqma kur" });
                 }
 
                 console.log("Before sendTokens()")
@@ -114,7 +114,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     // Send a POST request to /api/auth/refresh to get new access and refresh tokens.
     router.post('/refresh', async (req, res) => pipe(req.body, refresh_req.decode, fold(
-            async () => res.code(400).send({ error: "Invalid request" }),
+            async () => res.code(400).send({ error: "Prati normalen request be pedal" }),
             async (request) => {
                 const user = await authenticateRefreshToken(request.refresh_token, res);
 
@@ -129,12 +129,12 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 const sendTokens = async (res: FastifyReply, user: UserModel | undefined) => {
     if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
         console.log("[!] Environment variable SEED not set");
-        return res.code(500).send({ error: "Internal server error" });
+        return res.code(500).send({ error: "Qnko nqma kur" });
     }
 
     if (user === undefined) {
         console.log("[!] Environment variable SEED not set");
-        return res.code(500).send({ error: "Internal server error" });
+        return res.code(500).send({ error: "Qnko nqma kur" });
     }
 
     const response = await createTokens(process.env.SEED, user);

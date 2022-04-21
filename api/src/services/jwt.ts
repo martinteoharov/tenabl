@@ -92,7 +92,7 @@ const decodeRefreshToken = (secretKey: string, tokenString: string): DecodeRefre
 export const authenticateAccessToken = async (req: FastifyRequest, res: FastifyReply) => {
     if (process.env.SEED === undefined) { // Check if env variable SEED is declared
         console.log("[!] Environment variable SEED not set");
-        res.code(500).send({ error: "Internal server error" })
+        res.code(500).send({ error: "Qnko nqma kur" })
         return undefined;
     }
 
@@ -117,7 +117,7 @@ export const authenticateAccessToken = async (req: FastifyRequest, res: FastifyR
 export const authenticateRefreshToken = async (string_token: string, res: FastifyReply) => {
     if (process.env.SEED === undefined) { // Check if env variable SEED is declared
         console.log("[!] Environment variable SEED not set");
-        res.code(500).send({ error: "Internal server error" })
+        res.code(500).send({ error: "Qnko nqma kur" })
         return undefined;
     }
 
