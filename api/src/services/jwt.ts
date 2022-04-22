@@ -153,6 +153,8 @@ export const authenticateRefreshToken = async (string_token: string, res: Fastif
 
 const checkUserSessions = async (userId: string) => {
     // Delete all but 10 of the most recent sessions
-    const deleted = await connection.manager.find(SessionModel, {where: {user: userId}, order: {started: 'ASC'}, take: 10, select: ['id']})
-    connection.manager.delete(SessionModel, deleted);
+    const deleted = await connection.manager.find(SessionModel, {where: {user: userId}, order: {started: 'ASC'}, skip: 9, select: ['id']})
+    if (deleted.length !== 0) {
+        connection.manager.delete(SessionModel, deleted);
+    }
 }
