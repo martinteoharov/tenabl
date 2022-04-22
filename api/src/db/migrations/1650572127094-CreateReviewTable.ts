@@ -11,10 +11,6 @@ export class CreateReviewTable1650572127094 implements MigrationInterface {
                     isPrimary: true
                 },
                 {
-                    name: 'url',
-                    type: 'varchar'
-                },
-                {
                     name: 'review',
                     type: 'varchar',
                 }
@@ -26,10 +22,22 @@ export class CreateReviewTable1650572127094 implements MigrationInterface {
             type: 'varchar'
         }));
 
+        await queryRunner.addColumn('review', new TableColumn({
+            name: 'publicationId',
+            type: 'varchar'
+        }));
+
         await queryRunner.createForeignKey('review', new TableForeignKey({
             columnNames: ['userId'],
             referencedColumnNames: ['id'],
             referencedTableName: 'user',
+            onDelete: 'CASCADE'
+        }));
+
+        await queryRunner.createForeignKey('review', new TableForeignKey({
+            columnNames: ['publicationId'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'publication',
             onDelete: 'CASCADE'
         }));
     }

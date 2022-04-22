@@ -31,21 +31,25 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                 // Check if accepted_terms is false
                 if (!request.accepted_terms) {
                     res.code(400).send({ error: "Begai se kato ne acceptvash terms, shibanqk" })
+                    return
                 }
 
                 if (!password_regex.test(request.password)) {
                     res.code(400).send({ error: "Password does not meet standards" })
+                    return
                 }
 
                 // Validate email based on RFC 5322 specifications
                 if (!email_regex.test(request.email)) {
                     res.code(400).send({ error: "Invalid email format" })
+                    return
                 }
 
                 // Check if user already exists
                 const email_exists = await connection.manager.findOne(UserModel, { email: request.email }) !== undefined;
                 if (email_exists) {
                     res.code(400).send({ error: "User already exists" })
+                    return
                 }
 
                 const user = new UserModel(); // Create user instance
@@ -80,21 +84,25 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
                 if (!user) {
                     return res.code(400).send({ error: "User does not exist" });
+                    return
                 }
 
                 const hash = await connection.manager.findOne(PasswordModel, { user: user.id }); // Fetch user password hash
 
                 if (!hash) {
                     return res.code(400).send({ error: "Kura mi qnko" }); // User has no password, probably logged in with OAuth
+                    return
                 }
 
                 if (!await bcrypt.compare(request.password, hash.hash)) { // Check password
                     return res.code(403).send({ error: "Invalid password" });
+                    return
                 }
 
                 if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
                     console.log("[!] Environment variable SEED not set");
                     return res.code(500).send({ error: "Qnko nqma kur" });
+                    return
                 }
 
                 console.log("Before sendTokens()")
@@ -107,6 +115,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
         const user = await authenticateAccessToken(req, res);
         if (user !== undefined) {
             res.code(200).send({ ok: `Hello ${user.username}` });
+            return
         }
     })
 

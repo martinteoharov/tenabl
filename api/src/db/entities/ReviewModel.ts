@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { PublicationModel } from "./PublicationModel";
 import { UserModel } from "./UserModel";
 
 @Entity('review')
@@ -10,8 +11,8 @@ export class ReviewModel {
     @ManyToOne(() => UserModel, user => user.id)
     user!: UserModel;
 
-    @Column()
-    url!: string;
+    @ManyToOne(() => PublicationModel, publication => publication.id)
+    publication!: PublicationModel;
 
     @Column()
     review!: string;
