@@ -1,7 +1,6 @@
 import * as t from 'io-ts';
 
 const review_req = t.type({
-    user: t.string,
     url: t.string,
     review: t.string
 })

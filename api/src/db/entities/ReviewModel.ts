@@ -14,6 +14,6 @@ export class ReviewModel {
     @ManyToOne(() => PublicationModel, publication => publication.id)
     publication!: PublicationModel;
 
-    @Column()
-    review!: string;
+    @Column({ type: 'jsonb' })
+    review!: JSON;
 }

@@ -12,7 +12,7 @@ export class CreateReviewTable1650572127094 implements MigrationInterface {
                 },
                 {
                     name: 'review',
-                    type: 'varchar',
+                    type: 'jsonb',
                 }
             ]
         }), true)

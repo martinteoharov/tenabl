@@ -14,9 +14,8 @@ const connection: Connection = getDB();
 
 export default (router: FastifyInstance, opts: any, done: () => any) => {
     router.post('/submit', async (req, res) => pipe(req.body, review_req.decode, fold(
-            async () => res.code(400).send({ error: 'Tiq requesti na maika si shte gi prashtash piklio' }),
+            async () => res.code(400).send({ error: 'Invalid request body' }),
             async (request) => {
-                const review = new ReviewModel(); // Create user instance
                 const user = await authenticateAccessToken(req, res);
                 let publication = await connection.manager.findOne(PublicationModel, { url: request.url });
                 if (user === undefined) {
@@ -24,18 +23,39 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                     return
                 }
                 if (publication === undefined) { // If publication does not exist, create it
-                    publication = new PublicationModel();
-                    publication.publisher = ''; // TODO figure out publisher name
-                    publication.url = request.url;
-
-                    connection.manager.save(publication)
-                }
-                review.user = user;
-                review.publication = publication;
-                review.review = request.review;
-
-                await connection.manager.save(review);
-                return res.code(200).send({ ok: 'Review submitted' });
+                        publication = new PublicationModel();
+                        const publisher_name = /^[^/]*/.exec(request.url); // TODO figure out publisher name
+                        if (publisher_name === null){
+                            res.code(400).send({ error: 'Invalid URL provided' });
+                            return
+                        }
+                        publication.publisher = publisher_name[0];
+                        publication.url = request.url;
+    
+                        await connection.manager.save(publication);
+                    }
+                    if (publication === undefined) { // If publication does not exist, create it
+                        publication = new PublicationModel();
+                        const publisher_name = /^[^/]*/.exec(request.url); // TODO figure out publisher name
+                        if (publisher_name === null){
+                            res.code(400).send({ error: 'Invalid URL provided' });
+                            return
+                        }
+                        publication.publisher = publisher_name[0];
+                        publication.url = request.url;
+    
+                        await connection.manager.save(publication);
+                    }
+                    const review = new ReviewModel();
+                    review.user = user;
+                    review.publication = publication;
+                    // TODO parse request.review to verify format before saving to DB
+                    review.review = JSON.parse(request.review);
+                
+                    // Get rid of old reviews for the same publication
+                    await connection.manager.delete(ReviewModel, { user: user, publication: publication });
+                    await connection.manager.save(review);
+                    return res.code(200).send({ ok: 'Review submitted' });
             }
         ))
     )
