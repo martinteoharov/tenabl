@@ -13,22 +13,22 @@ export class CreateOAuthTable1646354852809 implements MigrationInterface {
                     generationStrategy: 'increment'
                 },
                 {
-                    name: "googleAuthToken",
+                    name: "google_auth_token",
                     type: "varchar",
                     isNullable: true,
                 },
                 {
-                    name: "googleTokenType",
+                    name: "google_token_type",
                     type: "varchar",
                     isNullable: true,
                 },
                 {
-                    name: "googleRenewToken",
+                    name: "google_renew_token",
                     type: "varchar",
                     isNullable: true,
                 },
                 {
-                    name: "googleExpiration",
+                    name: "google_expiration",
                     type: "timestamp",
                     isNullable: true,
                 }

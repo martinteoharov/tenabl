@@ -41,7 +41,7 @@ export const createTokens = async (secretKey: string, user: UserModel): Promise<
     const accessToken = encode(access, secretKey, algorithm);
     const refreshToken = encode(refresh, secretKey, algorithm);
 
-    session.refreshToken = refreshToken;
+    session.refresh_token = refreshToken;
     await connection.manager.save(session);
 
     return {
@@ -141,7 +141,7 @@ export const authenticateRefreshToken = async (stringToken: string, res: Fastify
         return undefined;
     }
 
-    if (stringToken !== session.refreshToken) { // If token does not match, invalidate current refresh token
+    if (stringToken !== session.refresh_token) { // If token does not match, invalidate current refresh token
         connection.manager.remove(session);
         res.code(401).send({ error: "Invalid refresh token" })
         return undefined;

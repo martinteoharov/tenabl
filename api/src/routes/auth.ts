@@ -59,11 +59,11 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                 }
 
                 const user = new UserModel(); // Create user instance
-                user.firstName = request.firstName;
-                user.lastName = request.lastName;
+                user.first_name = request.firstName;
+                user.last_name = request.lastName;
                 user.username = request.username;
                 user.email = request.email;
-                user.acceptedTerms = request.acceptedTerms;
+                user.accepted_terms = request.acceptedTerms;
 
                 await connection.manager.save(user);
 

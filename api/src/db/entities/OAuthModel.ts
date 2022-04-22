@@ -12,14 +12,14 @@ export class OAuthModel {
     user!: string;
 
     @Column()
-    googleAuthToken!: string;
+    google_auth_model!: string;
 
     @Column()
-    googleTokenType!: string;
+    google_token_type!: string;
 
     @Column()
-    googleRenewToken!: string;
+    google_renew_token!: string;
 
     @Column({ type: 'timestamp', nullable: true })
-    googleExpiration!: Date;
+    google_expiration!: Date;
 }
