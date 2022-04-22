@@ -11,7 +11,7 @@ export class CreateSessionTable1647110230376 implements MigrationInterface {
                     isPrimary: true
                 },
                 {
-                    name: 'refresh_token',
+                    name: 'refreshToken',
                     type: 'varchar'
                 },
                 {

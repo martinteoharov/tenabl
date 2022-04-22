@@ -3,15 +3,20 @@ import { FastifyInstance, FastifyReply } from 'fastify';
 import bcrypt from 'bcrypt';
 
 import 'reflect-metadata';
+
 import { PasswordModel } from '../db/entities/PasswordModel';
 import { UserModel } from '../db/entities/UserModel';
+
 import { Connection } from 'typeorm';
 import { getDB } from '../db';
-import password_req from '../common/password_req';
-import register_req from '../common/register_req';
-import refresh_req from '../common/refresh_req';
+
+import PasswordSchema from '../common/schemas/password';
+import RegisterSchema from '../common/schemas/register';
+import RefreshSchema from '../common/schemas/refresh';
+
 import { pipe } from 'fp-ts/lib/function';
 import { fold } from 'fp-ts/lib/Either';
+
 import { createTokens, authenticateAccessToken, authenticateRefreshToken } from '../services/jwt';
 
 
@@ -20,44 +25,45 @@ const connection: Connection = getDB();
 export default (router: FastifyInstance, opts: any, done: () => any) => {
     router.decorateRequest('user', {}); // Request parameter that stores the user (Doesn't work and I can't be bothered debugging it anymore)
 
-    router.post('/register', async (req, res) => pipe(req.body, register_req.decode, fold(
+    router.post('/register', async (req, res) => pipe(req.body, RegisterSchema.decode, fold(
             async () => res.code(400).send({ error: "Tiq requesti na maika si shte gi prashtash piklio" }),
             async (request) => {
                 // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
-                const password_regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-                // Basic email regex
-                const email_regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i; 
+                const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
-                // Check if accepted_terms is false
-                if (!request.accepted_terms) {
+                // Basic email regex
+                const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i; 
+
+                // Check if acceptedTerms is false
+                if (!request.acceptedTerms) {
                     res.code(400).send({ error: "Begai se kato ne acceptvash terms, shibanqk" })
                     return
                 }
 
-                if (!password_regex.test(request.password)) {
+                if (!passwordRegex.test(request.password)) {
                     res.code(400).send({ error: "Password does not meet standards" })
                     return
                 }
 
                 // Validate email based on RFC 5322 specifications
-                if (!email_regex.test(request.email)) {
+                if (!emailRegex.test(request.email)) {
                     res.code(400).send({ error: "Invalid email format" })
                     return
                 }
 
                 // Check if user already exists
-                const email_exists = await connection.manager.findOne(UserModel, { email: request.email }) !== undefined;
-                if (email_exists) {
+                const emailExists = await connection.manager.findOne(UserModel, { email: request.email }) !== undefined;
+                if (emailExists) {
                     res.code(400).send({ error: "User already exists" })
                     return
                 }
 
                 const user = new UserModel(); // Create user instance
-                user.first_name = request.first_name;
-                user.last_name = request.last_name;
+                user.firstName = request.firstName;
+                user.lastName = request.lastName;
                 user.username = request.username;
                 user.email = request.email;
-                user.accepted_terms = request.accepted_terms;
+                user.acceptedTerms = request.acceptedTerms;
 
                 await connection.manager.save(user);
 
@@ -77,7 +83,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
         ))
     )
 
-    router.post('/login', async (req, res) => pipe(req.body, password_req.decode, fold(
+    router.post('/login', async (req, res) => pipe(req.body, PasswordSchema.decode, fold(
             async () => res.code(400).send({ error: "Invalid request" }),
             async (request) => {
                 const user = await connection.manager.findOne(UserModel, { email: request.email }); // Fetch user profile with given email
@@ -122,10 +128,10 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     router.get('/login', (req, res) => { res.send({ ok: "Successful redirect" }) }) // Only here for testing redirection for expired tokens
 
     // Send a POST request to /api/auth/refresh to get new access and refresh tokens.
-    router.post('/refresh', async (req, res) => pipe(req.body, refresh_req.decode, fold(
+    router.post('/refresh', async (req, res) => pipe(req.body, RefreshSchema.decode, fold(
             async () => res.code(400).send({ error: "Prati normalen request be pedal" }),
             async (request) => {
-                const user = await authenticateRefreshToken(request.refresh_token, res);
+                const user = await authenticateRefreshToken(request.refreshToken, res);
 
                 if (user !== undefined) { // Create new access and refresh tokens.
                     sendTokens(res, user);

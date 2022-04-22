@@ -7,10 +7,10 @@ export class UserModel {
     id!: string;
 
     @Column()
-    first_name!: string;
+    firstName!: string;
 
     @Column()
-    last_name!: string;
+    lastName!: string;
 
     @Column()
     username!: string;
@@ -19,5 +19,5 @@ export class UserModel {
     email!: string;
 
     @Column()
-    accepted_terms!: boolean;
+    acceptedTerms!: boolean;
 }

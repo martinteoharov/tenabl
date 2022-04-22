@@ -11,7 +11,7 @@ describe('root tests', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/register',
-      payload: { first_name: "kur", last_name: "pedal", username: "kurpedal", email: "kurkopedal@gmail.com", password: "password", accepted_terms: true }
+      payload: { firstName: "kur", lastName: "pedal", username: "kurpedal", email: "kurkopedal@gmail.com", password: "password", acceptedTerms: true }
     })
 
     expect(res.statusCode).toEqual(200)

@@ -15,5 +15,5 @@ export class ReviewModel {
     publication!: PublicationModel;
 
     @Column({ type: 'jsonb' })
-    review!: JSON;
+    body!: JSON;
 }

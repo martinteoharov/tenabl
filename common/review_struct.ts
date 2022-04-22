@@ -1,11 +1,11 @@
 import * as t from 'io-ts';
 
-const review_struct = t.type({
+const ReviewStruct = t.type({
     trustworty: t.boolean,
     concise: t.boolean,
     outdated: t.boolean
-})
+});
 
-type review_struct = t.TypeOf<typeof review_struct>
+type ReviewStructType = t.TypeOf<typeof ReviewStruct>;
 
-export default review_struct
+export default ReviewStructType;

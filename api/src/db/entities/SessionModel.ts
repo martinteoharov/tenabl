@@ -14,5 +14,5 @@ export class SessionModel {
     user!: UserModel;
 
     @Column()
-    refresh_token!: string;
+    refreshToken!: string;
 }

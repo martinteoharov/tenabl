@@ -15,5 +15,5 @@ export class CommentModel {
     publication!: PublicationModel;
 
     @Column()
-    comment!: string;
+    body!: string;
 }
