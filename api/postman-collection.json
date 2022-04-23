@@ -1,127 +1,239 @@
 {
 	"info": {
-		"_postman_id": "e472a1f1-9da8-4876-998d-102c66c49086",
+		"_postman_id": "ed8c24aa-22b3-4d8d-a64c-4da3b768f990",
 		"name": "API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\",\n    \"email\": \"test@mail.com\",\n    \"username\": \"testuser\",\n    \"password\": \"Password0!\",\n    \"accepted_terms\": true\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\",\n    \"email\": \"test@mail.com\",\n    \"username\": \"testuser\",\n    \"password\": \"Password0!\",\n    \"accepted_terms\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:80/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:80/api/auth/register",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "80",
-					"path": [
-						"api",
-						"auth",
-						"register"
-					]
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@mail.com\",\n    \"password\": \"Password0!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:80/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test authentication",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Auth",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEwYWNkYTQ5LWU2YWQtNGJmMi1hOTk4LTJjOTM0N2I4ZWQ5MSIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpc3N1ZWQiOjE2NDY5NDU3NzgyNjcsImV4cGlyZXMiOjE2NDY5NDkzNzgyNjd9.A6RWuoKnmW57YcZaYZOtKle9_h7Mf8lLt2bYshjyu7MGRtAKu9weF4heVBXATKk5M3QBsILHdcXF4qjgfadyTg",
+								"description": "JWT",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:80/api/auth/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"api",
+								"auth",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiI0ZDJjMDcxMy0zYzQ4LTQ2ZTMtODU2ZC1lZTExNmNhMmU3OWMiLCJzZXNzaW9uSWQiOiJhYmE4NDIwMy01NTAxLTRiODMtOGNjMi0xZGI3MjNiZDdiZjgiLCJleHBpcmVzIjoxNjQ3ODg5MzEwMDczfQ.gG2Rm24lm90d2GkLaQCHBxxPN-H8yTXsEQF-7kK_3dIBasMQDZrRBAVUTg8yK1Awd8DQoA8yydM99A4W4vF3Zg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:80/api/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"test@mail.com\",\n    \"password\": \"Password0!\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Review",
+			"item": [
+				{
+					"name": "Submit review",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiJmN2U4NjU2Zi02OTI1LTQ1OTctODI0Ny1kMGFkMzJmZmZlNjQiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaXNzdWVkIjoxNjUwNjQ2NTExMTgwLCJleHBpcmVzIjoxNjUwNjUwMTExMTgwfQ.PNpv4NzJqxDJ2LXK-OvRvYPK5plSiFtBBX8RceZUMA_AtD7PK72MUvSybRZsp7FD8g72CDU-HioQdcNQxrFbfw",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Auth",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"www.bbc.com/test\",\n    \"review\": \"{\\\"trustworthy\\\": true}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:80/api/review/submit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"api",
+								"review",
+								"submit"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:80/api/auth/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "80",
-					"path": [
-						"api",
-						"auth",
-						"login"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Test authentication",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Auth",
-						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEwYWNkYTQ5LWU2YWQtNGJmMi1hOTk4LTJjOTM0N2I4ZWQ5MSIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpc3N1ZWQiOjE2NDY5NDU3NzgyNjcsImV4cGlyZXMiOjE2NDY5NDkzNzgyNjd9.A6RWuoKnmW57YcZaYZOtKle9_h7Mf8lLt2bYshjyu7MGRtAKu9weF4heVBXATKk5M3QBsILHdcXF4qjgfadyTg",
-						"description": "JWT",
-						"type": "default"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:80/api/auth/test",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "80",
-					"path": [
-						"api",
-						"auth",
-						"test"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Refresh",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiI0ZDJjMDcxMy0zYzQ4LTQ2ZTMtODU2ZC1lZTExNmNhMmU3OWMiLCJzZXNzaW9uSWQiOiJhYmE4NDIwMy01NTAxLTRiODMtOGNjMi0xZGI3MjNiZDdiZjgiLCJleHBpcmVzIjoxNjQ3ODg5MzEwMDczfQ.gG2Rm24lm90d2GkLaQCHBxxPN-H8yTXsEQF-7kK_3dIBasMQDZrRBAVUTg8yK1Awd8DQoA8yydM99A4W4vF3Zg\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Submit comment",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiJmN2U4NjU2Zi02OTI1LTQ1OTctODI0Ny1kMGFkMzJmZmZlNjQiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaXNzdWVkIjoxNjUwNjQ2NTExMTgwLCJleHBpcmVzIjoxNjUwNjUwMTExMTgwfQ.PNpv4NzJqxDJ2LXK-OvRvYPK5plSiFtBBX8RceZUMA_AtD7PK72MUvSybRZsp7FD8g72CDU-HioQdcNQxrFbfw",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Auth",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"www.bbc.com/tashak\",\n    \"comment\": \"The article does not contain references and is not structured well. - Lapai Kurami\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:80/api/comment/submit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"api",
+								"comment",
+								"submit"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:80/api/auth/refresh",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "80",
-					"path": [
-						"api",
-						"auth",
-						"refresh"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
