@@ -147,7 +147,7 @@ export const authenticateRefreshToken = async (stringToken: string, res: Fastify
         return undefined;
     }
 
-    connection.manager.delete(SessionModel, {user: userId, refreshToken: stringToken}); // Delete used token
+    connection.manager.delete(SessionModel, {user: userId, refresh_token: stringToken}); // Delete used token
     return await connection.manager.findOne(UserModel, userId); // Return the UserModel
 }
 

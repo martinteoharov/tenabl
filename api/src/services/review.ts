@@ -8,7 +8,7 @@ export const create = async(connection: Connection, user: UserModel, publication
 
     review.user = user;
     review.publication = publication;
-    review.body = JSON.parse(body); // TODO parse request.review to verify format before saving to DB
+    review.body = JSON.parse(body); // TODO parse body to verify format before saving to DB
 
     // Get rid of old reviews for the same publication
     await connection.manager.delete(ReviewModel, { user: user, publication: publication });
