@@ -1,4 +1,4 @@
-import { Access, DecodeAccessResult, Refresh, DecodeRefreshResult } from '../common/jwt_interfaces';
+import { Access, DecodeAccessResult, Refresh, DecodeRefreshResult } from '../common/interfaces/jwt';
 import { UserModel } from '../db/entities/UserModel';
 import { encode, decode, TAlgorithm } from 'jwt-simple';
 import { FastifyReply, FastifyRequest } from 'fastify';
@@ -9,16 +9,16 @@ import { v4 as uuidv4 } from 'uuid';
 const connection = getDB();
 
 // Create access and refresh tokens
-export const createTokens = async (secretKey: string, user: UserModel): Promise<{ access_token: string; refresh_token: string; }> => {
+export const createTokens = async (secretKey: string, user: UserModel): Promise<{ accessToken: string; refreshToken: string; }> => {
     // Check if too many sessions exist
     checkUserSessions(user.id);
 
     const algorithm: TAlgorithm = 'HS512'; // Signing algorithm
     const issued = Date.now();
-    const expiration_access = 60 * 60 * 1000; // One hour expiration in miliseconds
-    const expires_access = issued + expiration_access;
-    const expiration_refresh = 7 * 24 * 60 * 60 * 1000; // One week expiration in miliseconds
-    const expires_refresh = issued + expiration_refresh;
+    const expirationAccess = 60 * 60 * 1000; // One hour expiration in miliseconds
+    const expiresAccess = issued + expirationAccess;
+    const expirationRefresh = 7 * 24 * 60 * 60 * 1000; // One week expiration in miliseconds
+    const expiresRefresh = issued + expirationRefresh;
 
     const session = new SessionModel();
     session.id = uuidv4();
@@ -29,24 +29,24 @@ export const createTokens = async (secretKey: string, user: UserModel): Promise<
         userId: user.id,
         username: user.username,
         issued: issued,
-        expires: expires_access
+        expires: expiresAccess
     };
 
     const refresh: Refresh = {
         userId: user.id,
         sessionId: session.id,
-        expires: expires_refresh
+        expires: expiresRefresh
     };
 
-    const access_token = encode(access, secretKey, algorithm);
-    const refresh_token = encode(refresh, secretKey, algorithm);
+    const accessToken = encode(access, secretKey, algorithm);
+    const refreshToken = encode(refresh, secretKey, algorithm);
 
-    session.refresh_token = refresh_token;
+    session.refresh_token = refreshToken;
     await connection.manager.save(session);
 
     return {
-        access_token: access_token,
-        refresh_token: refresh_token
+        accessToken: accessToken,
+        refreshToken: refreshToken
     }
 }
 
@@ -114,14 +114,14 @@ export const authenticateAccessToken = async (req: FastifyRequest, res: FastifyR
 }
 
 // Check validity of the refresh token
-export const authenticateRefreshToken = async (string_token: string, res: FastifyReply) => {
+export const authenticateRefreshToken = async (stringToken: string, res: FastifyReply) => {
     if (process.env.SEED === undefined) { // Check if env variable SEED is declared
         console.log("[!] Environment variable SEED not set");
         res.code(500).send({ error: "Qnko nqma kur" })
         return undefined;
     }
 
-    const decoded = decodeRefreshToken(process.env.SEED, string_token);
+    const decoded = decodeRefreshToken(process.env.SEED, stringToken);
 
     if (decoded.type !== 'valid') { // Only allow valid token to authenticate
         res.code(401).send({ error: "Invalid token" });
@@ -141,18 +141,20 @@ export const authenticateRefreshToken = async (string_token: string, res: Fastif
         return undefined;
     }
 
-    if (string_token !== session.refresh_token) { // If token does not match, invalidate current refresh token
+    if (stringToken !== session.refresh_token) { // If token does not match, invalidate current refresh token
         connection.manager.remove(session);
         res.code(401).send({ error: "Invalid refresh token" })
         return undefined;
     }
 
-    connection.manager.delete(SessionModel, {user: userId, refresh_token: string_token}); // Delete used token
+    connection.manager.delete(SessionModel, {user: userId, refresh_token: stringToken}); // Delete used token
     return await connection.manager.findOne(UserModel, userId); // Return the UserModel
 }
 
 const checkUserSessions = async (userId: string) => {
     // Delete all but 10 of the most recent sessions
-    const deleted = await connection.manager.find(SessionModel, {where: {user: userId}, order: {started: 'ASC'}, take: 10, select: ['id']})
-    connection.manager.delete(SessionModel, deleted);
+    const deleted = await connection.manager.find(SessionModel, {where: {user: userId}, order: {started: 'ASC'}, skip: 9, select: ['id']})
+    if (deleted.length !== 0) {
+        connection.manager.delete(SessionModel, deleted);
+    }
 }

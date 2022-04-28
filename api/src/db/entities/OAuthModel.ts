@@ -12,7 +12,7 @@ export class OAuthModel {
     user!: string;
 
     @Column()
-    google_auth_token!: string;
+    google_auth_model!: string;
 
     @Column()
     google_token_type!: string;
