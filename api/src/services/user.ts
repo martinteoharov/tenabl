@@ -8,7 +8,6 @@ export const create = async(connection: Connection, request: {
     lastName: string;
     email: string;
     username: string;
-    password: string;
     acceptedTerms: boolean;
 }) => {
     // Basic email regex
@@ -17,12 +16,17 @@ export const create = async(connection: Connection, request: {
     // Check if acceptedTerms is false
     if (!request.acceptedTerms)
     {
-        return false;
+        return undefined;
     }
 
     // Validate email based on RFC 5322 specifications
     if (!emailRegex.test(request.email)){
-        return false;
+        return undefined;
+    }
+
+    // Ensure the user email does not exist in the database
+    if (await connection.manager.findOne(UserModel, { email: request.email }) !== undefined){
+        return undefined;
     }
 
     const user = new UserModel(); // Create user instance
@@ -36,7 +40,7 @@ export const create = async(connection: Connection, request: {
     return user;
 }
 
-// Function that returns an array of status code and error response or userModel object
+// Function that returns undefined or userModel object
 export const login = async(connection: Connection, request: {
     email: string;
     password: string;
@@ -62,4 +66,12 @@ export const login = async(connection: Connection, request: {
     }
 
     return user;
+}
+
+export const generateUsername = async(connection: Connection, firstName: string, lastName: string) => {
+    let username = ''
+    do {
+        username = (firstName[0] + lastName[0] + Math.floor((Math.random() * 100000) + 1)).toLowerCase();
+    } while(await connection.manager.findOne(UserModel, {username: username}) !== undefined);
+    return username;
 }

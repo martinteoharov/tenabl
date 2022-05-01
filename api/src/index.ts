@@ -9,6 +9,7 @@ export const build = async (): Promise<FastifyInstance> => {
 
     const app = fastify({ logger: true });
     app.register(require('./routes/auth'), { prefix: '/auth/' });
+    app.register(require('./routes/oauth'), { prefix: './oauth' });
     app.register(require('./routes/review'), { prefix: '/review/' });
     app.register(require('./routes/comment'), { prefix: '/comment/'});
 

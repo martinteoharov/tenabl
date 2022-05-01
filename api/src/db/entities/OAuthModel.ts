@@ -1,25 +1,16 @@
-import { Entity, OneToOne, JoinColumn, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, OneToOne, JoinColumn, Column, PrimaryColumn } from "typeorm";
 import { UserModel } from "./UserModel";
 
 @Entity('oauth')
 export class OAuthModel {
 
-    @PrimaryGeneratedColumn()
-    public id!: number
+    @PrimaryColumn()
+    public id!: string
 
     @OneToOne(() => UserModel)
     @JoinColumn()
     user!: string;
 
     @Column()
-    google_auth_model!: string;
-
-    @Column()
-    google_token_type!: string;
-
-    @Column()
-    google_renew_token!: string;
-
-    @Column({ type: 'timestamp', nullable: true })
-    google_expiration!: Date;
+    google_auth_sub!: string;
 }
