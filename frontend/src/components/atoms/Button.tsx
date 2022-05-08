@@ -9,11 +9,10 @@ export interface IProps {
 
 const Button: React.FC<IProps> = (props: IProps) => {
     const sizeClassName = `button--size-${props.size}`;
-    console.log(sizeClassName)
 
     return (
         <button 
-        onClick={() => props.onClick()} 
+        onClick={(e) => {e.preventDefault(); props.onClick()}} 
         className={`button--accent ${sizeClassName}`}> 
             {props.children} 
         </button>
