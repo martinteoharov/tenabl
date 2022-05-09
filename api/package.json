@@ -29,6 +29,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "fastify": "^3.27.1",
     "fastify-auth": "^1.1.0",

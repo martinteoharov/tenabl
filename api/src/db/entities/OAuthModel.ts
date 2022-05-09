@@ -13,4 +13,7 @@ export class OAuthModel {
 
     @Column()
     google_auth_sub!: string;
+
+    @Column()
+    github_auth_username!: string;
 }
