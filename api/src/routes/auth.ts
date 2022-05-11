@@ -25,41 +25,46 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
     router.decorateRequest('user', {}); // Request parameter that stores the user (Doesn't work and I can't be bothered debugging it anymore)
 
     router.post('/register', async (req, res) => pipe(req.body, RegisterSchema.decode, fold(
-            async () => res.code(400).send({ error: "Tiq requesti na maika si shte gi prashtash piklio" }),
-            async (request) => {
-                // Check if user already exists
-                const emailExists = await connection.manager.findOne(UserModel, { email: request.email }) !== undefined;
-                if (emailExists) {
-                    res.code(400).send({ error: "User already exists" })
-                    return
-                }
-
-                const user = await userService.create(connection, request);
-                if (!user) {
-                    res.code(400).send({ error: "Kura mi qnko" })
-                    return
-                }
-
-                if (!passwordService.create(connection, user, request.password)){
-                    return res.code(400).send({ error: "Password does not meet standards" })
-                }
-
-                return res.code(200).send({ ok: "User created" });
+        async () => res.code(400).send({ error: "Tiq requesti na maika si shte gi prashtash piklio" }),
+        async (request) => {
+            // Check if user already exists
+            const emailExists = await connection.manager.findOne(UserModel, { email: request.email }) !== undefined;
+            if (emailExists) {
+                res.code(400).send({ error: "User already exists" });
+                return
             }
-        ))
+
+            const isPasswordValid = passwordService.checkPassword(request.password);
+            if (!isPasswordValid) {
+                return res.code(400).send({ error: "Password does not meet standards" });
+            }
+
+            const user = await userService.create(connection, request);
+            if (!user) {
+                return res.code(400).send({ error: "Kura mi qnko" });
+            }
+
+            const pass = await passwordService.create(connection, user, request.password);
+            if (!pass) {
+                return res.code(400).send({ error: "Qnko nqma pishka" });
+            }
+
+            return res.code(200).send({ ok: "User created" });
+        }
+    ))
     )
 
     router.post('/login', async (req, res) => pipe(req.body, PasswordSchema.decode, fold(
-            async () => res.code(400).send({ error: "Invalid request" }),
-            async (request) => {
-                const response = await userService.login(connection, request, res);
-                if (!response){
-                    return response;
-                }
-                // Send JWT and refresh token
-                return sendTokens(res, response);
+        async () => res.code(400).send({ error: "Invalid request" }),
+        async (request) => {
+            const response = await userService.login(connection, request, res);
+            if (!response) {
+                return response;
             }
-        ))
+            // Send JWT and refresh token
+            return sendTokens(res, response);
+        }
+    ))
     );
 
     router.get('/test', async (req, res) => { // Send a GET request to /api/auth/test to check JWT token
@@ -74,14 +79,14 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
 
     // Send a POST request to /api/auth/refresh to get new access and refresh tokens.
     router.post('/refresh', async (req, res) => pipe(req.body, RefreshSchema.decode, fold(
-            async () => res.code(400).send({ error: "Prati normalen request be pedal" }),
-            async (request) => {
-                const user = await jwtService.authenticateRefreshToken(request.refreshToken, res);
+        async () => res.code(400).send({ error: "Prati normalen request be pedal" }),
+        async (request) => {
+            const user = await jwtService.authenticateRefreshToken(request.refreshToken, res);
 
-                if (user !== undefined) { // Create new access and refresh tokens.
-                    sendTokens(res, user);
-                }
-            }))
+            if (user !== undefined) { // Create new access and refresh tokens.
+                sendTokens(res, user);
+            }
+        }))
     )
     done();
 }
