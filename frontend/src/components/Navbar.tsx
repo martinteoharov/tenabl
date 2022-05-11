@@ -55,15 +55,9 @@ const Navbar: FC<Props> = () => {
         ))}
       </div>
 
-      <div className="navbar-login">
-        <NavLink to={"/login"} className='navbar-button'>
-          Sign In
-        </NavLink>
-
-        |
-
-        <NavLink to={"/register"} className='navbar-button'>
-          Sign Up
+      <div className="navbar-auth">
+        <NavLink to={"/auth"} className='navbar-button'>
+          Auth
         </NavLink>
       </div>
     </div>

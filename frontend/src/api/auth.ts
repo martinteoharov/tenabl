@@ -6,6 +6,8 @@ export interface UserLogin {
 }
 
 export interface UserRegister {
+    first_name: string;
+    last_name: string;
     username: string;
     email: string;
     password: string;

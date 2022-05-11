@@ -3,13 +3,15 @@ import { Connection } from "typeorm";
 import { PasswordModel } from "../db/entities/PasswordModel";
 import { UserModel } from "../db/entities/UserModel";
 
-export const create = async(connection: Connection, user: UserModel, password: string) => {
+export const checkPassword = (password: string) => {
     // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
     const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
-    if (!passwordRegex.test(password)) {
-        return false;
-    }
+    return passwordRegex.test(password);
+}
+
+export const create = async(connection: Connection, user: UserModel, password: string) => {
+    const valid = checkPassword(password);
 
     // Create password hash
     const salt = await bcrypt.genSalt(6);
@@ -26,6 +28,7 @@ export const create = async(connection: Connection, user: UserModel, password: s
 
 export const verify = async(connection: Connection, user: UserModel, password: string) => {
     const hash = await connection.manager.findOne(PasswordModel, { user: user.id }); // Fetch user password hash
+    console.log(hash)
 
     if (!hash) {
         return false; // User has no password, probably logged in with OAuth
