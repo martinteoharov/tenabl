@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply } from 'fastify';
+import { FastifyInstance } from 'fastify';
 
 import 'reflect-metadata';
 
@@ -18,12 +18,9 @@ import * as jwtService from '../services/jwt';
 import * as userService from '../services/user';
 import * as passwordService from '../services/password';
 
-
 const connection: Connection = getDB();
 
-export default (router: FastifyInstance, opts: any, done: () => any) => {
-    router.decorateRequest('user', {}); // Request parameter that stores the user (Doesn't work and I can't be bothered debugging it anymore)
-
+export default (router: FastifyInstance, opts: unknown, done: () => unknown) => {
     router.post('/register', async (req, res) => pipe(req.body, RegisterSchema.decode, fold(
         async () => res.code(400).send({ error: "Tiq requesti na maika si shte gi prashtash piklio" }),
         async (request) => {
@@ -62,7 +59,7 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
                 return response;
             }
             // Send JWT and refresh token
-            return sendTokens(res, response);
+            return jwtService.sendTokens(res, response);
         }
     ))
     );
@@ -84,24 +81,9 @@ export default (router: FastifyInstance, opts: any, done: () => any) => {
             const user = await jwtService.authenticateRefreshToken(request.refreshToken, res);
 
             if (user !== undefined) { // Create new access and refresh tokens.
-                sendTokens(res, user);
+                jwtService.sendTokens(res, user);
             }
         }))
     )
     done();
-}
-
-const sendTokens = async (res: FastifyReply, user: UserModel | undefined) => {
-    if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
-        console.log("[!] Environment variable SEED not set");
-        return res.code(500).send({ error: "Qnko nqma kur" });
-    }
-
-    if (user === undefined) {
-        console.log("[!] Environment variable SEED not set");
-        return res.code(500).send({ error: "Qnko nqma kur" });
-    }
-
-    const response = await jwtService.createTokens(process.env.SEED, user);
-    return res.code(200).send(response); // Send JWT and refresh token
 }
