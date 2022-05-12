@@ -2,7 +2,7 @@ FROM node:17-bullseye AS api_base
 
 # ===== NPM cache fix =====
 RUN mkdir /tmp/npm
-RUN chmod -r 777 /tmp/npm
+RUN chmod -R 777 /tmp/npm
 ENV npm_config_cache=/tmp/npm
 RUN npm install -g package-json-merge@0.0.1
 # Update version if NPM whines
