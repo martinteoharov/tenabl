@@ -5,6 +5,7 @@ import { UserLoginRequest, UserRegisterRequest, fetchLogin, fetchRegister } from
 import { rtr } from "../services/authService"
 import { TokenPair } from 'simple-rtr';
 import { spawnNotification } from "../helpers/notification";
+import jwtDecode from 'jwt-decode';
 
 export interface IProps {
     type: "login" | "register";
@@ -17,7 +18,9 @@ const Form: React.FC<IProps> = (props: IProps) => {
         const res = await fetchLogin(data) as any;
 
         if (res) {
-            spawnNotification({ type: "success", text: "Successfuly logged in." });
+            // TODO avoid any
+            const user = jwtDecode(res.accessToken) as any;
+            spawnNotification({ type: "success", text: `Wellcome back, ${user.username}` });
 
             const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
             console.log("Using token pair: ", tokenPair)
@@ -30,9 +33,8 @@ const Form: React.FC<IProps> = (props: IProps) => {
     const handleRegister = async (data: UserRegisterRequest) => {
         const res = await fetchRegister(data);
 
-
         if (res) {
-            spawnNotification({ type: "success", text: "Successfuly registered." });
+            spawnNotification({ type: "success", text: "User Created." });
             // redirect to login
             setSelected("login");
         } else {

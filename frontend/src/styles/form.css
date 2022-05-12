@@ -32,8 +32,8 @@
 
     border-radius: 3px;
     border: 0 !important;
-    border: 1px solid var(--accentColor) !important;
-    padding: 15px 10px;
+    border: 2px solid var(--accentColor) !important;
+    padding: 5px 10px;
 
     color: var(--primaryColor);
 }

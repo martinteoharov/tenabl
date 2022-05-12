@@ -19,4 +19,4 @@ export const rtr = rtrAgent({
 
     throw new Error(`HTTP error ${res.status}`)
   }
-})
+});

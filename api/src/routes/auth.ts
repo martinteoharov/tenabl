@@ -55,6 +55,7 @@ export default (router: FastifyInstance, opts: unknown, done: () => unknown) => 
         async () => res.code(400).send({ error: "Invalid request" }),
         async (request) => {
             const response = await userService.login(connection, request, res);
+
             if (!response) {
                 return response;
             }
