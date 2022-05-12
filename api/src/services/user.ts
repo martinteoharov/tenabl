@@ -3,7 +3,7 @@ import { Connection } from "typeorm";
 import { UserModel } from "../db/entities/UserModel";
 import { FastifyReply } from 'fastify';
 
-export const create = async(connection: Connection, request: {
+export const create = async (connection: Connection, request: {
     firstName: string;
     lastName: string;
     email: string;
@@ -12,16 +12,15 @@ export const create = async(connection: Connection, request: {
     acceptedTerms: boolean;
 }) => {
     // Basic email regex
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i; 
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i;
 
     // Check if acceptedTerms is false
-    if (!request.acceptedTerms)
-    {
+    if (!request.acceptedTerms) {
         return false;
     }
 
     // Validate email based on RFC 5322 specifications
-    if (!emailRegex.test(request.email)){
+    if (!emailRegex.test(request.email)) {
         return false;
     }
 
@@ -37,7 +36,7 @@ export const create = async(connection: Connection, request: {
 }
 
 // Function that returns an array of status code and error response or userModel object
-export const login = async(connection: Connection, request: {
+export const login = async (connection: Connection, request: {
     email: string;
     password: string;
 }, res: FastifyReply) => {
@@ -49,7 +48,7 @@ export const login = async(connection: Connection, request: {
         return undefined
     }
 
-    if (!await passwordService.verify(connection, user, request.password)){
+    if (!await passwordService.verify(connection, user, request.password)) {
         res.code(400).send({ error: "Invalid password" });
         return undefined
     }
