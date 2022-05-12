@@ -8,7 +8,6 @@ export const create = async (connection: Connection, request: {
     lastName: string;
     email: string;
     username: string;
-    password: string;
     acceptedTerms: boolean;
 }) => {
     // Basic email regex
@@ -61,4 +60,12 @@ export const login = async (connection: Connection, request: {
     }
 
     return user;
+}
+
+export const generateUsername = async (connection: Connection, firstName: string, lastName: string) => {
+    let username = ''
+    do {
+        username = (firstName[0] + lastName[0] + Math.floor((Math.random() * 100000) + 1)).toLowerCase();
+    } while (await connection.manager.findOne(UserModel, { username: username }) !== undefined);
+    return username;
 }

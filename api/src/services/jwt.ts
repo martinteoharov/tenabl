@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 const connection = getDB();
 
 // Create access and refresh tokens
-export const createTokens = async (secretKey: string, user: UserModel): Promise<{ accessToken: string; refreshToken: string; }> => {
+const createTokens = async (secretKey: string, user: UserModel): Promise<{ accessToken: string; refreshToken: string; }> => {
     // Check if too many sessions exist
     checkUserSessions(user.id);
 
@@ -151,6 +151,22 @@ export const authenticateRefreshToken = async (stringToken: string, res: Fastify
     return await connection.manager.findOne(UserModel, userId); // Return the UserModel
 }
 
+// This function is used to create and send the appropriate JWT tokens
+export const sendTokens = async (res: FastifyReply, user: UserModel | undefined) => {
+    if (process.env.SEED === undefined) { // Check if the SEED environment variable is set
+        console.log("[!] Environment variable SEED not set");
+        return res.code(500).send({ error: "Qnko nqma kur" });
+    }
+
+    if (user === undefined) {
+        console.log("[!] Environment variable SEED not set");
+        return res.code(500).send({ error: "Qnko nqma kur" });
+    }
+
+    const response = await createTokens(process.env.SEED, user);
+    return res.code(200).send(response); // Send JWT and refresh token
+}
+
 const checkUserSessions = async (userId: string) => {
     // Delete all but 10 of the most recent sessions
     const deleted = await connection.manager.find(SessionModel, {where: {user: userId}, order: {started: 'ASC'}, skip: 9, select: ['id']})
@@ -158,3 +174,4 @@ const checkUserSessions = async (userId: string) => {
         connection.manager.delete(SessionModel, deleted);
     }
 }
+
