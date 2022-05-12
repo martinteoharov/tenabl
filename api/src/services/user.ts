@@ -15,12 +15,12 @@ export const create = async (connection: Connection, request: {
 
     // Check if acceptedTerms is false
     if (!request.acceptedTerms) {
-        return false;
+        return undefined;
     }
 
     // Validate email based on RFC 5322 specifications
     if (!emailRegex.test(request.email)) {
-        return false;
+        return undefined;
     }
 
     const user = new UserModel(); // Create user instance
