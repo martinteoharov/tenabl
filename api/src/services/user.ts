@@ -3,7 +3,7 @@ import { Connection } from "typeorm";
 import { UserModel } from "../db/entities/UserModel";
 import { FastifyReply } from 'fastify';
 
-export const create = async(connection: Connection, request: {
+export const create = async (connection: Connection, request: {
     firstName: string;
     lastName: string;
     email: string;
@@ -11,21 +11,15 @@ export const create = async(connection: Connection, request: {
     acceptedTerms: boolean;
 }) => {
     // Basic email regex
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i; 
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i;
 
     // Check if acceptedTerms is false
-    if (!request.acceptedTerms)
-    {
+    if (!request.acceptedTerms) {
         return undefined;
     }
 
     // Validate email based on RFC 5322 specifications
-    if (!emailRegex.test(request.email)){
-        return undefined;
-    }
-
-    // Ensure the user email does not exist in the database
-    if (await connection.manager.findOne(UserModel, { email: request.email }) !== undefined){
+    if (!emailRegex.test(request.email)) {
         return undefined;
     }
 
@@ -40,8 +34,8 @@ export const create = async(connection: Connection, request: {
     return user;
 }
 
-// Function that returns undefined or userModel object
-export const login = async(connection: Connection, request: {
+// Function that returns an array of status code and error response or userModel object
+export const login = async (connection: Connection, request: {
     email: string;
     password: string;
 }, res: FastifyReply) => {
@@ -53,7 +47,7 @@ export const login = async(connection: Connection, request: {
         return undefined
     }
 
-    if (!await passwordService.verify(connection, user, request.password)){
+    if (!await passwordService.verify(connection, user, request.password)) {
         res.code(400).send({ error: "Invalid password" });
         return undefined
     }
@@ -68,10 +62,10 @@ export const login = async(connection: Connection, request: {
     return user;
 }
 
-export const generateUsername = async(connection: Connection, firstName: string, lastName: string) => {
+export const generateUsername = async (connection: Connection, firstName: string, lastName: string) => {
     let username = ''
     do {
         username = (firstName[0] + lastName[0] + Math.floor((Math.random() * 100000) + 1)).toLowerCase();
-    } while(await connection.manager.findOne(UserModel, {username: username}) !== undefined);
+    } while (await connection.manager.findOne(UserModel, { username: username }) !== undefined);
     return username;
 }

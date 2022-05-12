@@ -8,20 +8,17 @@ import {
 
 import Home from './pages/Home';
 import About from './pages/About';
-import Login from './pages/Login';
 
 function App() {
   return (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Home />}>
-      </Route>
-      <Route path="/about" element={<About />}>
-      </Route>
-      <Route path="/auth" element={<Login />}>
-      </Route>
-    </Routes>
-  </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />}>
+        </Route>
+        <Route path="/about" element={<About />}>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

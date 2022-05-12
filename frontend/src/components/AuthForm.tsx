@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import Button from './atoms/Button';
+import Button from '../common/React/components/Button';
 import '../styles/form.css'
-import * as auth from "../api/auth";
+import { UserLoginRequest, UserRegisterRequest, fetchLogin, fetchRegister } from "../api/auth";
+import { rtr } from "../services/authService"
+import { TokenPair } from 'simple-rtr';
+import { spawnNotification } from "../helpers/notification";
+import jwtDecode from 'jwt-decode';
 
 export interface IProps {
     type: "login" | "register";
@@ -10,12 +14,33 @@ export interface IProps {
 const Form: React.FC<IProps> = (props: IProps) => {
     const [selected, setSelected] = useState(props.type);
 
-    const handleSubmit = (data: any) => {
-        if(selected == "login") {
-            auth.login(data);
+    const handleLogin = async (data: UserLoginRequest) => {
+        const res = await fetchLogin(data) as any;
+
+        if (res) {
+            // TODO avoid any
+            const user = jwtDecode(res.accessToken) as any;
+            spawnNotification({ type: "success", text: `Wellcome back, ${user.username}` });
+
+            const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
+            console.log("Using token pair: ", tokenPair)
+            rtr.setPair(tokenPair);
         } else {
-            auth.register(data);
+            spawnNotification({ type: "error", text: "Couldn't login", timeout: 3000 })
         }
+    }
+
+    const handleRegister = async (data: UserRegisterRequest) => {
+        const res = await fetchRegister(data);
+
+        if (res) {
+            spawnNotification({ type: "success", text: "User Created." });
+            // redirect to login
+            setSelected("login");
+        } else {
+            spawnNotification({ type: "error", text: "Couldn't register.", timeout: 3000 })
+        }
+
     }
 
     const RegisterInsteadButton = <a className="form-anchor" onClick={() => { setSelected("register") }}> Create an account instead </a>
@@ -23,32 +48,38 @@ const Form: React.FC<IProps> = (props: IProps) => {
 
     return (
         <div>
-            {selected === "login" ? <LoginForm switchButton={RegisterInsteadButton} onSubmit={(data) => handleSubmit(data)} /> :
-                <RegisterForm switchButton={LoginInsteadButton} onSubmit={(data) => handleSubmit(data)} />}
+            {selected === "login" ? <LoginForm switchButton={RegisterInsteadButton} onSubmit={handleLogin} /> :
+                <RegisterForm switchButton={LoginInsteadButton} onSubmit={handleRegister} />}
         </div>
     )
 }
 
 interface ILoginProps {
     switchButton: any
-    onSubmit: (data: any) => void
+    onSubmit: (data: UserLoginRequest) => void
 }
-const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
-    const [state, setState] = useState({});
 
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setState({
-            ...state,
-            [e.target.name]: e.target.value
-        });
+const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
+    const [email, setEmail] = useState<string>();
+    const [password, setPassword] = useState<string>();
+
+    const handleSubmit = () => {
+        if (!email || !password) {
+            console.log("something is empty");
+            return;
+        }
+
+        props.onSubmit({ email, password, acceptedTerms: true })
     }
 
     return (
         <form className="form">
-            <input name="username" className="form-input" type="text" placeholder="Username" onChange={onInputChange} />
-            <input name="password" className="form-input" type="password" placeholder="Password" onChange={onInputChange} />
+            <label>Email</label>
+            <input name="email" className="form-input" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <label>Password</label>
+            <input name="password" className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <div style={{ display: "grid", justifyContent: "center", alignItems: "center" }}>
-                <Button onClick={() => props.onSubmit(state)} size="m"> login </Button>
+                <Button onClick={handleSubmit} size="m"> LOGIN </Button>
             </div>
             {props.switchButton}
         </form>
@@ -57,26 +88,38 @@ const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
 
 interface IRegisterProps {
     switchButton: any
-    onSubmit: (data: any) => void
+    onSubmit: (data: UserRegisterRequest) => void
 }
 const RegisterForm: React.FC<IRegisterProps> = (props: IRegisterProps) => {
-    const [state, setState] = useState({});
+    const [email, setEmail] = useState<string>();
+    const [username, setUsername] = useState<string>();
+    const [firstName, setFirstName] = useState<string>();
+    const [lastName, setLastName] = useState<string>();
+    const [password, setPassword] = useState<string>();
 
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setState({
-            ...state,
-            [e.target.name]: e.target.value
-        });
+    const handleSubmit = () => {
+        if (!email || !username || !firstName || !lastName || !password) {
+            console.log("something is empty");
+            return;
+        }
+
+        props.onSubmit({ email, username, firstName, lastName, password, acceptedTerms: true })
     }
 
     return (
         <form className="form">
-            <input name="first_name" className="form-input" type="text" placeholder="First Name" onChange={onInputChange} />
-            <input name="last_name" className="form-input" type="text" placeholder="Last Name" onChange={onInputChange} />
-            <input name="username" className="form-input" type="text" placeholder="Username" onChange={onInputChange} />
-            <input name="password" className="form-input" type="password" placeholder="Password" onChange={onInputChange} />
+            <label>Email</label>
+            <input name="email" className="form-input" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <label>Username</label>
+            <input name="username" className="form-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <label>First Name</label>
+            <input name="firstName" className="form-input" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            <label>Last Name</label>
+            <input name="lastName" className="form-input" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <label>Password</label>
+            <input name="password" className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <div style={{ display: "grid", justifyContent: "center", alignItems: "center" }}>
-                <Button onClick={() => props.onSubmit(state)} size="m"> register </Button>
+                <Button onClick={handleSubmit} size="m"> REGISTER </Button>
             </div>
             {props.switchButton}
         </form>

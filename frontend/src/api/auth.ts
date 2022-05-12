@@ -1,26 +1,31 @@
-import { genericFetch } from "./generic";
+// import { spawnNotification } from "src/helpers/notification";
+import { fetchPost } from "./fetch"
 
-export interface UserLogin {
-    username: string;
+export interface UserLoginRequest {
+    email: string;
     password: string;
+    acceptedTerms: boolean;
 }
 
-export interface UserRegister {
-    first_name: string;
-    last_name: string;
+export interface UserRegisterRequest {
+    firstName: string;
+    lastName: string;
     username: string;
     email: string;
     password: string;
+    acceptedTerms: boolean;
 }
 
-export const login = async (data: UserLogin) => {
-    const res = await genericFetch("/api/login", data, "POST");
+export const fetchLogin = async (data: UserLoginRequest) => {
+    // TODO typescript TokenPair
+    const res = await fetchPost("/api/auth/login", data);
 
     return res;
 }
 
-export const register = async (data: UserRegister) => {
-    const res = await genericFetch("/api/register", data, "POST");
+export const fetchRegister = async (data: UserRegisterRequest) => {
+    // TODO typescript TokenPair
+    const res = await fetchPost("/api/auth/register", data);
 
     return res;
 }

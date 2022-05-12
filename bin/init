@@ -1,11 +1,15 @@
 #!/bin/bash
 OLDDIR=`pwd`
+echo "Installing packages in api..."
 cd ./api
 npm i
+echo "Installing packages in frontend..."
 cd ../frontend
 npm i
+echo "Installing packages in common..."
 cd ../common
 npm i
+echo "Installing packages in extension..."
 cd ../extension
 npm i
 cd $OLDDIR

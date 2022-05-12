@@ -8,7 +8,7 @@ const Home: FC = () => {
 
   return (
     <>
-      <Layout> Welcome to tenabl! </Layout>
+      <Layout requireAuthentication={true}> Welcome to tenabl! </Layout>
     </>
   );
 };

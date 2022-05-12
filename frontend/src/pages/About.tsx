@@ -8,7 +8,7 @@ const Home: FC = () => {
 
   return (
     <>
-      <Layout> About! </Layout>
+      <Layout requireAuthentication={false}> About! </Layout>
     </>
   );
 };
