@@ -6,9 +6,9 @@ files:
 hooks:
   AfterInstall:
     - location: bin/build
-      timeout: 500
+      timeout: 5000
       runas: ubuntu
   ApplicationStart:
     - location: bin/deploy
-      timeout: 500
+      timeout: 5000
       runas: ubuntu
