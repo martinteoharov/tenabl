@@ -1,0 +1,6 @@
+.profile-container {
+    display: grid;
+
+    height: 40vh;
+    width: 30vw;
+}
