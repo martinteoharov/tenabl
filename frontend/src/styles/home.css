@@ -1,0 +1,37 @@
+.home-container {
+    display: grid;
+
+    height: 90vh;
+    width: 80vw;
+
+    grid-template-areas: "trending"
+        "curated";
+}
+
+.container-trending {
+    grid-area: trending;
+}
+
+.container-trending>h1 {
+    font-size: 20px;
+}
+
+.container-curated {
+    grid-area: curated;
+}
+
+.container-curated>h1 {
+    font-size: 20px;
+}
+
+
+.articles-container {
+    margin-top: 50px;
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+}
