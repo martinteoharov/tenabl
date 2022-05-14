@@ -1,5 +1,5 @@
 import React from 'react';
-import './button.css';
+import '../styles/button.css';
 
 export interface IProps {
     onClick: () => void;

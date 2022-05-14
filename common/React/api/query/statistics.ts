@@ -1,6 +1,6 @@
 // import { fetchGet } from "../fetch"
-import { IArticle } from "../../common/interfaces/article";
-import { IArticleStatistics } from "../../common/interfaces/statistics";
+import { IArticle } from "../../../interfaces/article";
+import { IArticleStatistics } from "../../../interfaces/statistics";
 
 const article: IArticle = {
     id: "123",

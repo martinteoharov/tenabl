@@ -3,11 +3,11 @@ import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 
-import Layout from "../components/Layout";
+import Layout from "src/components/Layout";
 
-import { getStatisticsByArticleID } from "../api/query/statistics";
+import { getStatisticsByArticleID } from "src/common/React/api/query/statistics";
 
-import "../styles/statistics.css";
+import "src/styles/statistics.css";
 import Button from "src/common/React/components/Button";
 import {
     BarChart,

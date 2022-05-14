@@ -7,7 +7,7 @@ import Switch from "react-switch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSun, faMoon, faHouse, faFile, faUser } from "@fortawesome/free-solid-svg-icons";
 
-import { setTheme } from '../helpers/theme';
+import { setTheme } from '../common/React/helpers/theme';
 
 interface Link {
   title: string;
