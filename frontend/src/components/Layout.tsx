@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useLayoutEffect, useState } from 'react';
 import "src/styles/layout.css";
 import Navbar from 'src/components/Navbar';
 import { Theme } from "src/common/React/helpers/theme";
@@ -16,7 +16,7 @@ interface Props {
 const Layout: FC<Props> = ({ children, requireAuthentication }) => {
     const [token, setToken] = useState<Variable<string> | undefined>(rtr.session.get());
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setTheme(localStorage.getItem("theme") as Theme);
 
         rtr.session.changed(setToken);
