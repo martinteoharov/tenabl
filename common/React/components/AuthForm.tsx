@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Button from '../common/React/components/Button';
+import Button from './Button';
 import '../styles/form.css'
 import { UserLoginRequest, UserRegisterRequest, fetchLogin, fetchRegister } from "../api/auth";
 import { rtr } from "../services/authService"
