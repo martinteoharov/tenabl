@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
-import "../styles/layout.css";
-import Navbar from '../components/Navbar';
-import { Theme } from "src/helpers/theme";
-import { setTheme } from "../helpers/theme";
-import { rtr } from "../services/authService";
+import "src/styles/layout.css";
+import Navbar from 'src/components/Navbar';
+import { Theme } from "src/common/React/helpers/theme";
+import { setTheme } from "src/common/React/helpers/theme";
+import { rtr } from "src/common/React/services/authService";
 import { Variable } from '@lbfalvy/mini-events';
-import AuthForm from "../components/AuthForm";
-import { spawnNotification } from "../helpers/notification";
+import AuthForm from "src/common/React/components/AuthForm";
+import { spawnNotification } from "src/common/React/helpers/notification";
 
 interface Props {
     children: any;

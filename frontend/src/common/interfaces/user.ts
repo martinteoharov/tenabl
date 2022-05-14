@@ -1,12 +1,12 @@
-export interface User {
+export interface IUser {
 
 }
 
-export interface UserPublic {
+export interface IUserPublic {
 
 }
 
-export interface UserProfile {
+export interface IUserProfile {
     username: string;
     firstName: string;
     lastName: string;
