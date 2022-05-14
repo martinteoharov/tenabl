@@ -2,9 +2,11 @@ import * as t from 'io-ts';
 
 const ReviewSchema = t.type({
     url: t.string,
-    review: t.string
+    flags: t.type({
+        reliable: t.boolean
+    })
 });
 
-type ReviewSchemaType = t.TypeOf<typeof ReviewSchema>;
+type ReviewSchema = t.TypeOf<typeof ReviewSchema>;
 
 export default ReviewSchema;

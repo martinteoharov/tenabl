@@ -25,11 +25,11 @@ export interface JwtService {
     refresh: RouteHandlerMethod
 }
 
-class AuthorizationError extends Error {}
+export class AuthError extends Error {}
 
 function getBearer(header: string): string {
     if (!header.startsWith('Bearer '))
-        throw new AuthorizationError('Invalid header format')
+        throw new AuthError('Invalid header format')
     return header.slice('Bearer '.length)
 }
 
@@ -107,7 +107,7 @@ export function jwtService(secret: string, entities: EntityManager): JwtService 
                     const user = await entities.findOneOrFail(UserModel, userId);
                     return cb(req, rep, user)
                 } catch(e) {
-                    if (e instanceof AuthorizationError) {
+                    if (e instanceof AuthError) {
                         return rep.code(401).send({ error: "Unrecognized authorization scheme"})
                     } else {
                         return rep.code(401).send({ error: "Invalid token" });
@@ -136,7 +136,7 @@ export function jwtService(secret: string, entities: EntityManager): JwtService 
                 const response = await service.createTokens(user)
                 return rep.code(200).send(response);
             } catch(e) {
-                if (e instanceof AuthorizationError) {
+                if (e instanceof AuthError) {
                     return rep.code(401).send({ error: "Unrecognized authorization scheme"})
                 } else if (e instanceof EntityNotFoundError) {
                     return rep.code(410).send({ error: 'Session invalidated' });

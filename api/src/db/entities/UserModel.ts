@@ -17,7 +17,4 @@ export class UserModel {
 
     @Column()
     email!: string;
-
-    @Column()
-    accepted_terms!: boolean;
 }

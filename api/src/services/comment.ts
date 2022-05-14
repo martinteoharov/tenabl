@@ -1,13 +1,13 @@
-import { Connection } from "typeorm";
+import { EntityManager } from "typeorm";
 import { CommentModel } from "../db/entities/CommentModel";
 import { PublicationModel } from "../db/entities/PublicationModel";
 import { UserModel } from "../db/entities/UserModel";
 
 export interface CommentService {
-    create(user: UserModel, publication: PublicationModel, body: string): Promise<true>
+    create(user: UserModel, publication: PublicationModel, body: string): Promise<void>
 }
 
-export function commentService(connection: Connection): CommentService {
+export function commentService(entities: EntityManager): CommentService {
     return {
         async create(user, publication, body) {
     
@@ -17,10 +17,8 @@ export function commentService(connection: Connection): CommentService {
             comment.body = body; // TODO filter out naughty words
         
             // Get rid of old comment for the same publication
-            await connection.manager.delete(CommentModel, { user: user, publication: publication });
-            await connection.manager.save(comment);
-        
-            return true
+            await entities.delete(CommentModel, { user: user, publication: publication });
+            await entities.save(comment);
         }
     }
 }

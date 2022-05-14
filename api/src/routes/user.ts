@@ -1,15 +1,17 @@
-import { FastifyInstance, FastifyReply } from 'fastify';
+import { FastifyPluginCallback } from 'fastify';
+import { JwtService } from '../services/jwt';
 
-import * as jwtService from '../services/jwt';
-
-export default (router: FastifyInstance, opts: any, done: () => any) => {
-    // router.decorateRequest('user', {}); // Request parameter that stores the user (Doesn't work and I can't be bothered debugging it anymore)
-
-    router.get('/profile', async (req, res) => {
+export const userRoutes = (
+    jwts: JwtService
+): FastifyPluginCallback => (router, opts, done) => {
+    router.get('/profile', jwts.withUser(async (req, res, user) => {
         // const user = await jwtService.authenticateAccessToken(req, res);
-
-        res.code(200).send({ username: "martinteoharov", firstName: "Martin", lastName: "Teoharov", email: "martin.teoharov15@gmail.com" });
-    });
-
-    done();
+        return {
+            username: user.username,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email
+        }
+    }));
+    done()
 }
