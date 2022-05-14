@@ -1,0 +1,47 @@
+
+.wrapper {
+  position: static;
+  display: grid;
+  grid-template-columns: 40% 40% 40%;
+  top: 800px;
+}
+
+.article  {
+    position: relative;
+    font-family: sans-serif;
+    border-radius: 5px;
+    border: solid;
+    border-width: 2px;
+    height: 80px;
+    width: 350px;
+    background-color: none;
+    box-shadow: 2px 2px 4px black;
+    padding-bottom: 20px;
+  }
+  
+  .score {
+    position: absolute;  
+    font-family: sans-serif;  
+    font-weight: bold;
+    font-size: 16;
+    text-align: right;              
+    right: 5px;
+    bottom: -5px;
+  }
+  
+  .title {
+    position: absolute;
+    font-family: sans-serif;
+    left: 5px;
+    top: 10px;
+    font-weight: bold;
+    font-size: 20px;  
+  }
+  
+  .author {
+    position: absolute;
+    font-family: sans-serif;
+    font-size: 16;
+    left: 5px;
+    bottom: 60px;
+  }
