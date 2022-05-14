@@ -8,17 +8,28 @@ import {
 
 import Home from './pages/Home';
 import About from './pages/About';
+import Profile from './pages/Profile';
+
+import { QueryClient } from 'react-query'
+import { QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient()
+
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />}>
-        </Route>
-        <Route path="/about" element={<About />}>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}>
+          </Route>
+          <Route path="/about" element={<About />}>
+          </Route>
+          <Route path="/profile" element={<Profile />}>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
