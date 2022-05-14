@@ -5,8 +5,7 @@ const RegisterSchema = t.type({
     lastName: t.string,
     email: t.string,
     username: t.string,
-    password: t.string,
-    acceptedTerms: t.boolean
+    password: t.string
 });
 
 type RegisterSchemaType = t.TypeOf<typeof RegisterSchema>;

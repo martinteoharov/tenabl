@@ -10,8 +10,16 @@ export const checkPassword = (password: string) => {
     return passwordRegex.test(password);
 }
 
+export interface PasswordService {
+    create(user: UserModel, password: string): Promise<void>
+    change(user: UserModel, password: string): Promise<void>
+    verify(user: UserModel, password: string): Promise<void>
+}
+
 export const create = async(connection: Connection, user: UserModel, password: string) => {
-    const valid = checkPassword(password);
+    if (!checkPassword(password)) {
+        throw new Error('Invalid password')
+    }
 
     // Create password hash
     const salt = await bcrypt.genSalt(6);

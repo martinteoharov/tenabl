@@ -3,6 +3,16 @@ import { Connection } from "typeorm";
 import { UserModel } from "../db/entities/UserModel";
 import { FastifyReply } from 'fastify';
 
+export interface UserService {
+    create(details: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        username: string;
+    }): Promise<UserModel>
+    find(email: string): Promise<UserModel>
+}
+
 export const create = async (connection: Connection, request: {
     firstName: string;
     lastName: string;

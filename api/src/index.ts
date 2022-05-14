@@ -2,10 +2,14 @@
 
 import fastify, { FastifyInstance } from "fastify";
 import { connectToDB } from "./db";
+import { jwtService } from "./services/jwt";
 
 export const build = async (): Promise<FastifyInstance> => {
-    // Note: Ensure connection to DB is established, before importing any routes
-    await connectToDB();
+    const connection = await connectToDB();
+    if (!process.env.SEED) throw new Error('Seed environment variable not set!')
+    const jwt = jwtService(process.env.SEED, connection.manager)
+    
+
 
     const app = fastify({ logger: true });
     app.register(require('./routes/auth'), { prefix: '/auth/' });

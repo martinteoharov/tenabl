@@ -1,6 +1,7 @@
 import { string } from "fp-ts";
 
 export interface Access {
+    type: 'access';
     userId: string;
     username: string;
     /**
@@ -14,6 +15,7 @@ export interface Access {
 }
 
 export interface Refresh {
+    type: 'refresh';
     sessionId: string;
     userId: string;
     /**
@@ -21,6 +23,8 @@ export interface Refresh {
      */
     expires: number;
 }
+
+export type Token = Access | Refresh
 
 export interface EncodeResult {
     token: string,
