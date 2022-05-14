@@ -7,6 +7,6 @@ export interface IStatistics {
 }
 
 export interface IArticleStatistics {
-    article: IArticle;
+    article?: IArticle;
     statistics: IStatistics[];
 }

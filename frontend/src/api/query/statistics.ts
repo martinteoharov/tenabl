@@ -17,14 +17,16 @@ const articleStatistics: IArticleStatistics = {
     ]
 }
 
-export const getStatisticsByArticleID = async (id: string): Promise<IArticleStatistics | undefined> => {
-    // const articleStatistics = await fetchGet("/api/user/profile") as unknown as ArticleStatistics;
-    console.log(id);
+export const getStatisticsByArticleID = async (id: string | undefined): Promise<IArticleStatistics | undefined> => {
+    // if ID is not defined, fetch median statistics
+    if (!id) {
+        // const articleStatistics = await fetchGet("/api/statistics/") as unknown as ArticleStatistics;
+        return {
+            ...articleStatistics,
+            article: undefined
+        }
+    };
 
-
-    if (articleStatistics) {
-        return articleStatistics;
-    }
-
-    return undefined;
+    // const articleStatistics = await fetchGet("/api/statistics/:id") as unknown as ArticleStatistics;
+    return articleStatistics;
 }

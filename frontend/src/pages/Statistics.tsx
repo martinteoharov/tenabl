@@ -46,7 +46,7 @@ const mapStatisticsToPiechart = (statistics: IStatistics[] | undefined) => {
 const Statistics: FC = () => {
     const { id } = useParams();
 
-    const { data: statistics } = useQuery("statistics", () => getStatisticsByArticleID(id || "0"));
+    const { data: statistics } = useQuery("statistics", () => getStatisticsByArticleID(id));
 
     const [barchartData, setBarchartData] = useState(mapStatisticsToBarchart(statistics?.statistics));
     const [piechartData, setPiechartData] = useState(mapStatisticsToPiechart(statistics?.statistics))
@@ -60,22 +60,22 @@ const Statistics: FC = () => {
         <>
             <Layout requireAuthentication={true}>
                 <div className="statistics-container">
-                    <div className="statistics-header">
-                        <h1> {statistics?.article.name} </h1>
-                        <p> {statistics?.article.description} </p>
-                        <Button onClick={() => window.open(statistics?.article.url)} size="l"> Visit Article </Button>
-                    </div>
+                    {statistics?.article ?
+                        (<div className="statistics-header">
+                            <h1> {statistics?.article?.name} </h1>
+                            <p> {statistics?.article?.description} </p>
+                            <Button onClick={() => window.open(statistics?.article?.url)} size="l"> Visit Article </Button>
+                        </div>) :
+                        (<div className="statistics-header">
+                            <h1> Global Statistics </h1>
+                            <p> The following graphs contain the median values for all articles scraped by us </p>
+                        </div>)
+                    }
                     <div className="statistics-bar-chart">
                         <BarChart
                             width={700}
                             height={500}
                             data={barchartData}
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}
                         >
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />

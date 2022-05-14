@@ -5,7 +5,7 @@ import "../styles/navbar.css";
 
 import Switch from "react-switch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faMoon, faHouse, faFile, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faHouse, faFile, faUser, faPieChart } from "@fortawesome/free-solid-svg-icons";
 
 import { setTheme } from '../helpers/theme';
 
@@ -29,6 +29,7 @@ const Navbar: FC<IProps> = (props) => {
     { title: "Home", path: "/", icon: <FontAwesomeIcon width="20px" icon={faHouse} size="lg" />, hidden: false },
     { title: "About", path: "/about", icon: <FontAwesomeIcon width="20px" icon={faFile} size="lg" />, hidden: false },
     { title: "Profile", path: "/profile", icon: <FontAwesomeIcon width="20px" icon={faUser} size="lg" />, hidden: !props.isAuthenticated },
+    { title: "Statistics", path: "/statistics", icon: <FontAwesomeIcon width="20px" icon={faPieChart} size="lg" />, hidden: !props.isAuthenticated },
   ];
 
   return (
