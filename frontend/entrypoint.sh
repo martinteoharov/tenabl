@@ -21,7 +21,7 @@ echo "Initialising common..."
 
 echo "Replacing common symlink with directory..."
 rm -f src/common
-cp -r ../common src/common
+mkdir src/common
 
 if command -v lsyncd &> /dev/null
 then

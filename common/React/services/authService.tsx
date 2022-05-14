@@ -1,12 +1,12 @@
 import { localStorageVar } from 'localstorage-var'
+import { toAsync } from '@lbfalvy/mini-events'
 import { rtrAgent, State } from 'simple-rtr'
 import { time } from "mockable-timer";
 
-export const kur = localStorageVar<State | undefined>("auth-data");
 export const rtr = rtrAgent({
   renewOnTtl: 60, // Renew a minute before expiry
   lockExpiry: 5, // Wait 5 seconds on network error
-  storage: kur,
+  storage: toAsync<State | undefined>(localStorageVar('auth'), undefined),
   time: time,
   refresh: async refresh => { // Example implementation
     const res = await fetch('/api/auth/refresh', {

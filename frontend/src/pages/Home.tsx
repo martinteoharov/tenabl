@@ -4,7 +4,7 @@ import Article from "../components/Article";
 
 const Home: FC = () => {
   useEffect(() => {
-    document.title = "Tenabl - Home";
+    document.title = "Tenabl";
   }, []);
 
   return (

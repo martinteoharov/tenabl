@@ -1,0 +1,40 @@
+.statistics-container {
+    display: grid;
+
+    width: 80vw;
+    height: 90vh;
+
+    grid-template-areas: "header header header header"
+        "bar bar pie pie"
+        "bar bar pie pie";
+}
+
+.statistics-header {
+    grid-area: header;
+    padding-left: 80px;
+}
+
+.statistics-bar-chart {
+    grid-area: bar;
+
+    display: grid;
+
+    height: 100%;
+    width: 100%;
+
+    align-items: center;
+}
+
+.statistics-pie-chart {
+    grid-area: pie;
+
+    display: grid;
+
+    height: 100%;
+    width: 100%;
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+
+    align-items: center;
+}
