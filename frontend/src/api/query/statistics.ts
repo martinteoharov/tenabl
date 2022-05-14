@@ -13,7 +13,9 @@ const articleStatistics: IArticleStatistics = {
     article,
     statistics: [
         { name: "trustworthiness", positive: 125, negative: 54 },
-        { name: "concise", positive: 54, negative: 24 }
+        { name: "concise", positive: 89, negative: 24 },
+        { name: "outdated", positive: 100, negative: 169 },
+        { name: "biased", positive: 54, negative: 69 },
     ]
 }
 
