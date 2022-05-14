@@ -23,7 +23,6 @@ const Form: React.FC<IProps> = (props: IProps) => {
             spawnNotification({ type: "success", text: `Wellcome back, ${user.username}` });
 
             const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
-            console.log(tokenPair);
             console.log("Using token pair: ", tokenPair)
             rtr.setPair(tokenPair);
         } else {

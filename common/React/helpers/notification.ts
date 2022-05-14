@@ -1,6 +1,6 @@
 import Noty from 'noty';
-import "../../node_modules/noty/lib/noty.css";
-import "../../node_modules/noty/lib/themes/mint.css";
+import "noty/lib/noty.css";
+import "noty/lib/themes/mint.css";
 
 export interface Options {
     text: string;
