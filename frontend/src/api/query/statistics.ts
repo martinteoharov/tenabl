@@ -1,21 +1,26 @@
 // import { fetchGet } from "../fetch"
-import { ArticleStatistics } from "../../common/interfaces/statistics";
+import { IArticle } from "../../common/interfaces/article";
+import { IArticleStatistics } from "../../common/interfaces/statistics";
 
-export const getStatisticsByArticleID = async (id: number): Promise<ArticleStatistics | undefined> => {
+const article: IArticle = {
+    id: "123",
+    name: "Victor is a sad cunt",
+    description: "Very bad stuff...",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+}
+
+const articleStatistics: IArticleStatistics = {
+    article,
+    statistics: [
+        { name: "trustworthiness", positive: 125, negative: 54 },
+        { name: "concise", positive: 54, negative: 24 }
+    ]
+}
+
+export const getStatisticsByArticleID = async (id: string): Promise<IArticleStatistics | undefined> => {
     // const articleStatistics = await fetchGet("/api/user/profile") as unknown as ArticleStatistics;
     console.log(id);
 
-    const articleStatistics: ArticleStatistics = {
-        voteCount: 123,
-        trust: {
-            positive: 34,
-            negative: 62
-        },
-        concise: {
-            positive: 43,
-            negative: 75
-        }
-    }
 
     if (articleStatistics) {
         return articleStatistics;
