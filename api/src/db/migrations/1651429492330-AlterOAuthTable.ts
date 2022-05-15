@@ -9,7 +9,8 @@ export class AlterOAuthTable1651429492330 implements MigrationInterface {
         await queryRunner.dropColumn('oauth', 'google_auth_token');
         await queryRunner.addColumn('oauth', new TableColumn({
             name: 'google_auth_sub',
-            type: 'varchar'
+            type: 'varchar',
+            isNullable: true
         }));
     }
 

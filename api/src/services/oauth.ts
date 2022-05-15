@@ -1,14 +1,9 @@
-import { OAuth2Client } from 'google-auth-library';
 import { EntityManager } from 'typeorm';
 import { OAuthModel } from '../db/entities/OAuthModel';
 import { UserModel } from '../db/entities/UserModel';
 import axios from 'axios';
 import { AuthError } from './jwt';
 import { UserService } from './user';
-
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const githubClientId = process.env.GITHUB_CLIENT_ID;
-const githubSecret = process.env.GITHUB_SECRET;
 
 export interface OauthService {
     // Login user using Google OAuth 2
@@ -18,38 +13,40 @@ export interface OauthService {
 
 export function oauthService(
     users: UserService,
-    entities: EntityManager
+    entities: EntityManager,
+    // googleClientId: string,
+    githubClientId: string,
+    githubSecret: string
 ): OauthService {
+    // const googleClient = new OAuth2Client(googleClientId);
     return {
         async googleLogin(token) {
-            const ticket = await googleClient.verifyIdToken({
-                idToken: token,
-                audience: process.env.CLIENT_ID
-            });
-            const payload = ticket.getPayload();
-            if (payload === undefined){
-                throw new AuthError('Login unsuccessful')
+            try {
+                const response = await axios({
+                    method: 'get',
+                    url: `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`,
+                })
+                const payload = response.data
+                const firstName = payload['given_name'] ?? ''
+                const lastName = payload['family_name'] ?? ''
+                // Try to locate existing user
+                const googleOAuth = await entities.findOne(OAuthModel, { google_auth_sub: payload['sub'] });
+                if (googleOAuth) return await entities.findOneOrFail(UserModel, googleOAuth.user);
+                // If first login
+                const username = await users.generateName(firstName, lastName);
+                const user = await users.create({
+                    firstName, lastName,
+                    email: payload['email'],
+                    username
+                })
+                const oauthData = new OAuthModel();
+                oauthData.user = user.id;
+                oauthData.google_auth_sub = payload['sub'];
+                await entities.save(oauthData)
+                return user
+            } catch(e) {
+                throw new AuthError('invalid token')
             }
-            if (payload['email'] == undefined) {
-                throw new AuthError('Required permission not given')
-            }
-            const firstName = payload['given_name'] ?? ''
-            const lastName = payload['family_name'] ?? ''
-            // Try to locate existing user
-            const googleOAuth = await entities.findOne(OAuthModel, { google_auth_sub: payload['sub'] });
-            if (googleOAuth) return await entities.findOneOrFail(UserModel, googleOAuth.user);
-            // If first login
-            const username = await users.generateName(firstName, lastName);
-            const user = await users.create({
-                  firstName, lastName,
-                  email: payload['email'],
-                  username
-            })
-            const oauthData = new OAuthModel();
-            oauthData.user = user.id;
-            oauthData.google_auth_sub = payload['sub'];
-            await entities.save(oauthData)
-            return user
         },
         async githubLogin(token) {
             try {
