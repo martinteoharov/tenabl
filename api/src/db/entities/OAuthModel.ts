@@ -1,19 +1,19 @@
-import { Entity, OneToOne, JoinColumn, Column, PrimaryColumn } from "typeorm";
+import { Entity, OneToOne, JoinColumn, Column, PrimaryGeneratedColumn } from "typeorm";
 import { UserModel } from "./UserModel";
 
 @Entity('oauth')
 export class OAuthModel {
 
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     public id!: string
 
     @OneToOne(() => UserModel)
     @JoinColumn()
     user!: string;
 
-    @Column()
-    google_auth_sub!: string;
+    @Column({ type: 'varchar', nullable: true })
+    google_auth_sub!: string | null | undefined;
 
-    @Column()
-    github_auth_username!: string;
+    @Column({ type: 'varchar', nullable: true })
+    github_auth_username!: string | null | undefined;
 }

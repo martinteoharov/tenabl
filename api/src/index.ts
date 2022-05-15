@@ -19,7 +19,6 @@ process.env["GOOGLE_CLIENT_ID"] = "285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh
 process.env["GITHUB_CLIENT_ID"] = "285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com";
 process.env["GITHUB_SECRET"] = "285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com";
 
-
 function getEnv(name: string): string {
     const val = process.env[name]
     if (!val) throw new Error(`${name} environment variable not set`)
