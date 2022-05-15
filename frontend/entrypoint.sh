@@ -21,7 +21,8 @@ echo "Initialising common..."
 
 echo "Replacing common symlink with directory..."
 rm -f src/common
-mkdir src/common
+cp -r /common src/common
+rm -rf src/common/node_modules
 
 if command -v lsyncd &> /dev/null
 then
