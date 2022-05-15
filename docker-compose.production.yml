@@ -29,6 +29,8 @@ services:
       DB_PASSWD: ${DB_PASSWD}
       DB_DATABASE: ${DB_DATABASE}
       SEED: ${SEED}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_SECRET: ${GITHUB_SECRET}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     profiles: [ 'core' ]

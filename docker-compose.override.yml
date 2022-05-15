@@ -29,6 +29,8 @@ services:
       DB_PASSWD: pgpassword
       DB_DATABASE: postgres
       SEED: Super_secret_key
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_SECRET: ${GITHUB_SECRET}
     depends_on:
       - db
   cra:
