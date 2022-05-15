@@ -52,7 +52,8 @@
 
 .form-anchor {
     text-decoration: underline;
-    margin-top: 30px;
+    display: block;
+    margin-top: 100px !important;
     cursor: pointer;
 }
 

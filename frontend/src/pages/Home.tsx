@@ -1,6 +1,8 @@
 import React, { FC, useEffect } from "react";
 import Layout from "../components/Layout";
 import Article, { ArticleProps } from "../components/Article";
+import { useSearchParams } from "react-router-dom";
+import { redirectGoogleOAuth } from "../common/React/api/oauth/google";
 
 import "../styles/home.css";
 
@@ -59,9 +61,20 @@ const articlesCurated: ArticleProps[] = [
 ]
 
 const Home: FC = () => {
+  const [searchParams] = useSearchParams();
+
+  const accessToken = searchParams.get("access_token");
+
   useEffect(() => {
     document.title = "Tenabl";
+
   }, []);
+  if (accessToken) {
+    const kur = redirectGoogleOAuth(accessToken)
+    console.log(kur);
+
+  }
+
 
   return (
     <>
