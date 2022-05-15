@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
 import Layout from "../components/Layout";
 import Article, { ArticleProps } from "../components/Article";
-import { redirectGoogleOAuth } from "../common/React/api/oauth/google";
+import { redirectGoogleOAuth } from "src/common/React/api/oauth/google";
 
 import "../styles/home.css";
 import { TokenPair } from "simple-rtr";
