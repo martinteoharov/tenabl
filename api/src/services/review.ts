@@ -1,18 +1,30 @@
-import { Connection } from "typeorm";
+import { EntityManager } from "typeorm";
+import { IFlags } from '../common/interfaces/review'
 import { PublicationModel } from "../db/entities/PublicationModel";
 import { ReviewModel } from "../db/entities/ReviewModel";
 import { UserModel } from "../db/entities/UserModel";
 
-export const create = async(connection: Connection, user: UserModel, publication: PublicationModel, body: string) => {
-    const review = new ReviewModel();
+export interface ReviewService {
+    create(user: UserModel, publication: PublicationModel, body: IFlags): Promise<void>
+    get(user: UserModel, publication: PublicationModel): Promise<IFlags|undefined>
+}
 
-    review.user = user;
-    review.publication = publication;
-    review.body = JSON.parse(body); // TODO parse body to verify format before saving to DB
+export function reviewService(entities: EntityManager): ReviewService {
+    return {
+        async create(user, publication, body) {
+            const review = new ReviewModel();
 
-    // Get rid of old reviews for the same publication
-    await connection.manager.delete(ReviewModel, { user: user, publication: publication });
-    await connection.manager.save(review);
+            review.user = user;
+            review.publication = publication;
+            review.body = JSON.stringify(body); // TODO parse body to verify format before saving to DB
 
-    return true
+            // Get rid of old reviews for the same publication
+            await entities.delete(ReviewModel, { user: user, publication: publication });
+            await entities.save(review);
+        },
+        async get(user, publication) {
+            const review = await entities.findOne(ReviewModel, { where: { user, publication }})
+            return review && JSON.parse(review.body)
+        }
+    }
 }
