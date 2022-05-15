@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from "react";
 import Layout from "../components/Layout";
 import Article, { ArticleProps } from "../components/Article";
-import { useSearchParams } from "react-router-dom";
 import { redirectGoogleOAuth } from "../common/React/api/oauth/google";
 
 import "../styles/home.css";
@@ -74,11 +73,10 @@ const handleOAuth = async (accessToken: string) => {
 console.log(handleOAuth)
 
 const Home: FC = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.hash.substring(1))
 
   useEffect(() => {
     document.title = "Tenabl";
-    console.log("USE EFFECT")
 
     const accessToken = searchParams.get("access_token");
 
