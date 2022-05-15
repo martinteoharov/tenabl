@@ -27,7 +27,7 @@ export const build = async (): Promise<FastifyInstance> => {
     const publications = publicationService(connection.manager)
     const comments = commentService(connection.manager)
     const users = userService(connection.manager)
-    const oauth = oauthService(users, connection.manager, getEnv('GOOGLE_CLIENT_ID'), getEnv('GITHUB_CLIENT_ID'), getEnv('GITHUB_SECRET'))
+    const oauth = oauthService(users, connection.manager, /*getEnv('GOOGLE_CLIENT_ID'),*/ getEnv('GITHUB_CLIENT_ID'), getEnv('GITHUB_SECRET'))
     const passwords = passwordService(connection.manager)
     const reviews = reviewService(connection.manager)
     const app = fastify({
