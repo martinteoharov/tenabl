@@ -15,22 +15,30 @@ import { reviewService } from "./services/review";
 import { reviewRoutes } from "./routes/review";
 import { userRoutes } from "./routes/user";
 
+function getEnv(name: string): string {
+    const val = process.env[name]
+    if (!val) throw new Error(`${name} environment variable not set`)
+    return val
+}
+
 export const build = async (): Promise<FastifyInstance> => {
     const connection = await connectToDB();
-    if (!process.env.SEED) throw new Error('Seed environment variable not set!')
-    const jwts = jwtService(process.env.SEED, connection.manager)
+    const jwts = jwtService(getEnv('SEED'), connection.manager)
     const publications = publicationService(connection.manager)
     const comments = commentService(connection.manager)
     const users = userService(connection.manager)
-    const oauth = oauthService(users, connection.manager)
+    const oauth = oauthService(users, connection.manager, getEnv('GOOGLE_CLIENT_ID'), getEnv('GITHUB_CLIENT_ID'), getEnv('GITHUB_SECRET'))
     const passwords = passwordService(connection.manager)
     const reviews = reviewService(connection.manager)
-    const app = fastify({ logger: true });
-    app.register(authRoutes(users, passwords, jwts, connection.manager), { prefix: '/auth/' });
-    app.register(oauthRoutes(jwts, oauth), { prefix: './oauth' });
-    app.register(userRoutes(jwts), { prefix: '/user/' });
-    app.register(reviewRoutes(jwts, publications, reviews), { prefix: '/review/' });
-    app.register(commentRoutes(jwts, comments, publications), { prefix: '/comment/' });
+    const app = fastify({
+        logger: true,
+        ignoreTrailingSlash: true
+    });
+    app.register(authRoutes(users, passwords, jwts, connection.manager), { prefix: '/auth' });
+    app.register(oauthRoutes(jwts, oauth), { prefix: '/oauth' });
+    app.register(userRoutes(jwts), { prefix: '/user' });
+    app.register(reviewRoutes(jwts, publications, reviews), { prefix: '/review' });
+    app.register(commentRoutes(jwts, comments, publications), { prefix: '/comment' });
 
     app.listen(80, '0.0.0.0');
 
