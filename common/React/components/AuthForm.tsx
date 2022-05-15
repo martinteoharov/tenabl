@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from './Button';
+import ButtonOAuth from './ButtonOAuth';
 import '../styles/form.css'
 import { UserLoginRequest, UserRegisterRequest, fetchLogin, fetchRegister } from "../api/auth";
 import { rtr } from "../services/authService"
@@ -25,8 +26,6 @@ const Form: React.FC<IProps> = (props: IProps) => {
             const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
             console.log("Using token pair: ", tokenPair)
             rtr.setPair(tokenPair);
-        } else {
-            spawnNotification({ type: "error", text: "Couldn't login", timeout: 3000 })
         }
     }
 
@@ -50,6 +49,7 @@ const Form: React.FC<IProps> = (props: IProps) => {
         <div>
             {selected === "login" ? <LoginForm switchButton={RegisterInsteadButton} onSubmit={handleLogin} /> :
                 <RegisterForm switchButton={LoginInsteadButton} onSubmit={handleRegister} />}
+
         </div>
     )
 }
@@ -78,8 +78,9 @@ const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
             <input name="email" className="form-input" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
             <label>Password</label>
             <input name="password" className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <div style={{ display: "grid", justifyContent: "center", alignItems: "center" }}>
+            <div style={{ display: "grid", justifyContent: "left", rowGap: "10px" }}>
                 <Button onClick={handleSubmit} size="m"> LOGIN </Button>
+                <ButtonOAuth size="s" clientId='285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com' > Login with google </ButtonOAuth>
             </div>
             {props.switchButton}
         </form>
@@ -118,7 +119,7 @@ const RegisterForm: React.FC<IRegisterProps> = (props: IRegisterProps) => {
             <input name="lastName" className="form-input" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
             <label>Password</label>
             <input name="password" className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <div style={{ display: "grid", justifyContent: "center", alignItems: "center" }}>
+            <div style={{ display: "grid", justifyContent: "left" }}>
                 <Button onClick={handleSubmit} size="m"> REGISTER </Button>
             </div>
             {props.switchButton}

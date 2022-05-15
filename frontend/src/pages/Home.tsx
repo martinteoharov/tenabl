@@ -1,8 +1,14 @@
 import React, { FC, useEffect } from "react";
 import Layout from "../components/Layout";
 import Article, { ArticleProps } from "../components/Article";
+import { useSearchParams } from "react-router-dom";
+import { redirectGoogleOAuth } from "../common/React/api/oauth/google";
 
 import "../styles/home.css";
+import { TokenPair } from "simple-rtr";
+import { rtr } from "src/common/React/services/authService";
+import jwtDecode from "jwt-decode";
+import { spawnNotification } from "src/common/React/helpers/notification";
 
 const articlesTrending: ArticleProps[] = [
   {
@@ -58,10 +64,30 @@ const articlesCurated: ArticleProps[] = [
   },
 ]
 
+const handleOAuth = async (accessToken: string) => {
+  const res = await redirectGoogleOAuth(accessToken) as any;
+  const user = jwtDecode(res.accessToken) as any;
+  spawnNotification({ type: "success", text: `Wellcome back, ${user.username}` });
+  const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
+  rtr.setPair(tokenPair);
+}
+console.log(handleOAuth)
+
 const Home: FC = () => {
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
     document.title = "Tenabl";
+    console.log("USE EFFECT")
+
+    const accessToken = searchParams.get("access_token");
+
+    if (accessToken) {
+      handleOAuth(accessToken);
+    }
+
   }, []);
+
 
   return (
     <>
