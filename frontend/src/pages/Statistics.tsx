@@ -46,7 +46,7 @@ const mapStatisticsToPiechart = (statistics: IStatistics[] | undefined) => {
 const Statistics: FC = () => {
     const { id } = useParams();
 
-    const { data: statistics } = useQuery("statistics", () => getStatisticsByArticleID(id));
+    const { data: statistics } = useQuery("statistics", () => getStatisticsByArticleID(id || ""));
 
     const [barchartData, setBarchartData] = useState(mapStatisticsToBarchart(statistics?.statistics));
     const [piechartData, setPiechartData] = useState(mapStatisticsToPiechart(statistics?.statistics))

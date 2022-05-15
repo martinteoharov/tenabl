@@ -8,7 +8,7 @@ const OAuthTenablEndpoint = "http://localhost/api/oauth/google"
 interface OAuthGoogleRequest {
     client_id: string;
     redirect_uri: string;
-    response_type: "token";
+    response_type: "token" | "code";
     scope: string;
 }
 
@@ -20,7 +20,7 @@ export const loginGoogleOAuth = async (data: Props) => {
     const req: OAuthGoogleRequest = {
         client_id: data.clientId.toString(),
         redirect_uri: redirect_uri.toString(),
-        response_type: "token",
+        response_type: "code",
         scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
     }
 
@@ -34,5 +34,5 @@ export const loginGoogleOAuth = async (data: Props) => {
 
 export const redirectGoogleOAuth = async (accessToken: string) => {
     const token = await fetchPost(OAuthTenablEndpoint, { idToken: accessToken });
-    console.log(token);
+    return token;
 }
