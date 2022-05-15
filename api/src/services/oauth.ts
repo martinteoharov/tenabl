@@ -6,10 +6,6 @@ import axios from 'axios';
 import { AuthError } from './jwt';
 import { UserService } from './user';
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const githubClientId = process.env.GITHUB_CLIENT_ID;
-const githubSecret = process.env.GITHUB_SECRET;
-
 export interface OauthService {
     // Login user using Google OAuth 2
     googleLogin(token: string): Promise<UserModel>
@@ -18,8 +14,12 @@ export interface OauthService {
 
 export function oauthService(
     users: UserService,
-    entities: EntityManager
-): OauthService {
+    entities: EntityManager,
+    googleClientId: string,
+    githubClientId: string,
+    githubSecret: string
+    ): OauthService {
+    const googleClient = new OAuth2Client(googleClientId);
     return {
         async googleLogin(token) {
             const ticket = await googleClient.verifyIdToken({
