@@ -1,15 +1,16 @@
-export interface User {
+import * as t from 'io-ts';
 
-}
+export const IUserPublic = t.type({
+    username: t.string,
+    firstName: t.string,
+    lastName: t.string,
+})
+export type IUserPublic = t.TypeOf<typeof IUserProfile>
 
-export interface UserPublic {
-
-}
-
-export interface UserProfile {
-    username: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-}
+export const IUserProfile = t.type({
+    username: t.string,
+    firstName: t.string,
+    lastName: t.string,
+    email: t.string
+})
+export type IUserProfile = t.TypeOf<typeof IUserProfile>

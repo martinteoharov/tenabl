@@ -1,14 +1,11 @@
 import { EntityManager } from "typeorm";
+import { IUserProfile } from "../common/interfaces/user";
 import { UserModel } from "../db/entities/UserModel";
 
 export interface UserService {
-    create(details: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        username: string;
-    }): Promise<UserModel>
-    find(email: string): Promise<UserModel>
+    create(details: IUserProfile): Promise<UserModel>
+    find(email: string): Promise<UserModel|undefined>
+    update(user: UserModel, details: IUserProfile): Promise<void>
     generateName(firstName: string, lastName: string): Promise<string>
 }
 
@@ -29,7 +26,14 @@ export function userService(
             return user
         },
         async find(email) {
-            return await entities.findOneOrFail(UserModel, { where: { email }})
+            return await entities.findOne(UserModel, { where: { email }})
+        },
+        async update(user, details) {
+            user.email = details.email ?? user.email
+            user.username = details.username ?? user.username
+            user.first_name = details.firstName ?? user.first_name
+            user.last_name = details.lastName ?? user.last_name
+            await entities.save(user)
         },
         async generateName(firstName, lastName) {
             const base = `${firstName}_${lastName}`.toLowerCase()

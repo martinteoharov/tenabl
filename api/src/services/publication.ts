@@ -6,12 +6,13 @@ export class PublicationError extends Error {}
 export interface PublicationService {
     // The function returns the existing publication or creates a new one (and then returns it)
     get(url: string): Promise<PublicationModel>
+    find(url: string): Promise<PublicationModel|undefined>
 }
 
 export function publicationService(entities: EntityManager): PublicationService {
-    return {
-        async get(urlString: string) {
-            let publication = await entities.findOne(PublicationModel, { url: urlString });
+    const service: PublicationService = {
+        async get(urlString) {
+            let publication = await service.find(urlString);
             // If publication does not exist, create it
             if (publication === undefined) {
                 const url = new URL(urlString)
@@ -24,6 +25,10 @@ export function publicationService(entities: EntityManager): PublicationService 
                 await entities.save(publication);
             }
             return publication;
+        },
+        async find(urlString) {
+            return await entities.findOne(PublicationModel, { url: urlString });
         }
     }
+    return service
 }

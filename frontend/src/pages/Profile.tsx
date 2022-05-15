@@ -1,15 +1,15 @@
 import React, { FC, useEffect, useState } from "react";
-import Layout from "../components/Layout";
+import Layout from "src/components/Layout";
 
-import "../styles/profile.css";
-import "../styles/form.css";
+import "src/styles/profile.css";
+import "src/styles/form.css";
 
 import { useQuery } from "react-query";
-import { getUser } from "../api/query/user";
+import { getUserProfile } from "src/common/React/api/query/user";
 import Button from "src/common/React/components/Button";
 
 const Home: FC = () => {
-    const { data: user } = useQuery("users", getUser);
+    const { data: user } = useQuery("users", getUserProfile);
     useEffect(() => {
         console.log("Setting title")
         document.title = "Tenabl";

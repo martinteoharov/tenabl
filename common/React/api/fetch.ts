@@ -1,5 +1,5 @@
 import { spawnNotification } from "../helpers/notification";
-import { rtr } from "src/services/authService";
+import { rtr } from "../services/authService";
 
 // Generic headers
 export const defaultHeaders: HeadersInit = {

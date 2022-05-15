@@ -19,6 +19,7 @@ module.exports = {
             argsIgnorePattern: '^_'
         }],
         'unused-imports/no-unused-imports': 'warn',
-        'eol-last': ['warn', 'always']
+        'eol-last': ['warn', 'always'],
+        'no-trailing-spaces': 'warn',
     }
 };

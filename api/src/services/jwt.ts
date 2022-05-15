@@ -1,10 +1,11 @@
-import { Access, Refresh, Token } from '../common/interfaces/jwt';
+import { IAccess, IRefresh, IToken } from '../common/interfaces/jwt';
 import { UserModel } from '../db/entities/UserModel';
 import { encode, decode, TAlgorithm } from 'jwt-simple';
 import { FastifyReply, FastifyRequest, RouteHandlerMethod } from 'fastify';
 import { SessionModel } from '../db/entities/SessionModel';
 import { v4 as uuidv4 } from 'uuid';
 import { EntityManager, EntityNotFoundError } from 'typeorm';
+import { RouteGenericInterface } from 'fastify/types/route';
 
 interface TokenPair {
     accessToken: string
@@ -14,14 +15,15 @@ interface TokenPair {
 export interface JwtService {
     createTokens(user: UserModel): Promise<TokenPair>
     // Decode and check validity of JWT
-    decodeToken(token: string): Token
-    withUser(
+    decodeToken(token: string): IToken
+    withUser<T extends unknown[] = [], U = unknown, V extends RouteGenericInterface = Record<string, unknown>>(
         cb: (
-            req: FastifyRequest,
-            rep: FastifyReply, 
-            user: UserModel
-        ) => ReturnType<RouteHandlerMethod>
-    ): RouteHandlerMethod
+            req: FastifyRequest<V>,
+            rep: FastifyReply,
+            user: UserModel,
+            ...args: T
+        ) => U
+    ): (req: FastifyRequest<V>, rep: FastifyReply, ...args: T) => Promise<U | void>
     refresh: RouteHandlerMethod
 }
 
@@ -61,7 +63,7 @@ export function jwtService(secret: string, entities: EntityManager): JwtService 
             session.started = new Date();
             session.user = user;
 
-            const access: Access = {
+            const access: IAccess = {
                 type: 'access',
                 userId: user.id,
                 username: user.username,
@@ -69,7 +71,7 @@ export function jwtService(secret: string, entities: EntityManager): JwtService 
                 expires: expiresAccess
             };
 
-            const refresh: Refresh = {
+            const refresh: IRefresh = {
                 type: 'refresh',
                 userId: user.id,
                 sessionId: session.id,
@@ -92,7 +94,7 @@ export function jwtService(secret: string, entities: EntityManager): JwtService 
             return decode(token, secret, false, algorithm)
         },
         withUser(cb) {
-            return async (req, rep) => {
+            return async (req, rep, ...args) => {
                 if (req.headers.authorization === undefined) {
                     return rep.code(401).send({ error: "Unauthorised" });
                 }
@@ -105,7 +107,7 @@ export function jwtService(secret: string, entities: EntityManager): JwtService 
                     const userId = access.userId;
                     // Obtain the UserModel
                     const user = await entities.findOneOrFail(UserModel, userId);
-                    return cb(req, rep, user)
+                    return cb(req, rep, user, ...args)
                 } catch(e) {
                     if (e instanceof AuthError) {
                         return rep.code(401).send({ error: "Unrecognized authorization scheme"})

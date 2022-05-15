@@ -1,53 +1,36 @@
-import { string } from "fp-ts";
+import * as t from 'io-ts';
 
-export interface Access {
-    type: 'access';
-    userId: string;
-    username: string;
+export const IAccess = t.type({
+    type: t.literal('access'),
+    userId: t.string,
+    username: t.string,
     /**
      * Timestamp indicating when the session was created, in Unix milliseconds.
      */
-    issued: number;
+    issued: t.number,
     /**
      * Timestamp indicating when the session should expire, in Unix milliseconds.
      */
-    expires: number;
-}
+    expires: t.number,
+})
+export type IAccess = t.TypeOf<typeof IAccess>
 
-export interface Refresh {
-    type: 'refresh';
-    sessionId: string;
-    userId: string;
+export const IRefresh = t.type({
+    type: t.literal('refresh'),
+    sessionId: t.string,
+    userId: t.string,
     /**
      * Timestamp indicating when the session should expire, in Unix milliseconds.
      */
-    expires: number;
-}
+    expires: t.number,
+})
+export type IRefresh = t.TypeOf<typeof IRefresh>
 
-export type Token = Access | Refresh
+export const IToken = t.union([IAccess, IRefresh])
+export type IToken = t.TypeOf<typeof IToken>
 
-export interface EncodeResult {
-    token: string,
-    expires: number,
-    issued: number
-}
-
-export type DecodeAccessResult =
-    | {
-        type: "valid";
-        access: Access;
-    }
-    | {
-        type: "invalid-token";
-    };
-
-export type DecodeRefreshResult =
-    | {
-        type: "valid";
-        refresh: Refresh;
-    }
-    | {
-        type: "invalid-token";
-    };
-
-export type ExpirationStatus = "expired" | "active" | "grace";
+export const ITokenPair =  t.type({
+    accessToken: t.string,
+    refreshToken: t.string
+})
+export type ITokenPair = t.TypeOf<typeof ITokenPair>

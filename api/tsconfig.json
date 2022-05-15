@@ -20,7 +20,10 @@
         "strict": true,
         "strictNullChecks": true,
         "target": "ESNext",
-        "types": ["jest", "node"],
+        "types": [
+            "jest",
+            "node"
+        ],
     },
     "include": [
         "src",

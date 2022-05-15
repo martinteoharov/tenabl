@@ -61,7 +61,7 @@ export function oauthService(
                     }
                 })
                 const accessToken = authResponse.data.access_token
-            
+
                 // Fetch the user info
                 try {
                     const userInfoResponse = await axios({
@@ -72,7 +72,7 @@ export function oauthService(
                         }
                     })
                     const githubOAuth = await entities.findOne(OAuthModel, { github_auth_username: userInfoResponse.data.username });
-                    
+
                     if (githubOAuth) return await entities.findOneOrFail(UserModel, githubOAuth.user);
                     const name:string = userInfoResponse.data.name
                     const [firstName, lastName] = name.split(' ', 2);

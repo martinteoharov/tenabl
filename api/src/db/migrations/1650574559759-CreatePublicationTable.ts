@@ -24,6 +24,6 @@ export class CreatePublicationTable1650574559759 implements MigrationInterface {
 
     async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable("publication");    // Revert changes if needed
-    }    
+    }
 }
-    
+
