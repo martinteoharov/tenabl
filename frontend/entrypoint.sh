@@ -20,7 +20,7 @@ echo "Initialising common..."
 (cd ../common; npm install)
 
 echo "Replacing common symlink with directory..."
-rm -f src/common
+rm -r src/common || rm -rf src/common
 cp -r /common src/common
 rm -rf src/common/node_modules
 
