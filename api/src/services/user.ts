@@ -1,71 +1,49 @@
-import * as passwordService from '../services/password';
-import { Connection } from "typeorm";
+import { EntityManager } from "typeorm";
+import { IUserProfile } from "../common/interfaces/user";
 import { UserModel } from "../db/entities/UserModel";
-import { FastifyReply } from 'fastify';
 
-export const create = async (connection: Connection, request: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    username: string;
-    acceptedTerms: boolean;
-}) => {
-    // Basic email regex
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i;
-
-    // Check if acceptedTerms is false
-    if (!request.acceptedTerms) {
-        return undefined;
-    }
-
-    // Validate email based on RFC 5322 specifications
-    if (!emailRegex.test(request.email)) {
-        return undefined;
-    }
-
-    const user = new UserModel(); // Create user instance
-    user.first_name = request.firstName;
-    user.last_name = request.lastName;
-    user.username = request.username;
-    user.email = request.email;
-    user.accepted_terms = request.acceptedTerms;
-
-    await connection.manager.save(user);
-    return user;
+export interface UserService {
+    create(details: IUserProfile): Promise<UserModel>
+    find(email: string): Promise<UserModel|undefined>
+    update(user: UserModel, details: IUserProfile): Promise<void>
+    generateName(firstName: string, lastName: string): Promise<string>
 }
 
-// Function that returns an array of status code and error response or userModel object
-export const login = async (connection: Connection, request: {
-    email: string;
-    password: string;
-}, res: FastifyReply) => {
-    // Fetch user profile with given email
-    const user = await connection.manager.findOne(UserModel, { email: request.email });
-
-    if (!user) {
-        res.code(400).send({ error: "User does not exist" });
-        return undefined
+export function userService(
+    entities: EntityManager
+): UserService {
+    return {
+        async create({ email, firstName, lastName, username }) {
+            if (!email.includes('@')) {
+                throw new Error('Invalid email address')
+            }
+            const user = new UserModel()
+            user.first_name = firstName;
+            user.last_name = lastName;
+            user.username = username;
+            user.email = email;
+            await entities.save(user)
+            return user
+        },
+        async find(email) {
+            return await entities.findOne(UserModel, { where: { email }})
+        },
+        async update(user, details) {
+            user.email = details.email ?? user.email
+            user.username = details.username ?? user.username
+            user.first_name = details.firstName ?? user.first_name
+            user.last_name = details.lastName ?? user.last_name
+            await entities.save(user)
+        },
+        async generateName(firstName, lastName) {
+            const base = `${firstName}_${lastName}`.toLowerCase()
+            let username: string
+            do {
+                username = `${base}${Math.floor((Math.random() * 100_000) + 1)}`
+            } while (await entities.count(UserModel, { username }) > 0)
+            // Bold to assume we will ever have a reasonable chance for this to clash, but
+            // better safe than sorry
+            return username;
+        }
     }
-
-    if (!await passwordService.verify(connection, user, request.password)) {
-        res.code(400).send({ error: "Invalid password" });
-        return undefined
-    }
-
-    // Check if the SEED environment variable is set
-    if (process.env.SEED === undefined) {
-        console.log("[!] Environment variable SEED not set");
-        res.code(500).send({ error: "Qnko nqma kur" });
-        return undefined
-    }
-
-    return user;
-}
-
-export const generateUsername = async (connection: Connection, firstName: string, lastName: string) => {
-    let username = ''
-    do {
-        username = (firstName[0] + lastName[0] + Math.floor((Math.random() * 100000) + 1)).toLowerCase();
-    } while (await connection.manager.findOne(UserModel, { username: username }) !== undefined);
-    return username;
 }

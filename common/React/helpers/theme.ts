@@ -14,7 +14,6 @@ export const setTheme = (theme: Theme) => {
 
     localStorage.setItem("theme", theme);
 };
-
 export const getColor = () => {
     const style = getComputedStyle(document.body);
     const theme = localStorage.getItem("theme");

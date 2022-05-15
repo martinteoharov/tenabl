@@ -5,7 +5,7 @@ cd ./api
 npm i
 echo "Installing packages in frontend..."
 cd ../frontend
-npm i
+npm i --legacy-peer-deps
 echo "Installing packages in common..."
 cd ../common
 npm i

@@ -1,42 +1,54 @@
 import bcrypt from 'bcrypt';
-import { Connection } from "typeorm";
+import { EntityManager } from "typeorm";
 import { PasswordModel } from "../db/entities/PasswordModel";
 import { UserModel } from "../db/entities/UserModel";
 
-export const checkPassword = (password: string) => {
-    // Pass requirements: Minimum eight chars, one uppercase, one lowercase, one number and one special character
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-
-    return passwordRegex.test(password);
+export function checkPassword(password: string): boolean {
+    if (password.length < 8) return false // Minimum eight chars
+    if (!/[A-Z]/.test(password)) return false // one uppercase
+    if (!/[a-z]/.test(password)) return false // one lowercase
+    if (!/[0-9]/.test(password)) return false // one digit
+    if (!/[^a-zA-Z0-9]/.test(password)) return false // one special character (aka. none of the above)
+    return true
 }
 
-export const create = async(connection: Connection, user: UserModel, password: string) => {
-    const valid = checkPassword(password);
+export interface PasswordService {
+    create(user: UserModel, password: string): Promise<void>
+    change(user: UserModel, password: string): Promise<void>
+    verify(user: UserModel, password: string): Promise<boolean>
+}
 
+async function hash(cleartext: string): Promise<string> {
     // Create password hash
     const salt = await bcrypt.genSalt(6);
-    const hash = await bcrypt.hash(password, salt);
-
-    const pass = new PasswordModel() // Create password instance
-    pass.user = user.id;
-    pass.hash = hash;
-
-    // Save password table entry
-    await connection.manager.save(pass);
-    return true;
+    return await bcrypt.hash(cleartext, salt);
 }
 
-export const verify = async(connection: Connection, user: UserModel, password: string) => {
-    const hash = await connection.manager.findOne(PasswordModel, { user: user.id }); // Fetch user password hash
-    console.log(hash)
-
-    if (!hash) {
-        return false; // User has no password, probably logged in with OAuth
+export function passwordService(entities: EntityManager): PasswordService {
+    return {
+        async create(user, password) {
+            if (!checkPassword(password)) {
+                throw new Error('Invalid password')
+            }
+            if (await entities.count(PasswordModel, { where: { user } }) > 0) {
+                throw new Error('User already has a password')
+            }
+            const pass = new PasswordModel()
+            pass.user = user.id;
+            pass.hash = await hash(password);
+            await entities.save(pass);
+        },
+        async change(user, password) {
+            if (!checkPassword(password)) {
+                throw new Error('Invalid password')
+            }
+            const pass = await entities.findOneOrFail(PasswordModel, { where: { user } })
+            pass.hash = await hash(password)
+            await entities.save(pass)
+        },
+        async verify(user, password) {
+            const hash = await entities.findOneOrFail(PasswordModel, { user: user.id });
+            return await bcrypt.compare(password, hash.hash) // Check password
+        }
     }
-    
-    if (!await bcrypt.compare(password, hash.hash)) { // Check password
-        return false;
-    }
-
-    return true;
 }

@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, Table, TableIndex, TableColumn, TableForeignKey } from "typeorm";
+import {MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from "typeorm";
 
 export class CreateOAuthTable1646354852809 implements MigrationInterface {
     async up(queryRunner: QueryRunner): Promise<void> {
@@ -48,7 +48,7 @@ export class CreateOAuthTable1646354852809 implements MigrationInterface {
         }));
     }
 
-    
+
     async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable("oauth");    // Revert changes if needed
     }
