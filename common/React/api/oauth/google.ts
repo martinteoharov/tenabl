@@ -20,7 +20,7 @@ export const loginGoogleOAuth = async (data: Props) => {
     const req: OAuthGoogleRequest = {
         client_id: data.clientId.toString(),
         redirect_uri: redirect_uri.toString(),
-        response_type: "code",
+        response_type: "token",
         scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
     }
 
