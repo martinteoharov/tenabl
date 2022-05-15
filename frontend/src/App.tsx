@@ -13,26 +13,30 @@ import Statistics from './pages/Statistics';
 
 import { QueryClient } from 'react-query'
 import { QueryClientProvider } from 'react-query';
+import { rtr } from './services/authService';
+import { rtrCtx } from './common/React/context/rtr' 
 
 const queryClient = new QueryClient()
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-          </Route>
-          <Route path="/about" element={<About />}>
-          </Route>
-          <Route path="/profile" element={<Profile />}>
-          </Route>
-          <Route path="/statistics" element={<Statistics />}>
-          </Route>
-          <Route path="/statistics/:id" element={<Statistics />}>
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <rtrCtx.Provider value={rtr}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />}>
+            </Route>
+            <Route path="/about" element={<About />}>
+            </Route>
+            <Route path="/profile" element={<Profile />}>
+            </Route>
+            <Route path="/statistics" element={<Statistics />}>
+            </Route>
+            <Route path="/statistics/:id" element={<Statistics />}>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </rtrCtx.Provider>
     </QueryClientProvider>
   );
 }

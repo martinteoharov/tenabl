@@ -7,14 +7,20 @@ import "src/styles/form.css";
 import { useQuery } from "react-query";
 import { getUserProfile } from "src/common/React/api/query/user";
 import Button from "src/common/React/components/Button";
+import { rtr } from '../services/authService'
 
 const Home: FC = () => {
-    const { data: user } = useQuery("users", getUserProfile);
+    const getProfile = React.useCallback(() => {
+        const token = rtr.session.get()?.get()
+        if (!token) return undefined
+        return getUserProfile(token)
+    }, [])
+    const { data: user, refetch } = useQuery("users", getProfile);
     useEffect(() => {
         console.log("Setting title")
         document.title = "Tenabl";
-
-    }, []);
+        return rtr.session.changed(() => refetch())
+    }, [refetch]);
 
     useEffect(() => {
         console.log("USER CHANGED!");

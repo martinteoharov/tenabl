@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "alwaysStrict": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "target": "ES6",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "module": "UMD",
+        "moduleResolution": "Node",
+        "skipLibCheck": true,
+        "strict": true
+    }
+}
