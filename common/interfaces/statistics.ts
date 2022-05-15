@@ -13,3 +13,8 @@ export const IArticleStatistics = t.type({
     statistics: t.array(IStatistics),
 })
 export type IArticleStatistics = t.TypeOf<typeof IArticleStatistics>
+
+export const ITotalStatistics = t.type({
+    statistics: t.array(IStatistics)
+})
+export type ITotalStatistics = t.TypeOf<typeof ITotalStatistics>

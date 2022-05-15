@@ -16,12 +16,6 @@ import { QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient()
 
-console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -32,6 +26,8 @@ function App() {
           <Route path="/about" element={<About />}>
           </Route>
           <Route path="/profile" element={<Profile />}>
+          </Route>
+          <Route path="/statistics" element={<Statistics />}>
           </Route>
           <Route path="/statistics/:id" element={<Statistics />}>
           </Route>
