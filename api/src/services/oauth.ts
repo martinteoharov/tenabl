@@ -57,27 +57,38 @@ export function oauthService(
                         accept: 'application/json'
                     }
                 })
-                console.log(authResponse);
                 const accessToken = authResponse.data.access_token
 
                 // Fetch the user info
                 try {
                     const userInfoResponse = await axios({
                         method: 'get',
-                        url: `https://api.github.com/user`,
+                        url: "https://api.github.com/user",
                         headers: {
                             Authorization: 'token ' + accessToken
                         }
                     })
-                    const githubOAuth = await entities.findOne(OAuthModel, { github_auth_username: userInfoResponse.data.username });
+
+                    const userEmailResponse = await axios({
+                        method: 'get',
+                        url: "https://api.github.com/user/emails",
+                        headers: {
+                            Authorization: 'token ' + accessToken
+                        }
+                    })
+
+                    const email = userEmailResponse.data[0].email;
+
+                    const githubOAuth = await entities.findOne(OAuthModel, { github_auth_username: userInfoResponse.data.login });
 
                     if (githubOAuth) return await entities.findOneOrFail(UserModel, githubOAuth.user);
-                    const name: string = userInfoResponse.data.name
-                    const [firstName, lastName] = name.split(' ', 2);
+                    const username = userInfoResponse.data.name
+                    const [firstName, lastName] = [username, " "];
                     const user = await users.create({
-                        firstName, lastName,
-                        email: userInfoResponse.data.email,
-                        username: userInfoResponse.data.username
+                        firstName,
+                        lastName,
+                        email,
+                        username: username
                     });
                     const oauthData = new OAuthModel();
                     oauthData.user = user.id;

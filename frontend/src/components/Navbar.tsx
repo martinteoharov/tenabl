@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 import "../styles/navbar.css";
@@ -24,6 +24,10 @@ interface IProps {
 const Navbar: FC<IProps> = (props) => {
   // light = true; dark = false;
   const [checked, setChecked] = useState(localStorage.getItem("theme") === "light");
+
+  useEffect(() => {
+    setChecked(localStorage.getItem("theme") === "light");
+  }, [localStorage.getItem("theme")])
 
   const links: Link[] = [
     { title: "Home", path: "/", icon: <FontAwesomeIcon width="20px" icon={faHouse} size="lg" />, hidden: false },

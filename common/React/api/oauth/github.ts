@@ -2,8 +2,7 @@ import { fetchPost } from "../fetch";
 
 const OAuthGithubEndpoint = "https://github.com/login/oauth/authorize";
 const redirect_uri = "https://www.tenabl.net";
-const OAuthGithubTenablEndpoint = "http://localhost/api/oauth/github"
-// const OAuthGithubTenablEndpoint = "https://tenabl.net/api/oauth/github"
+const OAuthGithubTenablEndpoint = "https://tenabl.net/api/oauth/github"
 
 interface OAuthGithubRequest {
     client_id: string;

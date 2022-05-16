@@ -2,6 +2,7 @@ import React, { FC, useEffect } from "react";
 import Layout from "../components/Layout";
 import Article, { ArticleProps } from "../components/Article";
 import { redirectGoogleOAuth } from "src/common/React/api/oauth/google";
+import { redirectGithubOAuth } from "src/common/React/api/oauth/github";
 
 import "../styles/home.css";
 import { TokenPair } from "simple-rtr";
@@ -11,38 +12,8 @@ import { spawnNotification } from "src/common/React/helpers/notification";
 
 const articlesTrending: ArticleProps[] = [
   {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
-  },
-  {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
-  },
-  {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
-  },
-  {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
-  },
-  {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
-  },
-  {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
+    authorName: "Mahon Hourig",
+    title: "Northern Ireland: PM meets Stormont parties to avert crisis",
     score: `${Math.floor(Math.random() * 100)}%`,
     url: "/statistics/1"
   },
@@ -50,38 +21,60 @@ const articlesTrending: ArticleProps[] = [
 
 const articlesCurated: ArticleProps[] = [
   {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
+    authorName: "Fortunata Atif",
+    title: "School shooting in Buffalo, US",
     score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
-  },
-  {
-    authorName: "kurami qnko",
-    title: "Qnko izqde kur",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
+    url: "/statistics/2"
   },
 ]
 
-const handleOAuth = async (accessToken: string) => {
+const handleGoogleOAuth = async (accessToken: string) => {
+  // request user info
   const res = await redirectGoogleOAuth(accessToken) as any;
-  console.log(res);
+
+  // decode user
   const user = jwtDecode(res.accessToken) as any;
   spawnNotification({ type: "success", text: `Wellcome back, ${user.username}` });
+
+  // set login
+  const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
+  rtr.setPair(tokenPair);
+}
+
+const handleGithubOAuth = async (code: string) => {
+  // request user info
+  const res = await redirectGithubOAuth(code) as any;
+
+  console.log(res);
+
+  // decode user
+  const user = jwtDecode(res.accessToken) as any;
+  spawnNotification({ type: "success", text: `Wellcome back, ${user.username}` });
+
+  // set login
   const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
   rtr.setPair(tokenPair);
 }
 
 const Home: FC = () => {
-  const searchParams = new URLSearchParams(window.location.hash.substring(1))
+  const searchParams = new URLSearchParams(window.location.hash.substring(1) || window.location.search)
 
   useEffect(() => {
     document.title = "Tenabl";
 
-    const accessToken = searchParams.get("access_token");
+    // check if google access token & handle auth
+    const googleAccessToken = searchParams.get("access_token");
+    if (googleAccessToken) {
+      handleGoogleOAuth(googleAccessToken);
+    }
 
-    if (accessToken) {
-      handleOAuth(accessToken);
+    // check if github code & handle auth
+    const githubCode = searchParams.get("code");
+    console.log("CODE")
+    console.log(githubCode);
+    if (githubCode) {
+      console.log(githubCode);
+      handleGithubOAuth(githubCode);
     }
 
   }, []);
