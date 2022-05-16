@@ -44,7 +44,7 @@ export function oauthService(
                 oauthData.google_auth_sub = payload['sub'];
                 await entities.save(oauthData)
                 return user
-            } catch(e) {
+            } catch (e) {
                 throw new AuthError('invalid token')
             }
         },
@@ -57,6 +57,7 @@ export function oauthService(
                         accept: 'application/json'
                     }
                 })
+                console.log(authResponse);
                 const accessToken = authResponse.data.access_token
 
                 // Fetch the user info
@@ -71,7 +72,7 @@ export function oauthService(
                     const githubOAuth = await entities.findOne(OAuthModel, { github_auth_username: userInfoResponse.data.username });
 
                     if (githubOAuth) return await entities.findOneOrFail(UserModel, githubOAuth.user);
-                    const name:string = userInfoResponse.data.name
+                    const name: string = userInfoResponse.data.name
                     const [firstName, lastName] = name.split(' ', 2);
                     const user = await users.create({
                         firstName, lastName,
@@ -86,7 +87,7 @@ export function oauthService(
                 } catch {
                     throw new Error("GitHub profile permissions not given")
                 }
-            } catch(e) {
+            } catch (e) {
                 throw new AuthError('Invalid token')
             }
         }

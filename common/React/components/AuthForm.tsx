@@ -80,7 +80,8 @@ const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
             <input name="password" className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <div style={{ display: "grid", justifyContent: "left", rowGap: "10px" }}>
                 <Button onClick={handleSubmit} size="m"> LOGIN </Button>
-                <ButtonOAuth size="s" clientId='285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com' > Login with google </ButtonOAuth>
+                <ButtonOAuth type="google" size="l" clientId='285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com' > Login with google </ButtonOAuth>
+                <ButtonOAuth type="github" size="l" clientId='4435cbde88e940f962a9' > Login with github </ButtonOAuth>
             </div>
             {props.switchButton}
         </form>

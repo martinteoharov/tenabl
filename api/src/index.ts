@@ -15,9 +15,9 @@ import { reviewService } from "./services/review";
 import { reviewRoutes } from "./routes/review";
 import { userRoutes } from "./routes/user";
 
-process.env["GOOGLE_CLIENT_ID"] = "285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com";
-process.env["GITHUB_CLIENT_ID"] = "285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com";
-process.env["GITHUB_SECRET"] = "285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com";
+// process.env["GOOGLE_CLIENT_ID"] = "285508928409-fd6e0j8b9bdavg8ce7fj461c1lc3tlmh.apps.googleusercontent.com";
+// process.env["GITHUB_CLIENT_ID"] = "4435cbde88e940f962a9";
+// process.env["GITHUB_SECRET"] = "194a78b86e691f3eaa97a481b45990d90017392d";
 
 function getEnv(name: string): string {
     const val = process.env[name]
