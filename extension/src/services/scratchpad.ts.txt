@@ -1,0 +1,42 @@
+
+function hash(s: string): number {
+    let sum = 0
+    for (const c of s) {
+        sum += c.charCodeAt(0)
+    }
+    return sum
+}
+
+function pick<T>(arr: T[], idx: number): T {
+    return arr[idx % arr.length]
+}
+
+function randomJudgement(seed: number): Judgement | undefined {
+    return seed % 2 ? {
+        conclusion: pick(['true', 'false', 'divisive'], seed),
+        confidence: (seed/1000) % 1
+    } : undefined
+}
+
+export function mock(url: string, username: string): Article {
+    const seed = hash(url)
+    const cmtv: IComment[] = [];
+    let rvw: IFlags | undefined
+    return Object.defineProperties({
+        judgement: randomJudgement(seed),
+        async comment(comment) {
+            cmtv.push({
+                comment,
+                url,
+                author: username,
+                timestamp: Date.now()
+            })
+        },
+        async loadComments(offset) {
+            return cmtv.slice(offset, offset + 7)
+        },
+        async review(rev) { rvw = rev },
+    }, {
+        ownReview: { get: () => rvw }
+    })
+}

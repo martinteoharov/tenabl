@@ -1,4 +1,3 @@
-import { number } from "fp-ts";
 import { spawnNotification } from "../helpers/notification";
 
 // Generic headers

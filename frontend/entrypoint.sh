@@ -20,8 +20,9 @@ echo "Initialising common..."
 (cd ../common; npm install)
 
 echo "Replacing common symlink with directory..."
-rm -f src/common
-mkdir src/common
+rm -f src/common || rm -rf src/common
+cp -r /common src/common
+rm -rf src/common/node_modules
 
 if command -v lsyncd &> /dev/null
 then
