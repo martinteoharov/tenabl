@@ -1,7 +1,7 @@
 .about-container {
     display: grid;
 
-    width: 80vw;
+    width: 65%;
     height: 80vh;
 
     grid-template-rows: 0.5fr 2fr 0.5fr 0.5fr 2fr;
@@ -9,4 +9,5 @@
 
 .about-container>p {
     font-size: 18px;
+    text-align: justify;
 }

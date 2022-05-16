@@ -36,7 +36,7 @@ export const build = async (): Promise<FastifyInstance> => {
     });
     app.register(authRoutes(users, passwords, jwts, connection.manager), { prefix: '/auth' });
     app.register(oauthRoutes(jwts, oauth), { prefix: '/oauth' });
-    app.register(userRoutes(jwts), { prefix: '/user' });
+    app.register(userRoutes(jwts, users, passwords), { prefix: '/user' });
     app.register(reviewRoutes(jwts, publications, reviews), { prefix: '/review' });
     app.register(commentRoutes(jwts, comments, publications), { prefix: '/comment' });
 

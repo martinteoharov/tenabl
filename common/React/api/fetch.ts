@@ -15,11 +15,12 @@ export const fetchPost = async <Type>(url: string, data: Type, headers: HeadersI
   };
 
   const res = await fetch(url, requestInit);
+  const body = await res.json();
 
   if (res.ok) {
-    return res.json();
+    return body;
   } else {
-    const errText = `Error: ${res.statusText} ${res.status}`;
+    const errText = `${requestInit.method} ${res.status} ${body.status}`;
     spawnNotification({ type: "error", text: errText, timeout: 3000 })
     console.log(res);
 
@@ -33,6 +34,7 @@ interface fetchGet {
   params?: any;
   headers?: HeadersInit;
 }
+
 export const fetchGet = async ({ url, params, headers = defaultHeaders }: fetchGet): Promise<Response | undefined> => {
   const requestInit: RequestInit = {
     method: "GET",
@@ -42,14 +44,43 @@ export const fetchGet = async ({ url, params, headers = defaultHeaders }: fetchG
   url += new URLSearchParams(params).toString();
 
   const res = await fetch(url, requestInit);
+  const body = await res.json();
 
   if (res.ok) {
-    return res.json();
+    return body;
   } else {
-    const errText = `${res.statusText} ${res.status}`;
+    const errText = `${requestInit.method} ${res.status} ${body.error}`;
     spawnNotification({ type: "error", text: errText, timeout: 3000 })
     console.log(res);
 
+    return undefined;
+  }
+};
+
+export const fetchPostAuth = async (url: string, data: any, headers: HeadersInit = defaultHeaders): Promise<Response | undefined> => {
+  const token = rtr.session.get()?.get();
+
+  const requestInit: RequestInit = {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(data)
+  };
+
+  const res = await fetch(url, requestInit);
+  const body = await res.json();
+
+  console.log(res);
+  console.log(body);
+  if (res.ok) {
+    spawnNotification({ type: "success", text: body.ok })
+    return body;
+  } else {
+    const errText = `${requestInit.method} ${res.status} ${body.error}`;
+    spawnNotification({ type: "error", text: errText, timeout: 3000 })
+    console.log(res);
     return undefined;
   }
 };
@@ -66,27 +97,14 @@ export const fetchGetAuth = async (url: string, headers: HeadersInit = defaultHe
   };
 
   const res = await fetch(url, requestInit);
+  const body = await res.json();
 
   if (res.ok) {
-    return res.json();
+    return body;
   } else {
-    const errText = `${res.statusText} ${res.status}`;
+    const errText = `${requestInit.method} ${res.status} ${body.error}`;
     spawnNotification({ type: "error", text: errText, timeout: 3000 })
     console.log(res);
     return undefined;
   }
 };
-
-
-// export const fetchPostAuth = async (url: string, data: any): Promise<Response> => {
-//   const requestInit = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   };
-
-//   const res = await fetch(url, requestInit);
-//   return res.json();
-// };
