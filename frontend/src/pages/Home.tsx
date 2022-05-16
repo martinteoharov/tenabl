@@ -70,7 +70,6 @@ const handleOAuth = async (accessToken: string) => {
   const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
   rtr.setPair(tokenPair);
 }
-console.log(handleOAuth)
 
 const Home: FC = () => {
   const searchParams = new URLSearchParams(window.location.hash.substring(1))

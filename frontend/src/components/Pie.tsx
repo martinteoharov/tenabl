@@ -35,7 +35,6 @@ export interface Props {
 }
 
 const Article: React.FC<Props> = ({ title, data, delay }) => {
-    console.log(delay);
     const [shown, setShown] = useState(false);
 
     const [textColor, setTextColor] = useState(getColor());
