@@ -2,22 +2,36 @@ import React, { FC, useEffect, useState } from "react";
 import Layout from "src/components/Layout";
 
 import "src/styles/profile.css";
-import "src/styles/form.css";
+import "src/common/React/styles/form.css";
 
-import { useQuery } from "react-query";
-import { getUserProfile } from "src/common/React/api/query/user";
+import { useMutation, useQuery } from "react-query";
+import { getUserProfile, saveUserProfile } from "src/common/React/api/query/user";
+
 import Button from "src/common/React/components/Button";
+import { spawnNotification } from "src/common/React/helpers/notification";
 
-const Home: FC = () => {
-    const { data: user } = useQuery("users", getUserProfile);
+const Profile: FC = () => {
+    const { data: user, refetch: refetchUser } = useQuery("user", getUserProfile);
+    const saveUser = useMutation(saveUserProfile);
+
+    const handleSaveProfile = async () => {
+        if (confirmPassword !== password) {
+            spawnNotification({ text: "Passwords don't match", type: "error" })
+            return;
+        }
+
+        await saveUser.mutate({ firstName, lastName, username, password }, { onSuccess: () => refetchUser() });
+    }
+
+    const handleCancel = async () => {
+        setFirstName(user?.firstName || firstName);
+        setLastName(user?.lastName || lastName);
+        setUsername(user?.username || username);
+        setPassword("");
+        setConfirmPassword("");
+    }
+
     useEffect(() => {
-        console.log("Setting title")
-        document.title = "Tenabl";
-
-    }, []);
-
-    useEffect(() => {
-        console.log("USER CHANGED!");
         setFirstName(user?.firstName || "");
         setLastName(user?.lastName || "");
         setUsername(user?.username || "");
@@ -27,6 +41,7 @@ const Home: FC = () => {
     const [lastName, setLastName] = useState(user?.lastName || "");
     const [username, setUsername] = useState(user?.username || "");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     return (
         <>
@@ -44,22 +59,27 @@ const Home: FC = () => {
                             <input className="form-input" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                         </div>
 
-                        <div className="form-email">
-                            <label> Email </label>
+                        <div className="form-username">
+                            <label> Username </label>
                             <input className="form-input" value={username} onChange={(e) => setUsername(e.target.value)} />
                         </div>
 
                         <div className="form-password">
-                            <label> Password </label>
-                            <input className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <label> New Password </label>
+                            <input type="password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </div>
+
+                        <div className="form-confpassword">
+                            <label> Confirm New Password </label>
+                            <input type="password" className="form-input" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                         </div>
 
                         <div className="form-cancel">
-                            <Button onClick={() => console.log("cancel")} size="l"> Cancel </Button>
+                            <Button onClick={handleCancel} size="fill"> Cancel </Button>
                         </div>
 
                         <div className="form-save">
-                            <Button onClick={() => console.log("save")} size="l"> Save </Button>
+                            <Button onClick={handleSaveProfile} size="fill"> Save </Button>
                         </div>
 
                     </form>
@@ -69,4 +89,4 @@ const Home: FC = () => {
     );
 };
 
-export default Home;
+export default Profile;

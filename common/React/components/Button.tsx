@@ -3,7 +3,7 @@ import '../styles/button.css';
 
 export interface IProps {
     onClick: () => void;
-    size: "s" | "m" | "l";
+    size: "s" | "m" | "l" | "fill";
     children?: React.ReactNode;
 }
 

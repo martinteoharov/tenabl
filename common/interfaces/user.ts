@@ -5,7 +5,7 @@ export const IUserPublic = t.type({
     firstName: t.string,
     lastName: t.string,
 })
-export type IUserPublic = t.TypeOf<typeof IUserProfile>
+export type IUserPublic = t.TypeOf<typeof IUserPublic>
 
 export const IUserProfile = t.type({
     username: t.string,
@@ -14,3 +14,11 @@ export const IUserProfile = t.type({
     email: t.string
 })
 export type IUserProfile = t.TypeOf<typeof IUserProfile>
+
+export const IUserProfileEdit = t.type({
+    username: t.string,
+    firstName: t.string,
+    lastName: t.string,
+    password: t.string
+})
+export type IUserProfileEdit = t.TypeOf<typeof IUserProfileEdit>
