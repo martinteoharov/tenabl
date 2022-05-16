@@ -3,7 +3,7 @@ import { fetchPost } from "../fetch";
 // import { spawnNotification } from "src/helpers/notification";
 const OAuthGoogleEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 const redirect_uri = "https://tenabl.net";
-const OAuthTenablEndpoint = "http://tenabl.net/api/oauth/google"
+const OAuthTenablEndpoint = "https://tenabl.net/api/oauth/google"
 
 interface OAuthGoogleRequest {
     client_id: string;
