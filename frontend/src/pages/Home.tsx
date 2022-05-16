@@ -65,6 +65,7 @@ const articlesCurated: ArticleProps[] = [
 
 const handleOAuth = async (accessToken: string) => {
   const res = await redirectGoogleOAuth(accessToken) as any;
+  console.log(res);
   const user = jwtDecode(res.accessToken) as any;
   spawnNotification({ type: "success", text: `Wellcome back, ${user.username}` });
   const tokenPair: TokenPair = { auth: res.accessToken, refresh: res.refreshToken }
