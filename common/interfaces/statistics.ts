@@ -18,3 +18,13 @@ export const ITotalStatistics = t.type({
     statistics: t.array(IStatistics)
 })
 export type ITotalStatistics = t.TypeOf<typeof ITotalStatistics>
+
+export const IJudgement = t.type({
+    conclusion: t.union([
+        t.literal('true'),
+        t.literal('false'),
+        t.literal('divisive')
+    ]),
+    confidence: t.number
+})
+export type IJudgement = t.TypeOf<typeof IJudgement>

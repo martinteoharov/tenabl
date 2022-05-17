@@ -16,6 +16,7 @@ export interface PasswordService {
     create(user: UserModel, password: string): Promise<void>
     change(user: UserModel, password: string): Promise<void>
     verify(user: UserModel, password: string): Promise<boolean>
+    has(user: UserModel): Promise<boolean>
 }
 
 async function hash(cleartext: string): Promise<string> {
@@ -49,6 +50,9 @@ export function passwordService(entities: EntityManager): PasswordService {
         async verify(user, password) {
             const hash = await entities.findOneOrFail(PasswordModel, { user: user.id });
             return await bcrypt.compare(password, hash.hash) // Check password
+        },
+        async has(user) {
+            return 0 < await entities.count(PasswordModel, { where: { user } })
         }
     }
 }

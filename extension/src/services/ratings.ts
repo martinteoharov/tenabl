@@ -1,11 +1,9 @@
 import { Subscribe } from "@lbfalvy/mini-events"
 import { IComment } from "../common/interfaces/comment"
 import { IFlags } from "../common/interfaces/review"
-
-export interface Judgement {
-    conclusion: 'true'|'false'|'divisive'
-    confidence: number
-}
+import { IJudgement } from '../common/interfaces/statistics'
+import { getComment } from "../common/React/api/query/comment"
+import { getReview } from "../common/React/api/query/review"
 
 // export interface Section {
 //     review(rev: string): Promise<void>
@@ -13,7 +11,7 @@ export interface Judgement {
 // }
 
 export interface Article {
-    judgement?: Judgement | undefined
+    judgement?: IJudgement | undefined
     ownComment?: string | undefined
     ownReview?: IFlags | undefined
     loadComments(offset: number): Promise<IComment[]>
@@ -22,6 +20,8 @@ export interface Article {
     update: Subscribe<[]>
 }
 
-async function getRatings(url: string): Promise<Article> {
-    
+async function getRatings(token: string, url: string): Promise<Article> {
+    const ownComment = await getComment(token, url)
+    const ownReview = await getReview(token, url)
+
 }

@@ -3,7 +3,6 @@ import { IArticle } from "../../../interfaces/article";
 import { IArticleStatistics, IStatistics, ITotalStatistics } from "../../../interfaces/statistics";
 
 const article: IArticle = {
-    id: "123",
     name: "Victor is a sad cunt",
     description: "Very bad stuff...",
     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
@@ -16,9 +15,10 @@ const statistics: IStatistics[] = [
     { name: "biased", positive: 54, negative: 69 },
 ]
 
-export async function getStatistics(id: string): Promise<IArticleStatistics>
+export async function getStatistics(url: string): Promise<IArticleStatistics>
 export async function getStatistics(): Promise<ITotalStatistics>
-export async function getStatistics(id?: string | undefined): Promise<IArticleStatistics | ITotalStatistics | undefined> {
+export async function getStatistics(url?: string | undefined): Promise<IArticleStatistics | ITotalStatistics | undefined> {
+
     // if ID is not defined, fetch median statistics
     if (!id) {
         // const articleStatistics = await fetchGet("/api/statistics/") as unknown as ArticleStatistics;

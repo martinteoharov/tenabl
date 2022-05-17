@@ -1,7 +1,7 @@
 import { FastifyPluginCallback } from 'fastify';
 import { JwtService } from '../services/jwt';
 import { withSchema } from '../utils/withSchema';
-import { IUserProfile, IUserProfileEdit, IUserPublic } from '../common/interfaces/user';
+import { IUserProfileEdit } from '../common/interfaces/user';
 import { checkPassword, PasswordService } from '../services/password';
 import { UserService } from '../services/user';
 
@@ -30,13 +30,12 @@ export const userRoutes = (
     }));
 
     router.post('/profile/edit', withSchema(IUserProfileEdit, jwts.withUser(async (req, rep, user, request) => {
-        if (checkPassword(request.password)) {
-            userService.update(user, { username: request.username, firstName: request.firstName, lastName: request.lastName, email: user.email })
+        userService.update(user, { username: request.username, firstName: request.firstName, lastName: request.lastName, email: user.email })
+        if (request.password && await passwordService.has(user)) {
+            if (!checkPassword(request.password)) return rep.code(400).send({ error: "Failed to update user" });
             passwordService.change(user, request.password);
-            return rep.code(200).send({ ok: "User updated successfuly" });
         }
-
-        return rep.code(400).send({ error: "Failed to update user" });
+        return { ok: "User updated successfuly" };
     })));
     done()
 }

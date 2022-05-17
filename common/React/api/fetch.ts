@@ -18,6 +18,7 @@ export class HttpError extends Error {
 }
 
 interface RequestDetails {
+  token?: string
   headers?: RequestInit['headers']
   params?: Record<string, string>
   body?: unknown
@@ -33,6 +34,7 @@ export async function request<T>(method: 'GET'|'POST', url: string, details?: Re
     if (details.params) url += `?${new URLSearchParams(details.params).toString()}`
     if (details.headers) Object.assign(init.headers, details.headers)
     if (details.body) init.body = JSON.stringify(details.body)
+    if (details.token) Object.assign(init.headers, { 'Authorization': `Bearer ${details.token}` })
   }
   const res = await fetch(url, init)
   if (res.ok) {
