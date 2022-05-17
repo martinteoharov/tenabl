@@ -18,11 +18,14 @@
 
     grid-template-areas:
         "fname lname"
-        "email email"
+        "username username"
         "password password"
-        "save cancel";
+        "confpassword confpassword"
+        "save save"
+        "cancel cancel";
 
     background-color: inherit;
+    grid-row-gap: 10px;
 }
 
 .form-fname {
@@ -33,26 +36,33 @@
     grid-area: lname;
 }
 
-.form-email {
-    grid-area: email;
+.form-username {
+    grid-area: username;
 }
 
 .form-password {
     grid-area: password;
 }
 
+.form-confpassword {
+    grid-area: confpassword;
+}
+
 .form-save {
     grid-area: save;
+    text-align: center;
 }
 
 .form-cancel {
     grid-area: cancel;
+    text-align: center;
 }
 
 
 .form-anchor {
     text-decoration: underline;
-    margin-top: 30px;
+    display: block;
+    margin-top: 100px !important;
     cursor: pointer;
 }
 

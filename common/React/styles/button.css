@@ -1,6 +1,4 @@
-.button {
-
-}
+.button {}
 
 .button--accent {
     background-color: var(--accentColor);
@@ -25,4 +23,9 @@
 
 .button--size-l {
     padding: 15px 32px !important;
+}
+
+.button--size-fill {
+    padding: 15px 32px;
+    width: 100% !important;
 }

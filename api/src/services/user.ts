@@ -4,7 +4,7 @@ import { UserModel } from "../db/entities/UserModel";
 
 export interface UserService {
     create(details: IUserProfile): Promise<UserModel>
-    find(email: string): Promise<UserModel|undefined>
+    find(email: string): Promise<UserModel | undefined>
     update(user: UserModel, details: IUserProfile): Promise<void>
     generateName(firstName: string, lastName: string): Promise<string>
 }
@@ -26,7 +26,7 @@ export function userService(
             return user
         },
         async find(email) {
-            return await entities.findOne(UserModel, { where: { email }})
+            return await entities.findOne(UserModel, { where: { email } })
         },
         async update(user, details) {
             user.email = details.email ?? user.email
