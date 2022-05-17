@@ -4,8 +4,8 @@ import { IArticleStatistics, IStatistics, ITotalStatistics } from "../../../inte
 
 const article: IArticle = {
     id: "123",
-    name: "Victor is a sad cunt",
-    description: "Very bad stuff...",
+    name: "Example article",
+    description: "example description...",
     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 }
 
