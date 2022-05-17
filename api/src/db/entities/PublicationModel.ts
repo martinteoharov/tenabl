@@ -11,4 +11,10 @@ export class PublicationModel {
 
     @Column()
     url!: string;
+
+    @Column()
+    title!: string;
+
+    @Column()
+    description!: string;
 }
