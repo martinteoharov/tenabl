@@ -20,9 +20,6 @@ const Home: FC = () => {
             <br></br>
           </p>
 
-          <h1> Our team. </h1>
-          <img width="200" height="200" src="https://scontent-lhr8-1.xx.fbcdn.net/v/t1.6435-9/50687334_976610279393382_3841496428320915456_n.jpg?_nc_cat=107&ccb=1-6&_nc_sid=09cbfe&_nc_ohc=h3dU2EdhkLQAX_Cyc1r&_nc_ht=scontent-lhr8-1.xx&oh=00_AT9yYcpAvE2OjJqOK5TBJpVJ2gdaLPSR98h2tdI1156a_g&oe=62A5165A"></img>
-
         </div>
       </Layout>
     </>
