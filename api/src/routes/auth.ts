@@ -14,7 +14,7 @@ import { UserService } from '../services/user';
 import { withSchema } from '../utils/withSchema';
 import { IRegisterRequest, ILoginRequest } from '../common/interfaces/requests/auth';
 
-export const authRoutes =(
+export const authRoutes = (
     users: UserService,
     passwords: PasswordService,
     jwts: JwtService,
@@ -40,7 +40,7 @@ export const authRoutes =(
     router.post('/login', withSchema(ILoginRequest, async (req, rep, request) => {
         const user = await users.find(request.email)
         if (!user) return rep.code(404).send({ error: 'User not found' })
-        if (!passwords.verify(user, request.password)) {
+        if (!await passwords.verify(user, request.password)) {
             return rep.code(422).send({ error: 'Invalid password' })
         }
         // Create session
