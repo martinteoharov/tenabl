@@ -20,16 +20,23 @@
         "strict": true,
         "strictNullChecks": true,
         "target": "ESNext",
+        "typeRoots": [
+            "src/types",
+            "src/types/**"
+        ],
         "types": [
             "jest",
-            "node"
+            "node",
+            "fastify-ws"
         ],
     },
     "include": [
         "src",
-        "test"
+        "test",
+        "src/types/**/*.d.ts"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "src/common/React"
     ]
 }

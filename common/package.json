@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lbfalvy/mini-events": "^3.3.3",
+    "@lbfalvy/mini-events": "^3.3.5",
     "fp-ts": "2.11.8",
     "io-ts": "2.2.16",
     "jwt-decode": "^3.1.2",

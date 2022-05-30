@@ -21,5 +21,6 @@ module.exports = {
         'unused-imports/no-unused-imports': 'warn',
         'eol-last': ['warn', 'always'],
         'no-trailing-spaces': 'warn',
+        '@typescript-eslint/ban-ts-comment': 'off'
     }
 };

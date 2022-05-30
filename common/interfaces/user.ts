@@ -19,6 +19,6 @@ export const IUserProfileEdit = t.type({
     username: t.string,
     firstName: t.string,
     lastName: t.string,
-    password: t.string
+    password: t.union([t.string, t.undefined])
 })
 export type IUserProfileEdit = t.TypeOf<typeof IUserProfileEdit>

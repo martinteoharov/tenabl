@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 
 import Layout from "src/components/Layout";
 
-import { getStatisticsByArticleID } from "src/common/React/api/query/statistics";
+import { getStatistics } from "src/common/React/api/query/statistics";
 
 import "src/styles/statistics.css";
 import Button from "src/common/React/components/Button";
@@ -22,6 +22,7 @@ import {
 } from 'recharts';
 
 import { IStatistics } from "src/common/interfaces/statistics";
+import { IArticle } from "src/common/interfaces/article";
 
 
 const mapStatisticsToBarchart = (statistics: IStatistics[] | undefined) => {
@@ -44,14 +45,15 @@ const mapStatisticsToPiechart = (statistics: IStatistics[] | undefined) => {
 }
 
 const Statistics: FC = () => {
-    const { id } = useParams();
+    const { url } = useParams();
 
-    const { data: statistics } = useQuery("statistics", () => getStatisticsByArticleID(id || ""));
+    const { data: statistics } = useQuery<{ statistics: IStatistics[], article?: IArticle }>("statistics", () => url ? getStatistics(url) : getStatistics());
 
     const [barchartData, setBarchartData] = useState(mapStatisticsToBarchart(statistics?.statistics));
     const [piechartData, setPiechartData] = useState(mapStatisticsToPiechart(statistics?.statistics))
 
     useEffect(() => {
+        console.log('statistics', statistics);
         setBarchartData(mapStatisticsToBarchart(statistics?.statistics))
         setPiechartData(mapStatisticsToPiechart(statistics?.statistics))
     }, [statistics]);

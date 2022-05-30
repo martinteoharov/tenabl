@@ -12,7 +12,7 @@
             "ESNext",
             "DOM"
         ],
-        "module": "UMD",
+        "module": "esnext",
         "moduleResolution": "Node",
         "skipLibCheck": true,
         "strict": true

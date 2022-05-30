@@ -3,7 +3,7 @@ import "src/styles/layout.css";
 import Navbar from 'src/components/Navbar';
 import { Theme } from "src/common/React/helpers/theme";
 import { setTheme } from "src/common/React/helpers/theme";
-import { rtr } from "src/common/React/services/authService";
+import { rtr } from "src/services/authService";
 import { Variable } from '@lbfalvy/mini-events';
 import AuthForm from "src/common/React/components/AuthForm";
 import { spawnNotification } from "src/common/React/helpers/notification";

@@ -1,0 +1,17 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Article } from './services/ratings'
+
+export async function overlay(el: HTMLElement, art: Article): Promise<() => void> {
+    const sec = await art.bindSection(el)
+    if (sec.judgement) {
+        el.style.backgroundColor = {
+            'true': '#0f0',
+            'false': '#f00',
+            'divisive': '#00f'
+        }[sec.judgement.conclusion]
+    }
+    return () => {
+        el.style.backgroundColor = ''
+    }
+}

@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import Button from './Button';
 import ButtonOAuth from './ButtonOAuth';
 import '../styles/form.css'
-import { UserLoginRequest, UserRegisterRequest, fetchLogin, fetchRegister } from "../api/auth";
-import { rtr } from "../services/authService"
+import { fetchLogin, fetchRegister } from "../api/auth";
 import { TokenPair } from 'simple-rtr';
 import { spawnNotification } from "../helpers/notification";
 import jwtDecode from 'jwt-decode';
+import { rtrCtx } from '../context/rtr';
+import { ILoginRequest, IRegisterRequest } from '../../interfaces/requests/auth';
 
 export interface IProps {
     type: "login" | "register";
@@ -14,8 +15,9 @@ export interface IProps {
 
 const Form: React.FC<IProps> = (props: IProps) => {
     const [selected, setSelected] = useState(props.type);
+    const rtr = React.useContext(rtrCtx)
 
-    const handleLogin = async (data: UserLoginRequest) => {
+    const handleLogin = async (data: ILoginRequest) => {
         const res = await fetchLogin(data) as any;
 
         if (res) {
@@ -29,7 +31,7 @@ const Form: React.FC<IProps> = (props: IProps) => {
         }
     }
 
-    const handleRegister = async (data: UserRegisterRequest) => {
+    const handleRegister = async (data: IRegisterRequest) => {
         const res = await fetchRegister(data);
 
         if (res) {
@@ -56,7 +58,7 @@ const Form: React.FC<IProps> = (props: IProps) => {
 
 interface ILoginProps {
     switchButton: any
-    onSubmit: (data: UserLoginRequest) => void
+    onSubmit: (data: ILoginRequest) => void
 }
 
 const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
@@ -69,7 +71,7 @@ const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
             return;
         }
 
-        props.onSubmit({ email, password, acceptedTerms: true })
+        props.onSubmit({ email, password })
     }
 
     return (
@@ -90,7 +92,7 @@ const LoginForm: React.FC<ILoginProps> = (props: ILoginProps) => {
 
 interface IRegisterProps {
     switchButton: any
-    onSubmit: (data: UserRegisterRequest) => void
+    onSubmit: (data: IRegisterRequest) => void
 }
 const RegisterForm: React.FC<IRegisterProps> = (props: IRegisterProps) => {
     const [email, setEmail] = useState<string>();
@@ -105,7 +107,7 @@ const RegisterForm: React.FC<IRegisterProps> = (props: IRegisterProps) => {
             return;
         }
 
-        props.onSubmit({ email, username, firstName, lastName, password, acceptedTerms: true })
+        props.onSubmit({ email, username, firstName, lastName, password })
     }
 
     return (

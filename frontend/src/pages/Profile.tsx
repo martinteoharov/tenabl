@@ -5,13 +5,19 @@ import "src/styles/profile.css";
 import "src/common/React/styles/form.css";
 
 import { useMutation, useQuery } from "react-query";
-import { getUserProfile, saveUserProfile } from "src/common/React/api/query/user";
+import { getUserProfile, saveUserProfile } from "../common/React/api/query/user";
 
 import Button from "src/common/React/components/Button";
 import { spawnNotification } from "src/common/React/helpers/notification";
+import { useVariable } from 'src/common/React/helpers/useVariable'
+import { rtr } from "src/services/authService";
 
 const Profile: FC = () => {
-    const { data: user, refetch: refetchUser } = useQuery("user", getUserProfile);
+    const token = useVariable(rtr.session)
+    const { data: user, refetch: refetchUser } = useQuery("user", () => token ? getUserProfile(token.get()) : undefined);
+    useEffect(() => {
+        return rtr.session.changed(() => refetchUser())
+    }, [refetchUser])
     const saveUser = useMutation(saveUserProfile);
 
     const handleSaveProfile = async () => {

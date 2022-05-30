@@ -7,9 +7,11 @@ import { UserModel } from "../db/entities/UserModel";
 export interface ReviewService {
     create(user: UserModel, publication: PublicationModel, body: IFlags): Promise<void>
     get(user: UserModel, publication: PublicationModel): Promise<IFlags|undefined>
+    getAll(publication?: PublicationModel): Promise<IFlags[]>
+    empty: boolean
 }
 
-export function reviewService(entities: EntityManager): ReviewService {
+export async function reviewService(entities: EntityManager): Promise<ReviewService> {
     return {
         async create(user, publication, body) {
             const review = new ReviewModel();
@@ -25,6 +27,13 @@ export function reviewService(entities: EntityManager): ReviewService {
         async get(user, publication) {
             const review = await entities.findOne(ReviewModel, { where: { user, publication }})
             return review && JSON.parse(review.body)
-        }
+        },
+        async getAll(publication) {
+            const reviews = publication
+                ? await entities.find(ReviewModel, { where: { publication }})
+                : await entities.find(ReviewModel)
+            return reviews.map(rev => JSON.parse(rev.body))
+        },
+        empty: await entities.count(ReviewModel) == 0
     }
 }

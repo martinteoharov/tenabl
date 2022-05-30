@@ -1,4 +1,4 @@
-FROM node:17-bullseye AS api_base
+FROM node:18-bullseye AS api_base
 
 # ===== NPM cache fix =====
 RUN mkdir /tmp/npm
@@ -35,6 +35,7 @@ COPY api /api
 RUN chown node:node -R /api
 USER node:node
 EXPOSE 80
+EXPOSE 8080
 
 FROM api_base AS api_debug
 EXPOSE 9229

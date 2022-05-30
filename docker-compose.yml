@@ -7,6 +7,7 @@ services:
       dockerfile: api/Dockerfile
     ports:
       - "80"
+      - "8080"
   extension:
     build:
       context: $PWD
@@ -14,5 +15,6 @@ services:
     volumes:
       - $PWD/extension/src:/extension/src
       - $PWD/extension/dist:/extension/dist
+      - $PWD/common:/common
       - $PWD/extension/package.json:/extension/package.json
       - $PWD/extension/package-lock.json:/extension/package-lock.json

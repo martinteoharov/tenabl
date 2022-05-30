@@ -13,6 +13,9 @@ export default defineConfig({
         name: 'Tenabl trust-network-based content validation',
         version: '0.1',
         description: 'Learn what the people you trust think about information on the web',
+        permissions: [
+          "storage"
+        ],
         content_scripts: [
           {
             matches: ['<all_urls>'],

@@ -14,7 +14,6 @@ export interface OauthService {
 export function oauthService(
     users: UserService,
     entities: EntityManager,
-    // googleClientId: string,
     githubClientId: string,
     githubSecret: string
 ): OauthService {

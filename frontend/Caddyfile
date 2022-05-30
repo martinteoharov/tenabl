@@ -10,6 +10,13 @@ localhost, 127.0.0.1, tenabl.net, www.tenabl.net {
 			header_up X-Real-IP {remote}
 		}
 	}
+	@websockets {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	reverse_proxy @websockets api:8080 {
+		header_up X-Real-IP {remote}
+	}
 	@notApi not path /api/*
 	route @notApi {
 		try_files {path} /index.html

@@ -17,7 +17,7 @@ export const commentRoutes = (
 ): FastifyPluginCallback => (router, opts, done) => {
     router.post('/', jwts.withUser(withSchema(ICommentPostRequest, async (req, rep, request, user) => {
         try {
-            const publication = await publications.get(request.url);
+            const publication = await publications.get(request.article);
             await comments.create(user, publication, request.comment);
             return rep.code(204).send();
         } catch(e) { // If publication does not exist, create it

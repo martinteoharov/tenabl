@@ -1,4 +1,5 @@
 #!/bin/bash
+cd $(dirname $(dirname $0))
 OLDDIR=`pwd`
 echo "Installing packages in api..."
 cd ./api

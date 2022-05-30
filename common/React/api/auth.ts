@@ -1,31 +1,18 @@
 // import { spawnNotification } from "src/helpers/notification";
-import { fetchPost } from "./fetch"
+import { ITokenPair } from '../../interfaces/jwt'
+import { ILoginRequest, IRegisterRequest } from '../../interfaces/requests/auth';
+import { request } from './fetch';
 
-export interface UserLoginRequest {
-    email: string;
-    password: string;
-    acceptedTerms: boolean;
-}
-
-export interface UserRegisterRequest {
-    firstName: string;
-    lastName: string;
-    username: string;
-    email: string;
-    password: string;
-    acceptedTerms: boolean;
-}
-
-export const fetchLogin = async (data: UserLoginRequest) => {
+export const fetchLogin = async (body: ILoginRequest): Promise<ITokenPair> => {
     // TODO typescript TokenPair
-    const res = await fetchPost("/api/auth/login", data);
-
-    return res;
+    return await request('POST', "/api/auth/login", { body });
 }
 
-export const fetchRegister = async (data: UserRegisterRequest) => {
+export const fetchRegister = async (body: IRegisterRequest): Promise<ITokenPair> => {
     // TODO typescript TokenPair
-    const res = await fetchPost("/api/auth/register", data);
+    return await request('POST', "/api/auth/register", { body });
+}
 
-    return res;
+export const fetchRefresh = async (token: string): Promise<ITokenPair> => {
+    return await request('POST', '/api/auth/refresh', { token })
 }
