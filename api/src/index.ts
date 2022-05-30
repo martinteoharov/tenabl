@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import fastify, { FastifyInstance } from "fastify";
 import { connectToDB } from "./db";
 import { jwtService } from "./services/jwt";
@@ -14,6 +12,7 @@ import { oauthRoutes } from "./routes/oauth";
 import { reviewService } from "./services/review";
 import { reviewRoutes } from "./routes/review";
 import { userRoutes } from "./routes/user";
+import { pubsubService } from "./services/pubsub";
 
 function getEnv(name: string): string {
     const val = process.env[name]
@@ -32,16 +31,15 @@ export const build = async (): Promise<FastifyInstance> => {
     const reviews = reviewService(connection.manager)
     const app = fastify({
         logger: true,
-        ignoreTrailingSlash: true
+        ignoreTrailingSlash: true,
     });
+    app.register(pubsubService())
     app.register(authRoutes(users, passwords, jwts, connection.manager), { prefix: '/auth' });
     app.register(oauthRoutes(jwts, oauth), { prefix: '/oauth' });
     app.register(userRoutes(jwts, users, passwords), { prefix: '/user' });
     app.register(reviewRoutes(jwts, publications, reviews), { prefix: '/review' });
     app.register(commentRoutes(jwts, comments, publications), { prefix: '/comment' });
-
     app.listen(80, '0.0.0.0');
-
     return app;
 };
 

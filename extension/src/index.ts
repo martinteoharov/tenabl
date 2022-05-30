@@ -1,4 +1,4 @@
-import { getTenabl, Tenabl } from './tenabl'
+import { getTenabl, Tenabl } from './services/tenabl'
 
 // Declare global object
 declare global {

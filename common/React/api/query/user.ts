@@ -2,7 +2,7 @@ import { IUserProfile, IUserProfileEdit } from "../../../interfaces/user";
 import { request } from "../fetch";
 
 export const getUserProfile = async (token: string): Promise<IUserProfile | undefined> => {
-    const userProfile: IUserProfile = await request('GET', "/api/user/profile", { token });
+    const userProfile: IUserProfile = await request('GET', "/api/user/profile", { token, silent404: true });
     if (userProfile) {
         return userProfile;
     }

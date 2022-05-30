@@ -6,7 +6,7 @@ import { redirectGithubOAuth } from "src/common/React/api/oauth/github";
 
 import "../styles/home.css";
 import { TokenPair } from "simple-rtr";
-import { rtr } from "src/common/React/services/authService";
+import { rtr } from "../services/authService";
 import jwtDecode from "jwt-decode";
 import { spawnNotification } from "src/common/React/helpers/notification";
 
@@ -57,7 +57,11 @@ const handleGithubOAuth = async (code: string) => {
 }
 
 const Home: FC = () => {
-  const searchParams = new URLSearchParams(window.location.hash.substring(1) || window.location.search)
+  const paramString = window.location.hash.substring(1) || window.location.search
+  const searchParams = React.useMemo(
+    () => new URLSearchParams(paramString),
+    [paramString]
+  )
 
   useEffect(() => {
     document.title = "Tenabl";
@@ -77,7 +81,7 @@ const Home: FC = () => {
       handleGithubOAuth(githubCode);
     }
 
-  }, []);
+  }, [searchParams]);
 
 
   return (

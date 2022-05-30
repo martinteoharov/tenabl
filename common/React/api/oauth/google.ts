@@ -1,4 +1,4 @@
-import { fetchPost } from "../fetch";
+import { request } from "../fetch";
 
 // import { spawnNotification } from "src/helpers/notification";
 const OAuthGoogleEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -31,6 +31,6 @@ export const loginGoogleOAuth = async (data: Props) => {
 
 
 export const redirectGoogleOAuth = async (accessToken: string) => {
-    const token = await fetchPost(OAuthGoogleTenablEndpoint, { idToken: accessToken });
+    const token = await request('POST', OAuthGoogleTenablEndpoint, { body: { idToken: accessToken }});
     return token;
 }

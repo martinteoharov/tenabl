@@ -1,33 +1,27 @@
 // import { fetchGet } from "../fetch"
-import { IArticle } from "../../../interfaces/article";
-import { IArticleStatistics, IStatistics, ITotalStatistics } from "../../../interfaces/statistics";
-
-const article: IArticle = {
-    name: "Victor is a sad cunt",
-    description: "Very bad stuff...",
-    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-}
-
-const statistics: IStatistics[] = [
-    { name: "trustworthiness", positive: 125, negative: 54 },
-    { name: "concise", positive: 89, negative: 24 },
-    { name: "outdated", positive: 100, negative: 169 },
-    { name: "biased", positive: 54, negative: 69 },
-]
+import { IAssGetResult, IJudgementGetResult } from "../../../interfaces/requests/statistics";
+import { IArticleStatistics, ITotalStatistics } from "../../../interfaces/statistics";
+import { HttpError, request } from "../fetch";
 
 export async function getStatistics(url: string): Promise<IArticleStatistics>
 export async function getStatistics(): Promise<ITotalStatistics>
-export async function getStatistics(url?: string | undefined): Promise<IArticleStatistics | ITotalStatistics | undefined> {
-
-    // if ID is not defined, fetch median statistics
-    if (!id) {
-        // const articleStatistics = await fetchGet("/api/statistics/") as unknown as ArticleStatistics;
-        return {
-            statistics
+export async function getStatistics(url?: string | undefined): Promise<IAssGetResult | undefined> {
+    try {
+        if (url) return {
+            statistics: await request('GET', '/api/statistics/assessment', { params: { url }, silent: true }),
+            article: await request('GET', '/api/statistics/article', { params: { url }, silent: true })
         }
+        return {
+            statistics: await request('GET', '/api/statistics/assessment', { silent: true })
+        }
+    } catch(ex) {
+        if (ex instanceof HttpError && ex.code == 404) {
+            return undefined
+        }
+        throw ex
     }
-    return {
-        statistics,
-        article
-    }
+}
+
+export async function getJudgement(url: string): Promise<IJudgementGetResult | undefined> {
+    return await request('GET', '/api/statistics/judgement', { params: { url }, silent404: true })
 }

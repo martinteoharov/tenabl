@@ -1,4 +1,4 @@
-import { fetchPost } from "../fetch";
+import { request } from "../fetch";
 
 const OAuthGithubEndpoint = "https://github.com/login/oauth/authorize";
 const redirect_uri = "https://www.tenabl.net";
@@ -28,6 +28,6 @@ export const loginGithubOAuth = async (data: Props) => {
 
 
 export const redirectGithubOAuth = async (code: string) => {
-    const token = await fetchPost(OAuthGithubTenablEndpoint, { idToken: code });
+    const token = await request('POST', OAuthGithubTenablEndpoint, { body: { idToken: code }});
     return token;
 }

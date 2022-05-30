@@ -16,7 +16,7 @@ export const reviewRoutes = (
 ): FastifyPluginCallback => (router, opts, done) => {
     router.post('/', jwts.withUser(withSchema(IReviewPostRequest, async (req, rep, request, user) => {
         try {
-            const publication = await publications.get(request.url);
+            const publication = await publications.get(request.article);
             await reviews.create(user, publication, request.flags)
             return rep.code(200).send({ ok: 'Review submitted' });
         } catch(e) { // If publication does not exist, create it

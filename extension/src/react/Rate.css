@@ -1,1 +1,32 @@
-.rate {}
+.tenabl_rate {
+    display: grid;
+    grid-template-areas:
+        "true false"
+        "concise vague"
+        "outdated outdated"
+        "comments comments";
+}
+
+.tenabl_true {
+    grid-area: true;
+}
+
+.tenabl_false {
+    grid-area: false;
+}
+
+.tenabl_concise {
+    grid-area: concise;
+}
+
+.tenabl_vague {
+    grid-area: vague;
+}
+
+.tenabl_outdated {
+    grid-area: outdated;
+}
+
+.tenabl_comments_btn {
+    grid-area: comments;
+}

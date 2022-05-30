@@ -23,6 +23,8 @@ export function publicationService(entities: EntityManager): PublicationService 
                 publication = new PublicationModel();
                 publication.publisher = url.hostname;
                 publication.url = art.url;
+                publication.title = art.name;
+                publication.description = art.description;
                 await entities.save(publication);
             }
             return publication;
