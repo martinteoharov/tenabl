@@ -45,14 +45,15 @@ const mapStatisticsToPiechart = (statistics: IStatistics[] | undefined) => {
 }
 
 const Statistics: FC = () => {
-    const { id } = useParams();
+    const { url } = useParams();
 
-    const { data: statistics } = useQuery<{ statistics: IStatistics[], article?: IArticle }>("statistics", () => id ? getStatistics(id) : getStatistics());
+    const { data: statistics } = useQuery<{ statistics: IStatistics[], article?: IArticle }>("statistics", () => url ? getStatistics(url) : getStatistics());
 
     const [barchartData, setBarchartData] = useState(mapStatisticsToBarchart(statistics?.statistics));
     const [piechartData, setPiechartData] = useState(mapStatisticsToPiechart(statistics?.statistics))
 
     useEffect(() => {
+        console.log('statistics', statistics);
         setBarchartData(mapStatisticsToBarchart(statistics?.statistics))
         setPiechartData(mapStatisticsToPiechart(statistics?.statistics))
     }, [statistics]);

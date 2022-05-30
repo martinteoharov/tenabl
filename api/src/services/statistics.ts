@@ -4,14 +4,14 @@ import { ReviewService } from "./review";
 
 export interface StatisticsService {
     judge(publication: PublicationModel): Promise<IJudgement>
-    anal(publication?: PublicationModel): Promise<IStatistics[]>
+    analyse(publication?: PublicationModel): Promise<IStatistics[]>
 }
 
 export function statisticsService(
     reviews: ReviewService
 ): StatisticsService {
     const service: StatisticsService = {
-        async anal(publication) {
+        async analyse(publication) {
             const revs = await reviews.getAll(publication)
             const trues = revs.filter(r => r.credibility = 'trustworthy').length
             const falses = revs.filter(r => r.credibility = 'false').length

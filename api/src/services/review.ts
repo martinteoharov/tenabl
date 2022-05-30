@@ -8,9 +8,10 @@ export interface ReviewService {
     create(user: UserModel, publication: PublicationModel, body: IFlags): Promise<void>
     get(user: UserModel, publication: PublicationModel): Promise<IFlags|undefined>
     getAll(publication?: PublicationModel): Promise<IFlags[]>
+    empty: boolean
 }
 
-export function reviewService(entities: EntityManager): ReviewService {
+export async function reviewService(entities: EntityManager): Promise<ReviewService> {
     return {
         async create(user, publication, body) {
             const review = new ReviewModel();
@@ -32,6 +33,7 @@ export function reviewService(entities: EntityManager): ReviewService {
                 ? await entities.find(ReviewModel, { where: { publication }})
                 : await entities.find(ReviewModel)
             return reviews.map(rev => JSON.parse(rev.body))
-        }
+        },
+        empty: await entities.count(ReviewModel) == 0
     }
 }

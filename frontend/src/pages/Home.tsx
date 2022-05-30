@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import Layout from "../components/Layout";
-import Article, { ArticleProps } from "../components/Article";
+import Article from "../components/Article";
 import { redirectGoogleOAuth } from "src/common/React/api/oauth/google";
 import { redirectGithubOAuth } from "src/common/React/api/oauth/github";
 
@@ -9,24 +9,27 @@ import { TokenPair } from "simple-rtr";
 import { rtr } from "../services/authService";
 import jwtDecode from "jwt-decode";
 import { spawnNotification } from "src/common/React/helpers/notification";
+import { useQuery } from "react-query";
+import { getPopular } from "src/common/React/api/query/statistics";
+import { IArticle } from "src/common/interfaces/article";
 
-const articlesTrending: ArticleProps[] = [
-  {
-    authorName: "Mahon Hourig",
-    title: "Northern Ireland: PM meets Stormont parties to avert crisis",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/1"
-  },
-]
+// const articlesTrending: ArticleProps[] = [
+//   {
+//     authorName: "Mahon Hourig",
+//     title: "Northern Ireland: PM meets Stormont parties to avert crisis",
+//     score: `${Math.floor(Math.random() * 100)}%`,
+//     url: "/statistics/1"
+//   },
+// ]
 
-const articlesCurated: ArticleProps[] = [
-  {
-    authorName: "Fortunata Atif",
-    title: "School shooting in Buffalo, US",
-    score: `${Math.floor(Math.random() * 100)}%`,
-    url: "/statistics/2"
-  },
-]
+// const articlesCurated: ArticleProps[] = [
+//   {
+//     authorName: "Fortunata Atif",
+//     title: "School shooting in Buffalo, US",
+//     score: `${Math.floor(Math.random() * 100)}%`,
+//     url: "/statistics/2"
+//   },
+// ]
 
 const handleGoogleOAuth = async (accessToken: string) => {
   // request user info
@@ -62,7 +65,7 @@ const Home: FC = () => {
     () => new URLSearchParams(paramString),
     [paramString]
   )
-
+  const { data: popular } = useQuery<IArticle[]>("popular", getPopular)
   useEffect(() => {
     document.title = "Tenabl";
 
@@ -91,19 +94,19 @@ const Home: FC = () => {
           <div className="container-trending">
             <h1> TRENDING ON TENABL </h1>
             <div className="articles-container">
-              {articlesTrending.map(({ authorName, title, score, url }) => {
-                return <div> <Article authorName={authorName} title={title} score={score} url={url} /> </div>
+              {popular?.map(({ name, url }) => {
+                return <div> <Article authorName={new URL(url).hostname} title={name} url={url} /> </div>
               })}
             </div>
           </div>
-          <div className="container-curated">
+          {/* <div className="container-curated">
             <h1> CURATED FOR YOU </h1>
             <div className="articles-container">
               {articlesCurated.map(({ authorName, title, score, url }) => {
                 return <div> <Article authorName={authorName} title={title} score={score} url={url} /> </div>
               })}
             </div>
-          </div>
+          </div> */}
         </div>
       </Layout>
 

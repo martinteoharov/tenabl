@@ -25,3 +25,5 @@ export const rtr = rtrAgent({
   },
   storage: toAsync<State | undefined>(localStorageVar('auth'), undefined),
 });
+
+Object.assign(window, { rtr })

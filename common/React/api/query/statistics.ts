@@ -1,4 +1,5 @@
 // import { fetchGet } from "../fetch"
+import { IArticle } from "../../../interfaces/article";
 import { IAssGetResult, IJudgementGetResult } from "../../../interfaces/requests/statistics";
 import { IArticleStatistics, ITotalStatistics } from "../../../interfaces/statistics";
 import { HttpError, request } from "../fetch";
@@ -24,4 +25,8 @@ export async function getStatistics(url?: string | undefined): Promise<IAssGetRe
 
 export async function getJudgement(url: string): Promise<IJudgementGetResult | undefined> {
     return await request('GET', '/api/statistics/judgement', { params: { url }, silent404: true })
+}
+
+export async function getPopular(): Promise<IArticle[]> {
+    return await request('GET', '/api/statistics/popular')
 }

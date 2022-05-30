@@ -32,7 +32,7 @@ function App() {
             </Route>
             <Route path="/statistics" element={<Statistics />}>
             </Route>
-            <Route path="/statistics/:id" element={<Statistics />}>
+            <Route path="/statistics/:url" element={<Statistics />}>
             </Route>
           </Routes>
         </BrowserRouter>

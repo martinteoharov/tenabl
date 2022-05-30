@@ -8,9 +8,11 @@ export interface PublicationService {
     // The function returns the existing publication or creates a new one (and then returns it)
     get(article: IArticle): Promise<PublicationModel>
     find(url: string): Promise<PublicationModel|undefined>
+    popular(): Promise<PublicationModel[]>
+    empty: boolean
 }
 
-export function publicationService(entities: EntityManager): PublicationService {
+export async function publicationService(entities: EntityManager): Promise<PublicationService> {
     const service: PublicationService = {
         async get(art) {
             let publication = await service.find(art.url);
@@ -31,7 +33,13 @@ export function publicationService(entities: EntityManager): PublicationService 
         },
         async find(urlString) {
             return await entities.findOne(PublicationModel, { url: urlString });
-        }
+        },
+        async popular() {
+            return await entities.find(PublicationModel, {
+                take: 12
+            })
+        },
+        empty: await entities.count(PublicationModel) == 0
     }
     return service
 }
